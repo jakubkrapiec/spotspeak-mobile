@@ -31,5 +31,5 @@ Future<void> bootstrap() async {
 
   configureDependencies();
 
-  runApp(const App());
+  runApp(App());
 }
