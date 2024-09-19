@@ -23,13 +23,15 @@ class AppBlocObserver extends BlocObserver {
 }
 
 Future<void> bootstrap() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
   Bloc.observer = const AppBlocObserver();
 
-  configureDependencies();
+  await configureDependencies();
 
   runApp(App());
 }
