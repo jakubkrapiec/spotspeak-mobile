@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotspeak_mobile/app.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/firebase_options.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -28,6 +30,8 @@ Future<void> bootstrap() async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   Bloc.observer = const AppBlocObserver();
 
