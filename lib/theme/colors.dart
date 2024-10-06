@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class AppColors {
+abstract class CustomColors {
   /// Number in colors' names describes shade of the color:
   /// 1 - the lightest, 9 - the darkest
 

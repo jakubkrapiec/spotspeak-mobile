@@ -12,8 +12,8 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       title: 'SpotSpeak',
       routerConfig: _router.config(),
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      theme: CustomTheme.lightTheme,
+      darkTheme: CustomTheme.darkTheme,
     );
   }
 }
