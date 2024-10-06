@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/routing/app_router.dart';
+import 'package:spotspeak_mobile/theme/theme.dart';
 
 class App extends StatelessWidget {
   App({super.key});
@@ -11,13 +12,8 @@ class App extends StatelessWidget {
     return MaterialApp.router(
       title: 'SpotSpeak',
       routerConfig: _router.config(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Colors.blue,
-          unselectedItemColor: Colors.grey,
-        ),
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
     );
   }
 }

@@ -19,5 +19,6 @@ class AppRouter extends RootStackRouter {
             AutoRoute(page: AchievementsRoute.page),
           ],
         ),
+        AutoRoute(page: SettingsRoute.page),
       ];
 }
