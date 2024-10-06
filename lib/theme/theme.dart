@@ -13,7 +13,7 @@ class CustomTheme {
       error: CustomColors.red1,
       onTertiary: Colors.orange,
     ),
-    canvasColor: CustomColors.blue5,
+    canvasColor: CustomColors.blue3,
     appBarTheme: CustomAppBarTheme.lightAppBarTheme,
     iconTheme: const IconThemeData(
       color: CustomColors.blue5,

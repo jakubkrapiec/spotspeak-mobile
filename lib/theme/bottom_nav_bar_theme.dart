@@ -5,8 +5,8 @@ class CustomBottomNavBarTheme {
   CustomBottomNavBarTheme._();
 
   static BottomNavigationBarThemeData lightBottomNavBarTheme = const BottomNavigationBarThemeData(
-    selectedItemColor: CustomColors.blue9,
-    unselectedItemColor: CustomColors.blue6,
+    selectedItemColor: CustomColors.blue1,
+    unselectedItemColor: CustomColors.blue5,
   );
 
   static BottomNavigationBarThemeData darkBottomNavBarTheme = const BottomNavigationBarThemeData(
