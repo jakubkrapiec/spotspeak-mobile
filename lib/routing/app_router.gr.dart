@@ -12,7 +12,7 @@ import 'package:auto_route/auto_route.dart' as _i7;
 import 'package:spotspeak_mobile/screens/home_screen.dart' as _i3;
 import 'package:spotspeak_mobile/screens/tabs/achievements_tab.dart' as _i1;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab.dart' as _i2;
-import 'package:spotspeak_mobile/screens/tabs/map_tab.dart' as _i4;
+import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i4;
 import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i5;
 import 'package:spotspeak_mobile/screens/tabs/profile_tab.dart' as _i6;
 
