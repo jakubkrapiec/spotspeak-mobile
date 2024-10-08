@@ -3,17 +3,15 @@ import 'package:spotspeak_mobile/theme/app_bar_theme.dart';
 import 'package:spotspeak_mobile/theme/bottom_nav_bar_theme.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
-class CustomTheme {
-  CustomTheme._();
-
-  static ThemeData lightTheme = ThemeData(
+abstract class CustomTheme {
+  static final lightTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: CustomColors.blue5,
       surface: CustomColors.blue1,
       error: CustomColors.red1,
       onTertiary: Colors.orange,
     ),
-    canvasColor: CustomColors.blue3,
+    canvasColor: CustomColors.blue1,
     appBarTheme: CustomAppBarTheme.lightAppBarTheme,
     iconTheme: const IconThemeData(
       color: CustomColors.blue5,
@@ -21,7 +19,7 @@ class CustomTheme {
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
 
-  static ThemeData darkTheme = ThemeData(
+  static final darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: CustomColors.green5,
       surface: CustomColors.grey5,

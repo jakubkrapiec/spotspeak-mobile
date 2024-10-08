@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
-class CustomAppBarTheme {
-  CustomAppBarTheme._();
-
-  static AppBarTheme lightAppBarTheme = AppBarTheme(
+abstract class CustomAppBarTheme {
+  static final lightAppBarTheme = AppBarTheme(
     color: CustomColors.blue5,
     centerTitle: true,
     titleTextStyle: const TextStyle().copyWith(
@@ -17,7 +15,7 @@ class CustomAppBarTheme {
     ),
   );
 
-  static AppBarTheme darkAppBarTheme = AppBarTheme(
+  static final darkAppBarTheme = AppBarTheme(
     color: CustomColors.grey6,
     centerTitle: true,
     titleTextStyle: const TextStyle().copyWith(

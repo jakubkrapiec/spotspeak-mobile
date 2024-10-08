@@ -42,7 +42,10 @@ flutter:
   generate: true
   assets:
     - path: assets/
+  fonts:
+    - family: Inconsolata
       fonts:
-        - family: Inconsolata
-          fonts:
-            - asset: fonts/static/Inconsolata-Black.ttf
+        - asset: assets/fonts/inconsolata/Inconsolata-Regular.ttf
+        - asset: assets/fonts/inconsolata/Inconsolata-Bold.ttf
+          weight: 700
+

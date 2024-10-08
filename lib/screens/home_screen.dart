@@ -5,14 +5,11 @@ import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 @RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    String screenName = 'Mapa';
-
     return AutoTabsScaffold(
       appBarBuilder: (context, router) => AppBar(
-        title: Text(screenName),
+        title: Text(router.currentChild?.title(context) ?? 'SpotSpeak'),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
