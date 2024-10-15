@@ -1,0 +1,1 @@
+enum MapTabEvents { goToUsersLocation }
