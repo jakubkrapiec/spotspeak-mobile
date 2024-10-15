@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
@@ -11,8 +12,11 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/location_marker.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
+import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
@@ -26,27 +30,38 @@ class MapTab extends StatefulWidget {
 class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   late final AnimatedMapController _mapController;
   final _locationService = getIt<LocationService>();
+  final _traceService = getIt<TraceService>();
+  final _dio = getIt<Dio>();
   StreamSubscription<Position>? _locationStreamSubscription;
+  StreamSubscription<MapEvent>? _mapEventSubscription;
   bool _waitingForFirstLocation = true;
   LatLng? _lastLocation;
+  Set<Trace> _traces = {};
+  static const _defaultZoom = 16.5;
 
   @override
   void initState() {
     super.initState();
     _mapController = AnimatedMapController(vsync: this);
     _initLocationService();
+    _mapEventSubscription = _mapController.mapController.mapEventStream.listen((event) {
+      if (event is MapEventMove) {
+        _onMapScrolled(_mapController.mapController.camera.visibleBounds);
+      }
+    });
   }
 
   @override
   void dispose() {
     _mapController.dispose();
+    _mapEventSubscription?.cancel();
     _locationStreamSubscription?.cancel();
     super.dispose();
   }
 
   void _onMoveToUserLocation() {
     if (_lastLocation != null) {
-      _mapController.animateTo(dest: _lastLocation, zoom: 15);
+      _mapController.animateTo(dest: _lastLocation, zoom: _defaultZoom);
     }
   }
 
@@ -65,9 +80,25 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
       _lastLocation = LatLng(position.latitude, position.longitude);
     });
     if (_waitingForFirstLocation) {
-      _mapController.animateTo(dest: _lastLocation, zoom: 15);
+      _mapController.animateTo(dest: _lastLocation, zoom: _defaultZoom);
       _waitingForFirstLocation = false;
     }
+  }
+
+  Future<void> _onMapScrolled(LatLngBounds bounds) async {
+    EasyDebounce.debounce('get-traces', const Duration(milliseconds: 200), _getVisibleTraces);
+  }
+
+  Future<void> _getVisibleTraces() async {
+    final bounds = _mapController.mapController.camera.visibleBounds;
+    final traces = await _traceService.getTracesFor(bounds);
+    print('Bounds: $bounds');
+    if (mounted) {
+      setState(() {
+        _traces = traces;
+      });
+    }
+    print('Visible traces: $_traces');
   }
 
   @override
@@ -89,13 +120,13 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         children: [
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            fallbackUrl: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: getIt<Dio>().options.headers[HttpHeaders.userAgentHeader]! as String,
+            userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
             tileProvider: CancellableNetworkTileProvider(dioClient: getIt()),
             maxZoom: 19,
             minZoom: 2,
             retinaMode: false,
           ),
+          // User's current location layer
           MarkerLayer(
             markers: [
               if (_lastLocation != null)
@@ -104,6 +135,18 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                   child: const LocationMarker(),
                   height: LocationMarker.dimens,
                   width: LocationMarker.dimens,
+                ),
+            ],
+          ),
+          // Traces layer
+          MarkerLayer(
+            markers: [
+              for (final trace in _traces)
+                Marker(
+                  point: trace.location,
+                  child: const TraceMarker(),
+                  height: TraceMarker.dimens,
+                  width: TraceMarker.dimens,
                 ),
             ],
           ),
