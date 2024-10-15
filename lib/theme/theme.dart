@@ -13,17 +13,15 @@ abstract class CustomTheme {
     ),
     canvasColor: CustomColors.blue1,
     appBarTheme: CustomAppBarTheme.lightAppBarTheme,
-    iconTheme: const IconThemeData(
-      color: CustomColors.blue5,
-    ),
-    textTheme: TextTheme(
-      titleLarge: const TextStyle().copyWith(
+    iconTheme: const IconThemeData(color: CustomColors.blue5),
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 40,
         fontWeight: FontWeight.bold,
         color: CustomColors.blue9,
       ),
-      bodyLarge: const TextStyle().copyWith(
+      bodyLarge: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 20,
         color: CustomColors.blue7,
@@ -58,17 +56,15 @@ abstract class CustomTheme {
       onTertiary: Colors.orange,
     ),
     appBarTheme: CustomAppBarTheme.darkAppBarTheme,
-    iconTheme: const IconThemeData(
-      color: CustomColors.green5,
-    ),
-    textTheme: TextTheme(
-      titleLarge: const TextStyle().copyWith(
+    iconTheme: const IconThemeData(color: CustomColors.green5),
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 40,
         fontWeight: FontWeight.bold,
         color: CustomColors.green4,
       ),
-      bodyLarge: const TextStyle().copyWith(
+      bodyLarge: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 20,
         color: CustomColors.green3,

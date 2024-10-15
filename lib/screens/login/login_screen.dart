@@ -17,32 +17,24 @@ class LoginScreen extends StatelessWidget {
             : CustomColors.backgroundGradientDark,
         child: Column(
           children: [
-            const SizedBox(
-              height: 50,
-            ),
+            const SizedBox(height: 50),
             SizedBox(
               width: 350,
               height: 350,
-              child: SvgPicture.asset(
-                'assets/SPOT.svg',
-              ),
+              child: SvgPicture.asset('assets/SPOT.svg'),
             ),
             Text(
               'Zacznijmy wspólną przygodę!',
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(
-              height: 48,
-            ),
+            const SizedBox(height: 48),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(15),
-                  ),
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
                   color:
                       MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
                 ),
@@ -62,9 +54,7 @@ class LoginScreen extends StatelessWidget {
                           onPressed: () {},
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 48, vertical: 8),
-                            child: Text(
-                              'Logowanie',
-                            ),
+                            child: Text('Logowanie'),
                           ),
                         ),
                       ),
@@ -74,10 +64,7 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
             TextButton(
-              child: const Text(
-                'Kontynuuj jako gość',
-                textAlign: TextAlign.start,
-              ),
+              child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
               onPressed: () {
                 context.router.push(const HomeRoute());
               },
