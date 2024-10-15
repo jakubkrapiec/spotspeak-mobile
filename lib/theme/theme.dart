@@ -62,8 +62,35 @@ abstract class CustomTheme {
       color: CustomColors.green5,
     ),
     textTheme: TextTheme(
-      headlineLarge: const TextStyle().copyWith(
-        color: CustomColors.green5,
+      titleLarge: const TextStyle().copyWith(
+        fontFamily: 'Inconsolata',
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: CustomColors.green4,
+      ),
+      bodyLarge: const TextStyle().copyWith(
+        fontFamily: 'Inconsolata',
+        fontSize: 20,
+        color: CustomColors.green3,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CustomColors.green1,
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 18,
+          color: CustomColors.green9,
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 15,
+          color: CustomColors.green2,
+        ),
       ),
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,

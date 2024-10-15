@@ -12,18 +12,9 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Colors.white,
-              CustomColors.blue1,
-              CustomColors.blue2,
-              CustomColors.blue3,
-            ],
-          ),
-        ),
+        decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
+            ? CustomColors.backgroundGradientLight
+            : CustomColors.backgroundGradientDark,
         child: Column(
           children: [
             const SizedBox(
@@ -33,7 +24,7 @@ class LoginScreen extends StatelessWidget {
               width: 350,
               height: 350,
               child: SvgPicture.asset(
-                'assets/SPOT2.svg',
+                'assets/SPOT.svg',
               ),
             ),
             Text(
@@ -48,11 +39,12 @@ class LoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               child: Container(
                 width: double.infinity,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(15),
                   ),
-                  color: Colors.white,
+                  color:
+                      MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
