@@ -12,6 +12,7 @@ import 'package:dio/dio.dart' as _i361;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
+import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
 
@@ -31,6 +32,8 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.dio,
       preResolve: true,
     );
+    gh.singleton<_i281.AuthenticationService>(
+        () => _i281.AuthenticationService());
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
     gh.singleton<_i192.TraceService>(() => _i192.TraceService());
     return this;
