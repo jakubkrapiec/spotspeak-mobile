@@ -44,7 +44,7 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Text(
                         'Zaloguj się do aplikacji:',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),

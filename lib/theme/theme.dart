@@ -21,10 +21,27 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.blue9,
       ),
-      bodyLarge: TextStyle(
+      bodySmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 18,
+        color: CustomColors.blue6,
+      ),
+      bodyMedium: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 20,
         color: CustomColors.blue7,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 32,
+        color: CustomColors.blue8,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        color: CustomColors.red1,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -41,6 +58,7 @@ abstract class CustomTheme {
         textStyle: const TextStyle(
           fontFamily: 'Inconsolata',
           fontSize: 15,
+          fontWeight: FontWeight.bold,
           color: CustomColors.blue9,
         ),
       ),
@@ -64,10 +82,27 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.green4,
       ),
-      bodyLarge: TextStyle(
+      bodySmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 18,
+        color: CustomColors.green2,
+      ),
+      bodyMedium: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 20,
         color: CustomColors.green3,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 32,
+        color: CustomColors.green6,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+        color: CustomColors.red1,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -85,6 +120,7 @@ abstract class CustomTheme {
         textStyle: const TextStyle(
           fontFamily: 'Inconsolata',
           fontSize: 15,
+          fontWeight: FontWeight.bold,
           color: CustomColors.green2,
         ),
       ),
