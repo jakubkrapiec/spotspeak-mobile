@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_list_widget.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_search_widget.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_list_widget.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_search_widget.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
 @RoutePage()

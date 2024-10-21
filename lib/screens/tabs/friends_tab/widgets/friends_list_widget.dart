@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/friend_tile_widget.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friend_tile_widget.dart';
 
 class FriendsListWidget extends StatelessWidget {
   const FriendsListWidget({required this.items, this.requestWidgets, super.key});

@@ -8,7 +8,7 @@ class FriendsSearchWidget extends StatelessWidget {
     super.key,
   });
 
-  final Function(String val) pressFunction;
+  final void Function(String val) pressFunction;
   @override
   Widget build(BuildContext context) {
     var textPattern = '';
