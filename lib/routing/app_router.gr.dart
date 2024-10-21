@@ -13,7 +13,7 @@ import 'package:spotspeak_mobile/screens/home_screen.dart' as _i3;
 import 'package:spotspeak_mobile/screens/login/login_screen.dart' as _i4;
 import 'package:spotspeak_mobile/screens/settings/settings_screen.dart' as _i8;
 import 'package:spotspeak_mobile/screens/tabs/achievements_tab.dart' as _i1;
-import 'package:spotspeak_mobile/screens/tabs/friends_tab.dart' as _i2;
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_tab.dart' as _i2;
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i5;
 import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i6;
 import 'package:spotspeak_mobile/screens/tabs/profile_tab.dart' as _i7;

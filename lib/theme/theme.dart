@@ -13,7 +13,7 @@ abstract class CustomTheme {
     ),
     canvasColor: CustomColors.blue1,
     appBarTheme: CustomAppBarTheme.lightAppBarTheme,
-    iconTheme: const IconThemeData(color: CustomColors.blue5),
+    iconTheme: const IconThemeData(color: CustomColors.blue7, size: 26),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         fontFamily: 'Inconsolata',
@@ -63,7 +63,36 @@ abstract class CustomTheme {
         ),
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: const TextStyle(
+        fontSize: 16,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        color: CustomColors.grey3,
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+      fillColor: CustomColors.blue2,
+    ),
+    tabBarTheme: TabBarTheme(
+      labelColor: CustomColors.blue8,
+      unselectedLabelColor: CustomColors.grey4,
+    ),
+    listTileTheme: ListTileThemeData(
+      tileColor: CustomColors.blue3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+      titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
+  );
+
+  static final lightContainerStyle = BoxDecoration(
+    color: CustomColors.blue3,
+    borderRadius: BorderRadius.all(Radius.circular(15)),
   );
 
   static final darkTheme = ThemeData(
@@ -74,7 +103,7 @@ abstract class CustomTheme {
       onTertiary: Colors.orange,
     ),
     appBarTheme: CustomAppBarTheme.darkAppBarTheme,
-    iconTheme: const IconThemeData(color: CustomColors.green5),
+    iconTheme: const IconThemeData(color: CustomColors.green7),
     textTheme: const TextTheme(
       titleLarge: TextStyle(
         fontFamily: 'Inconsolata',
@@ -125,6 +154,35 @@ abstract class CustomTheme {
         ),
       ),
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      hintStyle: const TextStyle(
+        fontSize: 16,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        color: CustomColors.grey3,
+      ),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderSide: BorderSide.none,
+      ),
+      filled: true,
+      fillColor: CustomColors.grey5,
+    ),
+    tabBarTheme: TabBarTheme(
+      labelColor: CustomColors.green8,
+      unselectedLabelColor: CustomColors.grey3,
+    ),
+    listTileTheme: ListTileThemeData(
+      tileColor: CustomColors.grey6,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+      titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.green3),
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
+  );
+
+  static final darkContainerStyle = BoxDecoration(
+    color: CustomColors.grey6,
+    borderRadius: BorderRadius.all(Radius.circular(15)),
   );
 }
