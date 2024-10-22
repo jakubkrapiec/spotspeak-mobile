@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'package:spotspeak_mobile/di/get_it.config.dart';
+import 'package:spotspeak_mobile/misc/auth_interceptor.dart';
 
 final getIt = GetIt.instance;
 
@@ -39,6 +40,7 @@ abstract class RegisterModule {
       store: DbCacheStore(databasePath: cacheDirectory.path),
     );
     dio.interceptors.add(DioCacheInterceptor(options: cacheInterceptorOptions));
+    dio.interceptors.add(AuthInterceptor());
     return dio;
   }
 }

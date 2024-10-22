@@ -15,6 +15,6 @@
 			],
 			"group": "build",
 			"label": "generate code",
-		}
+		},
 	]
 }

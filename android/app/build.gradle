@@ -60,6 +60,9 @@ android {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
+        manifestPlaceholders += [
+            'appAuthRedirectScheme': "com.odwaznistudenci.spotspeak"
+        ]
     }
 
     signingConfigs {
