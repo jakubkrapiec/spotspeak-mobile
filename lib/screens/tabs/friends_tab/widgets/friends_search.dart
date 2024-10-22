@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
-class FriendsSearchWidget extends StatelessWidget {
-  const FriendsSearchWidget({
+class FriendsSearch extends StatelessWidget {
+  const FriendsSearch({
     required this.pressFunction,
     super.key,
   });

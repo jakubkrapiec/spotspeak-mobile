@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
-import 'package:spotspeak_mobile/theme/colors.dart';
+import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
 
 @RoutePage()
 class ProfileTab extends StatelessWidget {
@@ -31,33 +31,11 @@ class ProfileTab extends StatelessWidget {
         ProfileButton(pressFunction: () {}, buttonText: 'Ustawienia aplikacji'),
         TextButton(
           child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
       ],
-    );
-  }
-}
-
-class ProfileButton extends StatelessWidget {
-  const ProfileButton({required this.pressFunction, required this.buttonText, super.key});
-
-  final VoidCallback pressFunction;
-  final String buttonText;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: pressFunction,
-      child: Container(
-        width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? CustomColors.blue3 : CustomColors.grey6,
-          borderRadius: BorderRadius.all(Radius.circular(10)),
-        ),
-        child: Text(buttonText),
-      ),
     );
   }
 }

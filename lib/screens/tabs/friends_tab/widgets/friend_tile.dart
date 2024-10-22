@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
-class FriendTileWidget extends StatelessWidget {
-  const FriendTileWidget({
+class FriendTile extends StatelessWidget {
+  const FriendTile({
     required this.username,
+    required this.tapFunction,
     this.requestWidgets,
     super.key,
   });
 
   final String username;
+  final VoidCallback tapFunction;
   final Widget? requestWidgets;
 
   @override
@@ -15,10 +17,9 @@ class FriendTileWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
-        onTap: () {},
-        leading: SizedBox(
-          height: 45,
-          width: 45,
+        onTap: tapFunction,
+        leading: SizedBox.square(
+          dimension: 45,
           child: ClipOval(child: Image.asset('assets/default_icon.jpg')),
         ),
         title: Text(username),

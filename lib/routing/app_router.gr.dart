@@ -9,14 +9,17 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i10;
+import 'package:flutter/material.dart' as _i11;
 import 'package:spotspeak_mobile/screens/home_screen.dart' as _i3;
 import 'package:spotspeak_mobile/screens/login/login_screen.dart' as _i4;
 import 'package:spotspeak_mobile/screens/settings/settings_screen.dart' as _i8;
 import 'package:spotspeak_mobile/screens/tabs/achievements_tab.dart' as _i1;
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_tab.dart' as _i2;
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_tab.dart'
+    as _i2;
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i5;
 import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i6;
-import 'package:spotspeak_mobile/screens/tabs/profile_tab.dart' as _i7;
+import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_tab.dart'
+    as _i7;
 import 'package:spotspeak_mobile/screens/user_profile/user_profile_screen.dart'
     as _i9;
 
@@ -174,10 +177,17 @@ class SettingsRoute extends _i10.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i9.UserProfileScreen]
-class UserProfileRoute extends _i10.PageRouteInfo<void> {
-  const UserProfileRoute({List<_i10.PageRouteInfo>? children})
-      : super(
+class UserProfileRoute extends _i10.PageRouteInfo<UserProfileRouteArgs> {
+  UserProfileRoute({
+    required _i9.FriendshipStatus status,
+    _i11.Key? key,
+    List<_i10.PageRouteInfo>? children,
+  }) : super(
           UserProfileRoute.name,
+          args: UserProfileRouteArgs(
+            status: status,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -186,7 +196,27 @@ class UserProfileRoute extends _i10.PageRouteInfo<void> {
   static _i10.PageInfo page = _i10.PageInfo(
     name,
     builder: (data) {
-      return const _i9.UserProfileScreen();
+      final args = data.argsAs<UserProfileRouteArgs>();
+      return _i9.UserProfileScreen(
+        status: args.status,
+        key: args.key,
+      );
     },
   );
+}
+
+class UserProfileRouteArgs {
+  const UserProfileRouteArgs({
+    required this.status,
+    this.key,
+  });
+
+  final _i9.FriendshipStatus status;
+
+  final _i11.Key? key;
+
+  @override
+  String toString() {
+    return 'UserProfileRouteArgs{status: $status, key: $key}';
+  }
 }

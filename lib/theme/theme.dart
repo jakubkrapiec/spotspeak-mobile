@@ -86,6 +86,7 @@ abstract class CustomTheme {
       tileColor: CustomColors.blue3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
+      iconColor: CustomColors.blue7,
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
@@ -93,6 +94,14 @@ abstract class CustomTheme {
   static final lightContainerStyle = BoxDecoration(
     color: CustomColors.blue3,
     borderRadius: BorderRadius.all(Radius.circular(15)),
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black.withOpacity(0.2),
+        spreadRadius: 1,
+        blurRadius: 8,
+        offset: const Offset(5, 3),
+      ),
+    ],
   );
 
   static final darkTheme = ThemeData(
@@ -177,6 +186,7 @@ abstract class CustomTheme {
       tileColor: CustomColors.grey6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.green3),
+      iconColor: CustomColors.green7,
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
   );
@@ -184,5 +194,13 @@ abstract class CustomTheme {
   static final darkContainerStyle = BoxDecoration(
     color: CustomColors.grey6,
     borderRadius: BorderRadius.all(Radius.circular(15)),
+    boxShadow: [
+      BoxShadow(
+        color: CustomColors.grey3.withOpacity(0.2),
+        spreadRadius: 1,
+        blurRadius: 8,
+        offset: const Offset(5, 3),
+      ),
+    ],
   );
 }

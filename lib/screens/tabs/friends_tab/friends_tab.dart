@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_list_widget.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_search_widget.dart';
-import 'package:spotspeak_mobile/theme/colors.dart';
+import 'package:spotspeak_mobile/routing/app_router.gr.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_list.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_search.dart';
+import 'package:spotspeak_mobile/screens/user_profile/user_profile_screen.dart';
 
 @RoutePage()
 class FriendsTab extends StatelessWidget {
@@ -34,35 +35,37 @@ class FriendsTab extends StatelessWidget {
           children: [
             Column(
               children: [
-                FriendsSearchWidget(
+                FriendsSearch(
                   pressFunction: (value) {},
                 ),
-                FriendsListWidget(items: items),
+                FriendsList(
+                  items: items,
+                  tapFunction: () {
+                    context.router.push(UserProfileRoute(status: FriendshipStatus.friends));
+                  },
+                ),
               ],
             ),
             Column(
               children: [
-                FriendsSearchWidget(pressFunction: (value) {}),
-                FriendsListWidget(
+                FriendsSearch(pressFunction: (value) {}),
+                FriendsList(
                   items: items,
+                  tapFunction: () {
+                    context.router.push(UserProfileRoute(status: FriendshipStatus.request));
+                  },
                   requestWidgets: Wrap(
                     spacing: 12,
                     children: [
                       GestureDetector(
                         child: Icon(
                           Icons.person_add,
-                          color: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                              ? CustomColors.blue7
-                              : CustomColors.green7,
                         ),
                         onTap: () {},
                       ),
                       GestureDetector(
                         child: Icon(
                           Icons.person_remove,
-                          color: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                              ? CustomColors.blue7
-                              : CustomColors.green7,
                         ),
                         onTap: () {},
                       ),
@@ -73,8 +76,13 @@ class FriendsTab extends StatelessWidget {
             ),
             Column(
               children: [
-                FriendsSearchWidget(pressFunction: (value) {}),
-                FriendsListWidget(items: items),
+                FriendsSearch(pressFunction: (value) {}),
+                FriendsList(
+                  items: items,
+                  tapFunction: () {
+                    context.router.push(UserProfileRoute(status: FriendshipStatus.stranger));
+                  },
+                ),
               ],
             ),
           ],
