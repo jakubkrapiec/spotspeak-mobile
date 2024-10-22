@@ -40,4 +40,30 @@ abstract class CustomColors {
   /// Red:
 
   static const red1 = Color(0xFFF23C35);
+
+  static const backgroundGradientLight = BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [
+        Colors.white,
+        CustomColors.blue1,
+        CustomColors.blue2,
+        CustomColors.blue3,
+      ],
+    ),
+  );
+
+  static const backgroundGradientDark = BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [
+        grey2,
+        grey3,
+        grey4,
+        grey5,
+      ],
+    ),
+  );
 }

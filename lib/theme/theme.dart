@@ -13,8 +13,37 @@ abstract class CustomTheme {
     ),
     canvasColor: CustomColors.blue1,
     appBarTheme: CustomAppBarTheme.lightAppBarTheme,
-    iconTheme: const IconThemeData(
-      color: CustomColors.blue5,
+    iconTheme: const IconThemeData(color: CustomColors.blue5),
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: CustomColors.blue9,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 20,
+        color: CustomColors.blue7,
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 18,
+          color: CustomColors.blue8,
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 15,
+          color: CustomColors.blue9,
+        ),
+      ),
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
@@ -27,12 +56,37 @@ abstract class CustomTheme {
       onTertiary: Colors.orange,
     ),
     appBarTheme: CustomAppBarTheme.darkAppBarTheme,
-    iconTheme: const IconThemeData(
-      color: CustomColors.green5,
+    iconTheme: const IconThemeData(color: CustomColors.green5),
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 40,
+        fontWeight: FontWeight.bold,
+        color: CustomColors.green4,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 20,
+        color: CustomColors.green3,
+      ),
     ),
-    textTheme: TextTheme(
-      headlineLarge: const TextStyle().copyWith(
-        color: CustomColors.green5,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: CustomColors.green1,
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 18,
+          color: CustomColors.green9,
+        ),
+      ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        textStyle: const TextStyle(
+          fontFamily: 'Inconsolata',
+          fontSize: 15,
+          color: CustomColors.green2,
+        ),
       ),
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
