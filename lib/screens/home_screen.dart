@@ -19,7 +19,13 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      routes: const [FriendsRoute(), NearbyRoute(), MapRoute(), AchievementsRoute(), ProfileRoute()],
+      routes: const [
+        FriendsRoute(),
+        NearbyRoute(),
+        MapRoute(),
+        AchievementsRoute(),
+        ProfileRoute(),
+      ],
       bottomNavigationBuilder: (context, tabsRouter) {
         return BottomNavigationBar(
           currentIndex: tabsRouter.activeIndex,

@@ -13,7 +13,11 @@ class AppRouter extends RootStackRouter {
         AutoRoute(
           page: HomeRoute.page,
           children: [
-            AutoRoute(page: FriendsRoute.page, title: (context, data) => 'Znajomi'),
+            AutoRoute(
+              page: FriendsRoute.page,
+              title: (context, data) => 'Znajomi',
+              children: [AutoRoute(page: UserProfileRoute.page)],
+            ),
             AutoRoute(page: MapRoute.page, initial: true, title: (context, data) => 'Mapa'),
             AutoRoute(page: NearbyRoute.page, title: (context, data) => 'W pobliżu'),
             AutoRoute(page: ProfileRoute.page, title: (context, data) => 'Twoje konto'),
@@ -21,5 +25,8 @@ class AppRouter extends RootStackRouter {
           ],
         ),
         AutoRoute(page: SettingsRoute.page),
+        AutoRoute(
+          page: UserProfileRoute.page,
+        ),
       ];
 }

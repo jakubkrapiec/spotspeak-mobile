@@ -6,6 +6,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
+import 'package:spotspeak_mobile/theme/theme.dart';
 
 @RoutePage()
 class LoginScreen extends StatelessWidget {
@@ -37,18 +38,21 @@ class LoginScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               child: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  color:
-                      MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
-                ),
+                decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
+                    ? CustomTheme.lightContainerStyle.copyWith(color: Colors.white)
+                    : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey5),
+                // decoration: BoxDecoration(
+                //   borderRadius: const BorderRadius.all(Radius.circular(15)),
+                //   color:
+                //       MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
+                // ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
                       Text(
                         'Zaloguj się do aplikacji:',
-                        style: Theme.of(context).textTheme.bodyLarge,
+                        style: Theme.of(context).textTheme.bodyMedium,
                         textAlign: TextAlign.center,
                       ),
                       const Gap(16),

@@ -13,13 +13,13 @@ import 'package:flutter/material.dart' as _i11;
 import 'package:spotspeak_mobile/screens/home_screen.dart' as _i3;
 import 'package:spotspeak_mobile/screens/login/login_screen.dart' as _i4;
 import 'package:spotspeak_mobile/screens/settings/settings_screen.dart' as _i8;
-import 'package:spotspeak_mobile/screens/splash_screen/splash_screen.dart'
-    as _i9;
+import 'package:spotspeak_mobile/screens/splash_screen/splash_screen.dart' as _i9;
 import 'package:spotspeak_mobile/screens/tabs/achievements_tab.dart' as _i1;
-import 'package:spotspeak_mobile/screens/tabs/friends_tab.dart' as _i2;
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_tab.dart' as _i2;
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i5;
 import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i6;
-import 'package:spotspeak_mobile/screens/tabs/profile_tab.dart' as _i7;
+import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_tab.dart' as _i7;
+import 'package:spotspeak_mobile/screens/user_profile/user_profile_screen.dart' as _i9;
 
 /// generated route for
 /// [_i1.AchievementsTab]
@@ -95,8 +95,7 @@ class LoginRoute extends _i10.PageRouteInfo<LoginRouteArgs> {
   static _i10.PageInfo page = _i10.PageInfo(
     name,
     builder: (data) {
-      final args =
-          data.argsAs<LoginRouteArgs>(orElse: () => const LoginRouteArgs());
+      final args = data.argsAs<LoginRouteArgs>(orElse: () => const LoginRouteArgs());
       return _i4.LoginScreen(key: args.key);
     },
   );
