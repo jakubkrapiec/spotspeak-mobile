@@ -14,7 +14,13 @@
 				"$dart-build_runner"
 			],
 			"group": "build",
-			"label": "generate code",
+			"label": "generate code"
 		},
+		{
+			"type": "shell",
+			"command": "flutter clean;flutter pub get",
+			"label": "clean",
+			"problemMatcher": []
+		}
 	]
 }

@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -21,6 +23,7 @@ Future<void> configureDependencies() => getIt.init();
 @module
 abstract class RegisterModule {
   @preResolve
+  @singleton
   Future<Dio> get dio async {
     final packageInfo = await PackageInfo.fromPlatform();
     final dio = Dio(BaseOptions(headers: {HttpHeaders.userAgentHeader: 'SpotSpeakMobile/${packageInfo.version}'}));
@@ -43,4 +46,10 @@ abstract class RegisterModule {
     dio.interceptors.add(AuthInterceptor());
     return dio;
   }
+
+  @singleton
+  FlutterAppAuth get flutterAppAuth => FlutterAppAuth();
+
+  @singleton
+  FlutterSecureStorage get flutterSecureStorage => const FlutterSecureStorage();
 }

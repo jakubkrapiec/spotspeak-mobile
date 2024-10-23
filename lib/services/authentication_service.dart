@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -8,22 +7,32 @@ import 'package:flutter/services.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
-import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:spotspeak_mobile/misc/auth_constants.dart';
 import 'package:spotspeak_mobile/models/auth_id_token.dart';
 import 'package:spotspeak_mobile/models/auth_user.dart';
 
 @singleton
 class AuthenticationService {
+  AuthenticationService(this._dio, this._appAuth, this._secureStoreage);
+
+  final Dio _dio;
+  final FlutterAppAuth _appAuth;
+  final FlutterSecureStorage _secureStoreage;
+
+  final _userController = BehaviorSubject<AuthUser>();
+
+  ValueStream<AuthUser> get user => _userController.stream;
+
   final _loginInfo = LoginInfo();
 
   Future<String?> get accessToken async {
-    if (tokenExpirationTimestamp != null && tokenExpirationTimestamp!.isAfter(DateTime.now())) {
+    if (_tokenExpirationTimestamp != null && _tokenExpirationTimestamp!.isAfter(DateTime.now())) {
       return _accessToken;
     }
-    final securedRefreshToken = await secureStoreage.read(key: kAuthRefreshTokenKey);
+    final securedRefreshToken = await _secureStoreage.read(key: kAuthRefreshTokenKey);
 
-    final response = await appAuth.token(
+    final response = await _appAuth.token(
       TokenRequest(
         kAuthClientId,
         kAuthRedirectUri,
@@ -33,31 +42,30 @@ class AuthenticationService {
       ),
     );
 
-    return _setLocalVariables(response);
+    if (await _setLocalVariables(response)) {
+      return _accessToken;
+    } else {
+      return null;
+    }
   }
 
   String? _accessToken;
-  AuthIdToken? authIdToken;
-  String? idTokenRaw;
-  AuthUser? profile;
-  DateTime? tokenExpirationTimestamp;
-  final _dio = getIt<Dio>();
+  //AuthIdToken? _authIdToken;
+  String? _idTokenRaw;
+  DateTime? _tokenExpirationTimestamp;
 
   LoginInfo get logininfo => _loginInfo;
 
-  final appAuth = FlutterAppAuth();
+  Future<AuthResult> init() async {
+    final securedRefreshToken = await _secureStoreage.read(key: kAuthRefreshTokenKey);
 
-  final secureStoreage = FlutterSecureStorage();
+    if (securedRefreshToken == null) {
+      return AuthResult.mustLogIn;
+    }
 
-  Future<String> init() async {
-    return errorHandler(() async {
-      final securedRefreshToken = await secureStoreage.read(key: kAuthRefreshTokenKey);
-
-      if (securedRefreshToken == null) {
-        return 'You need to login!';
-      }
-
-      final response = await appAuth.token(
+    TokenResponse? response;
+    try {
+      response = await _appAuth.token(
         TokenRequest(
           kAuthClientId,
           kAuthRedirectUri,
@@ -66,82 +74,82 @@ class AuthenticationService {
           refreshToken: securedRefreshToken,
         ),
       );
+    } on PlatformException catch (e) {
+      if (e.code == 'token_failed') {
+        return AuthResult.mustLogIn;
+      }
+    }
 
-      return _setLocalVariables(response);
-    });
+    if (response == null) {
+      return AuthResult.error;
+    }
+
+    if (await _setLocalVariables(response)) {
+      return AuthResult.success;
+    } else {
+      return AuthResult.mustLogIn;
+    }
   }
 
-  bool isAuthResultValid(TokenResponse? response) => response?.accessToken != null && response?.idToken != null;
+  bool _isAuthResultValid(TokenResponse? response) => response?.accessToken != null && response?.idToken != null;
 
-  Future<String> _setLocalVariables(TokenResponse? result) async {
-    if (isAuthResultValid(result)) {
+  Future<bool> _setLocalVariables(TokenResponse? result) async {
+    if (_isAuthResultValid(result)) {
       _accessToken = result!.accessToken;
-      idTokenRaw = result.idToken;
-      tokenExpirationTimestamp = result.accessTokenExpirationDateTime;
-      authIdToken = parseIdToken(idTokenRaw!);
+      _idTokenRaw = result.idToken;
+      _tokenExpirationTimestamp = result.accessTokenExpirationDateTime;
+      //_authIdToken = _parseIdToken(_idTokenRaw!);
 
-      profile = await getUserDetails(_accessToken!);
+      final profile = await getUserDetails(_accessToken!);
+      _userController.add(profile);
 
       if (result.refreshToken != null) {
-        await secureStoreage.write(key: kAuthRefreshTokenKey, value: result.refreshToken);
+        await _secureStoreage.write(key: kAuthRefreshTokenKey, value: result.refreshToken);
       }
 
       _loginInfo.isLoggedIn = true;
 
-      return 'SUCCESS';
+      return true;
     }
 
-    return 'Passing Token went wrong';
+    return false;
   }
 
-  Future<String> errorHandler(Future<String> Function() callback) async {
-    try {
-      return callback();
-    } on TimeoutException catch (e) {
-      return e.message ?? 'Timeout error';
-    } on FormatException catch (e) {
-      return e.message;
-    } on SocketException catch (e) {
-      return e.message;
-    } on PlatformException catch (e) {
-      return e.message ?? 'Unknown platform exception';
-    } catch (e) {
-      return 'Unknown error ${e.runtimeType}';
+  Future<AuthUser> login() async {
+    final authorizationTokenRequest = AuthorizationTokenRequest(
+      'flutter-frontend',
+      kAuthRedirectUri,
+      clientSecret: kAuthClientSecret,
+      issuer: kAuthIssuer,
+      scopes: ['openid', 'profile', 'email', 'offline_access'],
+      promptValues: ['login'],
+    );
+
+    final result = await _appAuth.authorizeAndExchangeCode(authorizationTokenRequest);
+
+    if (await _setLocalVariables(result)) {
+      final authUser = await getUserDetails(_accessToken!);
+      return authUser;
+    } else {
+      throw Exception('Failed to login');
     }
-  }
-
-  Future<String> login() async {
-    return errorHandler(() async {
-      final authorizationTokenRequest = AuthorizationTokenRequest(
-        'flutter-frontend',
-        kAuthRedirectUri,
-        clientSecret: kAuthClientSecret,
-        issuer: kAuthIssuer,
-        scopes: ['openid', 'profile', 'email', 'offline_access'],
-        promptValues: ['login'],
-      );
-
-      final result = await appAuth.authorizeAndExchangeCode(authorizationTokenRequest);
-
-      return _setLocalVariables(result);
-    });
   }
 
   Future<void> logout() async {
     _loginInfo.isLoggedIn = false;
-    await secureStoreage.delete(key: kAuthRefreshTokenKey);
+    await _secureStoreage.delete(key: kAuthRefreshTokenKey);
 
     final request = EndSessionRequest(
-      idTokenHint: idTokenRaw,
+      idTokenHint: _idTokenRaw,
       issuer: kAuthIssuer,
       postLogoutRedirectUrl: kLogoutRedirectUri,
     );
 
-    await appAuth.endSession(request);
+    await _appAuth.endSession(request);
     _loginInfo.isLoggedIn = false;
   }
 
-  AuthIdToken parseIdToken(String idToken) {
+  AuthIdToken _parseIdToken(String idToken) {
     final parts = idToken.split('.');
 
     final Map<String, dynamic> json =
@@ -156,10 +164,17 @@ class AuthenticationService {
     final response = await _dio.get<String>(url.toString());
 
     if (response.statusCode == 200) {
-      return AuthUser.fromJson(jsonDecode(response.data!) as Map<String, Object?>);
+      final user = AuthUser.fromJson(jsonDecode(response.data!) as Map<String, Object?>);
+      _userController.add(user);
+      return user;
     } else {
       throw Exception('Failed to get user details');
     }
+  }
+
+  @disposeMethod
+  void dispose() {
+    _userController.close();
   }
 }
 
@@ -173,3 +188,5 @@ class LoginInfo extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+enum AuthResult { success, mustLogIn, error }

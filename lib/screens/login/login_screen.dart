@@ -1,12 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
 @RoutePage()
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  LoginScreen({super.key});
+
+  final _authService = getIt<AuthenticationService>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +22,9 @@ class LoginScreen extends StatelessWidget {
             : CustomColors.backgroundGradientDark,
         child: Column(
           children: [
-            const SizedBox(height: 50),
-            SizedBox(
-              width: 350,
-              height: 350,
+            const Gap(50),
+            SizedBox.square(
+              dimension: 350,
               child: SvgPicture.asset('assets/SPOT.svg'),
             ),
             Text(
@@ -28,13 +32,13 @@ class LoginScreen extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 48),
+            const Gap(48),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  borderRadius: BorderRadius.circular(16),
                   color:
                       MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
                 ),
@@ -47,11 +51,17 @@ class LoginScreen extends StatelessWidget {
                         style: Theme.of(context).textTheme.bodyLarge,
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 16),
+                      const Gap(16),
                       Padding(
                         padding: const EdgeInsets.all(16),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await _authService.login();
+                            } catch (e) {
+                              debugPrint('Error: $e');
+                            }
+                          },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 48, vertical: 8),
                             child: Text('Logowanie'),

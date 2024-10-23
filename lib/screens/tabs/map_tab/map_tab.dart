@@ -174,11 +174,13 @@ class _FloatingActionButtons extends StatelessWidget {
       children: [
         FloatingActionButton(
           onPressed: onTapMoveToUserLocation,
+          heroTag: 'go_to_user_location',
           child: const Icon(Icons.near_me),
         ),
         const Gap(8),
         FloatingActionButton(
           onPressed: onTapAddTrace,
+          heroTag: 'add_trace',
           child: const Icon(Icons.add),
         ),
       ],
