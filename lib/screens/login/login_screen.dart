@@ -37,11 +37,6 @@ class LoginScreen extends StatelessWidget {
                 decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
                     ? CustomTheme.lightContainerStyle.copyWith(color: Colors.white)
                     : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey5),
-                // decoration: BoxDecoration(
-                //   borderRadius: const BorderRadius.all(Radius.circular(15)),
-                //   color:
-                //       MediaQuery.platformBrightnessOf(context) == Brightness.light ? Colors.white : CustomColors.grey5,
-                // ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(

@@ -88,6 +88,7 @@ abstract class CustomTheme {
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
       iconColor: CustomColors.blue7,
     ),
+    dividerColor: CustomColors.blue7,
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
 
@@ -188,6 +189,7 @@ abstract class CustomTheme {
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.green3),
       iconColor: CustomColors.green7,
     ),
+    dividerColor: CustomColors.green9,
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
   );
 

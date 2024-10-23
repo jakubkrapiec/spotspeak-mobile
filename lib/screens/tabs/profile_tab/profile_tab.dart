@@ -9,33 +9,45 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ClipOval(
-          child: Image.asset(
-            'assets/default_icon.jpg',
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ClipOval(
+            child: Image.asset(
+              'assets/default_icon.jpg',
+            ),
           ),
-        ),
-        Text('Username', style: Theme.of(context).textTheme.bodyLarge),
-        Text('2137 pkt', style: Theme.of(context).textTheme.bodySmall),
-        ProfileButton(pressFunction: () {}, buttonText: 'Informacje o koncie'),
-        ProfileButton(
-          pressFunction: () {
-            context.router.push(const FriendsRoute());
-          },
-          buttonText: 'Lista znajomych',
-        ),
-        ProfileButton(pressFunction: () {}, buttonText: 'Dodane ślady'),
-        ProfileButton(pressFunction: () {}, buttonText: 'Ustawienia konta'),
-        ProfileButton(pressFunction: () {}, buttonText: 'Ustawienia aplikacji'),
-        TextButton(
-          child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ],
+          Text('Username', style: Theme.of(context).textTheme.bodyLarge),
+          Text('2137 pkt', style: Theme.of(context).textTheme.bodySmall),
+          ProfileButton(
+            pressFunction: () {
+              context.router.push(const FriendsRoute());
+            },
+            buttonText: 'Lista znajomych',
+          ),
+          ProfileButton(pressFunction: () {}, buttonText: 'Dodane ślady'),
+          ProfileButton(
+            pressFunction: () {
+              context.router.push(const AccountSettingsRoute());
+            },
+            buttonText: 'Ustawienia konta',
+          ),
+          ProfileButton(
+            pressFunction: () {
+              context.router.push(const SettingsRoute());
+            },
+            buttonText: 'Ustawienia aplikacji',
+          ),
+          TextButton(
+            child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -13,12 +13,18 @@ class ProfileButton extends StatelessWidget {
       onTap: pressFunction,
       child: Container(
         width: double.infinity,
-        margin: EdgeInsets.symmetric(horizontal: 16),
+        // margin: EdgeInsets.symmetric(horizontal: 16),
         padding: EdgeInsets.all(16),
         decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
             ? CustomTheme.lightContainerStyle
             : CustomTheme.darkContainerStyle,
-        child: Text(buttonText),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(buttonText),
+            Icon(Icons.arrow_forward_ios),
+          ],
+        ),
       ),
     );
   }

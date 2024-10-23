@@ -12,10 +12,8 @@ class HomeScreen extends StatelessWidget {
         title: Text(router.currentChild?.title(context) ?? 'SpotSpeak'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.router.push(const SettingsRoute());
-            },
+            icon: const Icon(Icons.notifications),
+            onPressed: () {},
           ),
         ],
       ),
