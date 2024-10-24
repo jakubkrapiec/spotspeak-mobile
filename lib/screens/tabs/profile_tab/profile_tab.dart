@@ -36,7 +36,7 @@ class ProfileTab extends StatelessWidget {
           ),
           ProfileButton(
             pressFunction: () {
-              context.router.push(const SettingsRoute());
+              context.router.push(const AppSettingsRoute());
             },
             buttonText: 'Ustawienia aplikacji',
           ),

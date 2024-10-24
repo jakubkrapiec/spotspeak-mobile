@@ -12,20 +12,21 @@ import 'package:auto_route/auto_route.dart' as _i13;
 import 'package:flutter/material.dart' as _i14;
 import 'package:spotspeak_mobile/screens/account_settings/account_settings_screen.dart'
     as _i1;
-import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart'
+import 'package:spotspeak_mobile/screens/app_settings/app_settings_screen.dart'
     as _i3;
-import 'package:spotspeak_mobile/screens/change_data/change_app_data_screen.dart'
+import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart'
     as _i4;
-import 'package:spotspeak_mobile/screens/home_screen.dart' as _i6;
-import 'package:spotspeak_mobile/screens/login/login_screen.dart' as _i7;
-import 'package:spotspeak_mobile/screens/settings/settings_screen.dart' as _i11;
+import 'package:spotspeak_mobile/screens/change_data/change_app_data_screen.dart'
+    as _i5;
+import 'package:spotspeak_mobile/screens/home_screen.dart' as _i7;
+import 'package:spotspeak_mobile/screens/login/login_screen.dart' as _i8;
 import 'package:spotspeak_mobile/screens/tabs/achievements_tab.dart' as _i2;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_tab.dart'
-    as _i5;
-import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i8;
-import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i9;
+    as _i6;
+import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab.dart' as _i9;
+import 'package:spotspeak_mobile/screens/tabs/nearby_tab.dart' as _i10;
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_tab.dart'
-    as _i10;
+    as _i11;
 import 'package:spotspeak_mobile/screens/user_profile/user_profile_screen.dart'
     as _i12;
 
@@ -68,11 +69,30 @@ class AchievementsRoute extends _i13.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i3.ChangeAccountDataScreen]
+/// [_i3.AppSettingsScreen]
+class AppSettingsRoute extends _i13.PageRouteInfo<void> {
+  const AppSettingsRoute({List<_i13.PageRouteInfo>? children})
+      : super(
+          AppSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AppSettingsRoute';
+
+  static _i13.PageInfo page = _i13.PageInfo(
+    name,
+    builder: (data) {
+      return const _i3.AppSettingsScreen();
+    },
+  );
+}
+
+/// generated route for
+/// [_i4.ChangeAccountDataScreen]
 class ChangeAccountDataRoute
     extends _i13.PageRouteInfo<ChangeAccountDataRouteArgs> {
   ChangeAccountDataRoute({
-    required _i3.AccountData accountData,
+    required _i4.AccountData accountData,
     _i14.Key? key,
     List<_i13.PageRouteInfo>? children,
   }) : super(
@@ -90,7 +110,7 @@ class ChangeAccountDataRoute
     name,
     builder: (data) {
       final args = data.argsAs<ChangeAccountDataRouteArgs>();
-      return _i3.ChangeAccountDataScreen(
+      return _i4.ChangeAccountDataScreen(
         accountData: args.accountData,
         key: args.key,
       );
@@ -104,7 +124,7 @@ class ChangeAccountDataRouteArgs {
     this.key,
   });
 
-  final _i3.AccountData accountData;
+  final _i4.AccountData accountData;
 
   final _i14.Key? key;
 
@@ -115,10 +135,10 @@ class ChangeAccountDataRouteArgs {
 }
 
 /// generated route for
-/// [_i4.ChangeAppDataScreen]
+/// [_i5.ChangeAppDataScreen]
 class ChangeAppDataRoute extends _i13.PageRouteInfo<ChangeAppDataRouteArgs> {
   ChangeAppDataRoute({
-    required _i4.AppData appData,
+    required _i5.AppData appData,
     _i14.Key? key,
     List<_i13.PageRouteInfo>? children,
   }) : super(
@@ -136,7 +156,7 @@ class ChangeAppDataRoute extends _i13.PageRouteInfo<ChangeAppDataRouteArgs> {
     name,
     builder: (data) {
       final args = data.argsAs<ChangeAppDataRouteArgs>();
-      return _i4.ChangeAppDataScreen(
+      return _i5.ChangeAppDataScreen(
         appData: args.appData,
         key: args.key,
       );
@@ -150,7 +170,7 @@ class ChangeAppDataRouteArgs {
     this.key,
   });
 
-  final _i4.AppData appData;
+  final _i5.AppData appData;
 
   final _i14.Key? key;
 
@@ -161,7 +181,7 @@ class ChangeAppDataRouteArgs {
 }
 
 /// generated route for
-/// [_i5.FriendsTab]
+/// [_i6.FriendsTab]
 class FriendsRoute extends _i13.PageRouteInfo<void> {
   const FriendsRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -174,13 +194,13 @@ class FriendsRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i5.FriendsTab();
+      return const _i6.FriendsTab();
     },
   );
 }
 
 /// generated route for
-/// [_i6.HomeScreen]
+/// [_i7.HomeScreen]
 class HomeRoute extends _i13.PageRouteInfo<void> {
   const HomeRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -193,13 +213,13 @@ class HomeRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i6.HomeScreen();
+      return const _i7.HomeScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i7.LoginScreen]
+/// [_i8.LoginScreen]
 class LoginRoute extends _i13.PageRouteInfo<void> {
   const LoginRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -212,13 +232,13 @@ class LoginRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i7.LoginScreen();
+      return const _i8.LoginScreen();
     },
   );
 }
 
 /// generated route for
-/// [_i8.MapTab]
+/// [_i9.MapTab]
 class MapRoute extends _i13.PageRouteInfo<void> {
   const MapRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -231,13 +251,13 @@ class MapRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i8.MapTab();
+      return const _i9.MapTab();
     },
   );
 }
 
 /// generated route for
-/// [_i9.NearbyTab]
+/// [_i10.NearbyTab]
 class NearbyRoute extends _i13.PageRouteInfo<void> {
   const NearbyRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -250,13 +270,13 @@ class NearbyRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i9.NearbyTab();
+      return const _i10.NearbyTab();
     },
   );
 }
 
 /// generated route for
-/// [_i10.ProfileTab]
+/// [_i11.ProfileTab]
 class ProfileRoute extends _i13.PageRouteInfo<void> {
   const ProfileRoute({List<_i13.PageRouteInfo>? children})
       : super(
@@ -269,26 +289,7 @@ class ProfileRoute extends _i13.PageRouteInfo<void> {
   static _i13.PageInfo page = _i13.PageInfo(
     name,
     builder: (data) {
-      return const _i10.ProfileTab();
-    },
-  );
-}
-
-/// generated route for
-/// [_i11.SettingsScreen]
-class SettingsRoute extends _i13.PageRouteInfo<void> {
-  const SettingsRoute({List<_i13.PageRouteInfo>? children})
-      : super(
-          SettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'SettingsRoute';
-
-  static _i13.PageInfo page = _i13.PageInfo(
-    name,
-    builder: (data) {
-      return const _i11.SettingsScreen();
+      return const _i11.ProfileTab();
     },
   );
 }

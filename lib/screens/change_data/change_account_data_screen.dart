@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 enum AccountData {
   email,
@@ -62,12 +63,24 @@ class UsernameEmailForm extends StatelessWidget {
           Gap(8),
           TextFormField(
             initialValue: initValue,
+            style: TextStyle(fontSize: 22),
+            decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                ? InputDecoration(
+                    fillColor: CustomColors.grey6,
+                  )
+                : null,
           ),
           Gap(16),
           Text('Potwierdź hasło:'),
           Gap(8),
           TextFormField(
             obscureText: true,
+            style: TextStyle(fontSize: 22),
+            decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                ? InputDecoration(
+                    fillColor: CustomColors.grey6,
+                  )
+                : null,
           ),
           Gap(16),
           Center(child: ElevatedButton(onPressed: () {}, child: Text('Zatwierdź'))),
@@ -100,7 +113,9 @@ class _PasswordFormState extends State<PasswordForm> {
           Gap(8),
           TextFormField(
             obscureText: obscureText1,
+            style: TextStyle(fontSize: 22),
             decoration: InputDecoration(
+              fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
               suffixIcon: GestureDetector(
                 child: Icon(obscureText1 ? Icons.visibility_off : Icons.visibility),
                 onTap: () {
@@ -116,7 +131,9 @@ class _PasswordFormState extends State<PasswordForm> {
           Gap(8),
           TextFormField(
             obscureText: obscureText2,
+            style: TextStyle(fontSize: 22),
             decoration: InputDecoration(
+              fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
               suffixIcon: GestureDetector(
                 child: Icon(obscureText2 ? Icons.visibility_off : Icons.visibility),
                 onTap: () {
@@ -132,7 +149,9 @@ class _PasswordFormState extends State<PasswordForm> {
           Gap(8),
           TextFormField(
             obscureText: obscureText3,
+            style: TextStyle(fontSize: 22),
             decoration: InputDecoration(
+              fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
               suffixIcon: GestureDetector(
                 child: Icon(obscureText3 ? Icons.visibility_off : Icons.visibility),
                 onTap: () {

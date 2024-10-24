@@ -6,8 +6,8 @@ import 'package:spotspeak_mobile/screens/change_data/change_app_data_screen.dart
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
 
 @RoutePage()
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class AppSettingsScreen extends StatelessWidget {
+  const AppSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

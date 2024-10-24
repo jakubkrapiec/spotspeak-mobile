@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class ProfileButton extends StatelessWidget {
@@ -13,7 +14,6 @@ class ProfileButton extends StatelessWidget {
       onTap: pressFunction,
       child: Container(
         width: double.infinity,
-        // margin: EdgeInsets.symmetric(horizontal: 16),
         padding: EdgeInsets.all(16),
         decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
             ? CustomTheme.lightContainerStyle
@@ -21,7 +21,7 @@ class ProfileButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(buttonText),
+            Text(buttonText, style: TextStyle(color: buttonText == 'Usunięcie konta' ? CustomColors.red1 : null)),
             Icon(Icons.arrow_forward_ios),
           ],
         ),

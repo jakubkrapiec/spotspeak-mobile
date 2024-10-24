@@ -70,6 +70,12 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.grey3,
       ),
+      labelStyle: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 16,
+        // fontWeight: FontWeight.bold,
+      ),
+      suffixIconColor: CustomColors.blue7,
       contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -171,6 +177,12 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.grey3,
       ),
+      labelStyle: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontSize: 16,
+        // fontWeight: FontWeight.bold,
+      ),
+      suffixIconColor: CustomColors.green7,
       contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(15)),

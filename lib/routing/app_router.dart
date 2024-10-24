@@ -23,7 +23,7 @@ class AppRouter extends RootStackRouter {
             AutoRoute(page: AchievementsRoute.page, title: (context, data) => 'Osiągnięcia'),
           ],
         ),
-        AutoRoute(page: SettingsRoute.page),
+        AutoRoute(page: AppSettingsRoute.page),
         AutoRoute(page: UserProfileRoute.page),
         AutoRoute(page: AccountSettingsRoute.page),
         AutoRoute(page: ChangeAccountDataRoute.page),
