@@ -11,7 +11,7 @@ abstract class CustomAppBarTheme {
       fontSize: 22,
     ),
     iconTheme: const IconThemeData(
-      color: CustomColors.blue1,
+      color: CustomColors.blue2,
     ),
   );
 
@@ -24,7 +24,7 @@ abstract class CustomAppBarTheme {
       fontSize: 22,
     ),
     iconTheme: const IconThemeData(
-      color: CustomColors.grey3,
+      color: CustomColors.green7,
     ),
   );
 }
