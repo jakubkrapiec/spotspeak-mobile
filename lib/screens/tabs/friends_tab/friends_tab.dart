@@ -20,7 +20,7 @@ class FriendsTab extends StatelessWidget {
           child: AppBar(
             bottom: TabBar(
               tabs: [
-                Tab(text: 'Twoi znajomi'),
+                Tab(text: 'Znajomi'),
                 Tab(
                   text: 'Zaproszenia',
                 ),

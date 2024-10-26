@@ -21,6 +21,18 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.blue9,
       ),
+      titleMedium: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 26,
+        color: CustomColors.blue7,
+      ),
+      titleSmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        color: CustomColors.blue7,
+      ),
       bodySmall: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 18,
@@ -36,6 +48,12 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         fontSize: 32,
         color: CustomColors.blue8,
+      ),
+      labelSmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        color: CustomColors.blue7,
       ),
       labelMedium: TextStyle(
         fontFamily: 'Inconsolata',
@@ -73,7 +91,6 @@ abstract class CustomTheme {
       labelStyle: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 16,
-        // fontWeight: FontWeight.bold,
       ),
       suffixIconColor: CustomColors.blue7,
       contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -86,6 +103,16 @@ abstract class CustomTheme {
     ),
     tabBarTheme: TabBarTheme(
       labelColor: CustomColors.blue8,
+      labelStyle: TextStyle(
+        fontSize: 19,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: TextStyle(
+        fontSize: 16,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+      ),
       unselectedLabelColor: CustomColors.grey4,
     ),
     listTileTheme: ListTileThemeData(
@@ -94,7 +121,17 @@ abstract class CustomTheme {
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
       iconColor: CustomColors.blue7,
     ),
-    dividerColor: CustomColors.blue7,
+    popupMenuTheme: PopupMenuThemeData(
+      color: CustomColors.blue2,
+      textStyle: TextStyle(
+        fontSize: 12,
+        fontFamily: 'Inconsolata',
+        color: CustomColors.blue7,
+      ),
+    ),
+    dividerTheme: DividerThemeData(
+      color: CustomColors.blue7,
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
 
@@ -127,6 +164,18 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         color: CustomColors.green4,
       ),
+      titleMedium: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 26,
+        color: CustomColors.green7,
+      ),
+      titleSmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        color: CustomColors.green3,
+      ),
       bodySmall: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 18,
@@ -148,6 +197,12 @@ abstract class CustomTheme {
         fontWeight: FontWeight.bold,
         fontSize: 20,
         color: CustomColors.red1,
+      ),
+      labelSmall: TextStyle(
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+        color: CustomColors.green2,
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -180,7 +235,6 @@ abstract class CustomTheme {
       labelStyle: TextStyle(
         fontFamily: 'Inconsolata',
         fontSize: 16,
-        // fontWeight: FontWeight.bold,
       ),
       suffixIconColor: CustomColors.green7,
       contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
@@ -194,6 +248,16 @@ abstract class CustomTheme {
     tabBarTheme: TabBarTheme(
       labelColor: CustomColors.green8,
       unselectedLabelColor: CustomColors.grey3,
+      labelStyle: TextStyle(
+        fontSize: 19,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+      ),
+      unselectedLabelStyle: TextStyle(
+        fontSize: 16,
+        fontFamily: 'Inconsolata',
+        fontWeight: FontWeight.bold,
+      ),
     ),
     listTileTheme: ListTileThemeData(
       tileColor: CustomColors.grey6,
@@ -201,7 +265,17 @@ abstract class CustomTheme {
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.green3),
       iconColor: CustomColors.green7,
     ),
-    dividerColor: CustomColors.green9,
+    popupMenuTheme: PopupMenuThemeData(
+      color: CustomColors.grey5,
+      textStyle: TextStyle(
+        fontSize: 12,
+        fontFamily: 'Inconsolata',
+        color: CustomColors.green7,
+      ),
+    ),
+    dividerTheme: DividerThemeData(
+      color: CustomColors.green3,
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
   );
 

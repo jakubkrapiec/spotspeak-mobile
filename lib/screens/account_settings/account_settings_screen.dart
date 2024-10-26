@@ -24,9 +24,12 @@ class AccountSettingsScreen extends StatelessWidget {
               children: [
                 SizedBox.square(
                   dimension: 100,
-                  child: ClipOval(
-                    child: Image.asset(
-                      'assets/default_icon.jpg',
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/default_icon.jpg',
+                      ),
                     ),
                   ),
                 ),

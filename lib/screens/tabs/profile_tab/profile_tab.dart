@@ -27,7 +27,12 @@ class ProfileTab extends StatelessWidget {
             },
             buttonText: 'Lista znajomych',
           ),
-          ProfileButton(pressFunction: () {}, buttonText: 'Dodane ślady'),
+          ProfileButton(
+            pressFunction: () {
+              context.router.push(const UserTracesRoute());
+            },
+            buttonText: 'Dodane ślady',
+          ),
           ProfileButton(
             pressFunction: () {
               context.router.push(const AccountSettingsRoute());

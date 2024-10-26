@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class ProfileButton extends StatelessWidget {
@@ -21,7 +20,7 @@ class ProfileButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(buttonText, style: TextStyle(color: buttonText == 'Usunięcie konta' ? CustomColors.red1 : null)),
+            Text(buttonText, style: buttonText == 'Usunięcie konta' ? Theme.of(context).textTheme.labelMedium : null),
             Icon(Icons.arrow_forward_ios),
           ],
         ),
