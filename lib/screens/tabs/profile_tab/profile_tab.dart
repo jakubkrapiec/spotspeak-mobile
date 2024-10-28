@@ -1,23 +1,29 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/models/auth_user.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 
 @RoutePage()
 class ProfileTab extends StatelessWidget {
-  const ProfileTab({super.key});
+  ProfileTab({super.key});
+
+  final _authService = getIt<AuthenticationService>();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        ClipOval(
-          child: Image.asset(
-            'assets/default_icon.jpg',
-          ),
+        ClipOval(child: Image.asset('assets/default_icon.jpg')),
+        StreamBuilder<AuthUser>(
+          stream: _authService.user,
+          builder: (context, snapshot) {
+            return Text(snapshot.data?.name ?? '', style: Theme.of(context).textTheme.bodyLarge);
+          },
         ),
-        Text('Username', style: Theme.of(context).textTheme.bodyLarge),
         Text('2137 pkt', style: Theme.of(context).textTheme.bodySmall),
         ProfileButton(pressFunction: () {}, buttonText: 'Informacje o koncie'),
         ProfileButton(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -65,6 +67,8 @@ class LoginScreen extends StatelessWidget {
                             } catch (e) {
                               debugPrint('Error: $e');
                             }
+                            if (!context.mounted) return;
+                            unawaited(context.router.replace(HomeRoute()));
                           },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 48, vertical: 8),
@@ -80,7 +84,7 @@ class LoginScreen extends StatelessWidget {
             TextButton(
               child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
               onPressed: () {
-                context.router.push(const HomeRoute());
+                context.router.replace(const HomeRoute());
               },
             ),
           ],

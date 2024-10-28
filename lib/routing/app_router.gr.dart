@@ -157,10 +157,13 @@ class NearbyRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i7.ProfileTab]
-class ProfileRoute extends _i11.PageRouteInfo<void> {
-  const ProfileRoute({List<_i11.PageRouteInfo>? children})
-      : super(
+class ProfileRoute extends _i11.PageRouteInfo<ProfileRouteArgs> {
+  ProfileRoute({
+    _i12.Key? key,
+    List<_i11.PageRouteInfo>? children,
+  }) : super(
           ProfileRoute.name,
+          args: ProfileRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -169,9 +172,22 @@ class ProfileRoute extends _i11.PageRouteInfo<void> {
   static _i11.PageInfo page = _i11.PageInfo(
     name,
     builder: (data) {
-      return const _i7.ProfileTab();
+      final args =
+          data.argsAs<ProfileRouteArgs>(orElse: () => const ProfileRouteArgs());
+      return _i7.ProfileTab(key: args.key);
     },
   );
+}
+
+class ProfileRouteArgs {
+  const ProfileRouteArgs({this.key});
+
+  final _i12.Key? key;
+
+  @override
+  String toString() {
+    return 'ProfileRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
