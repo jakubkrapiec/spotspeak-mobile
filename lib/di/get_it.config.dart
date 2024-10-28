@@ -9,9 +9,12 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:dio/dio.dart' as _i361;
+import 'package:flutter_appauth/flutter_appauth.dart' as _i337;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
+import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
 
@@ -27,12 +30,23 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final registerModule = _$RegisterModule();
-    await gh.factoryAsync<_i361.Dio>(
+    await gh.singletonAsync<_i361.Dio>(
       () => registerModule.dio,
       preResolve: true,
     );
+    gh.singleton<_i337.FlutterAppAuth>(() => registerModule.flutterAppAuth);
+    gh.singleton<_i558.FlutterSecureStorage>(
+        () => registerModule.flutterSecureStorage);
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
     gh.singleton<_i192.TraceService>(() => _i192.TraceService());
+    gh.singleton<_i281.AuthenticationService>(
+      () => _i281.AuthenticationService(
+        gh<_i361.Dio>(),
+        gh<_i337.FlutterAppAuth>(),
+        gh<_i558.FlutterSecureStorage>(),
+      ),
+      dispose: (i) => i.dispose(),
+    );
     return this;
   }
 }

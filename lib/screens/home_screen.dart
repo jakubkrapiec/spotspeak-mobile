@@ -17,7 +17,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      routes: const [
+      routes: [
         FriendsRoute(),
         NearbyRoute(),
         MapRoute(),

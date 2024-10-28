@@ -21,12 +21,8 @@ class FriendsTab extends StatelessWidget {
             bottom: TabBar(
               tabs: [
                 Tab(text: 'Znajomi'),
-                Tab(
-                  text: 'Zaproszenia',
-                ),
-                Tab(
-                  text: 'Wyszukaj',
-                ),
+                Tab(text: 'Zaproszenia'),
+                Tab(text: 'Wyszukaj'),
               ],
             ),
           ),
@@ -54,23 +50,6 @@ class FriendsTab extends StatelessWidget {
                   tapFunction: () {
                     context.router.push(UserProfileRoute(status: FriendshipStatus.request));
                   },
-                  requestWidgets: Wrap(
-                    spacing: 12,
-                    children: [
-                      GestureDetector(
-                        child: Icon(
-                          Icons.person_add,
-                        ),
-                        onTap: () {},
-                      ),
-                      GestureDetector(
-                        child: Icon(
-                          Icons.person_remove,
-                        ),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
