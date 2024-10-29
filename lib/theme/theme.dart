@@ -148,6 +148,9 @@ abstract class CustomTheme {
     ],
   );
 
+  static final lightSliderButton =
+      BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.all(Radius.circular(12)));
+
   static final darkTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: CustomColors.green5,
@@ -291,4 +294,7 @@ abstract class CustomTheme {
       ),
     ],
   );
+
+  static final darkSliderButton =
+      BoxDecoration(color: CustomColors.grey4, borderRadius: BorderRadius.all(Radius.circular(12)));
 }
