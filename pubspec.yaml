@@ -21,7 +21,9 @@ dependencies:
   flutter_bloc: ^8.1.6
   flutter_map: ^7.0.2
   flutter_map_animations: ^0.7.1
+  flutter_map_cache: ^1.5.1
   flutter_map_cancellable_tile_provider: ^3.0.2
+  flutter_map_location_marker: ^9.1.1
   flutter_secure_storage: ^4.2.1
   flutter_svg: ^2.0.10+1
   gap: ^3.0.1
@@ -30,9 +32,11 @@ dependencies:
   injectable: ^2.4.4
   json_annotation: ^4.9.0
   latlong2: ^0.9.1
+  logger: ^2.4.0
   package_info_plus: ^8.0.2
   path_provider: ^2.1.4
   pretty_dio_logger: ^1.4.0
+  retrofit: ^4.4.1
   rxdart: ^0.28.0
   sliding_up_panel: ^2.0.0+1
   sqlite3_flutter_libs: ^0.5.24
@@ -45,6 +49,7 @@ dev_dependencies:
     sdk: flutter
   injectable_generator: ^2.6.2
   json_serializable: ^6.8.0
+  retrofit_generator: ^9.1.4
   very_good_analysis: ^6.0.0
 
 
