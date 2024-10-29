@@ -17,7 +17,7 @@ abstract class TraceService {
 
   @POST('')
   @MultiPart()
-  Future<Trace> addTrace(@Part() File file, AddTraceDto traceUploadDTO);
+  Future<Trace> addTrace(@Part() File? file, AddTraceDto traceUploadDTO);
 
   @GET('/{id}')
   Future<Trace> getTrace(@Path() int id);

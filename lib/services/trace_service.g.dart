@@ -25,20 +25,23 @@ class _TraceService implements TraceService {
 
   @override
   Future<Trace> addTrace(
-    File file,
+    File? file,
     AddTraceDto traceUploadDTO,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{};
     final _data = FormData();
-    _data.files.add(MapEntry(
-      'file',
-      MultipartFile.fromFileSync(
-        file.path,
-        filename: file.path.split(Platform.pathSeparator).last,
-      ),
-    ));
+    if (file != null) {
+      _data.files.add(MapEntry(
+        'file',
+        MultipartFile.fromFileSync(
+          file.path,
+          filename: file.path.split(Platform.pathSeparator).last,
+        ),
+      ));
+    }
     final _options = _setStreamType<Trace>(Options(
       method: 'POST',
       headers: _headers,

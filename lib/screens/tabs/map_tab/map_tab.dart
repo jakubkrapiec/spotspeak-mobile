@@ -76,8 +76,16 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     }
   }
 
-  void _onAddTrace() {
-    showDialog<AddTraceDto?>(context: context, builder: (context) => const NewTraceDialog());
+  Future<void> _onAddTrace() async {
+    final result = await showDialog<TraceDialogResult?>(context: context, builder: (context) => const NewTraceDialog());
+    if (result == null || _lastLocation == null) return;
+    final dto = AddTraceDto(
+      _lastLocation!.longitude,
+      _lastLocation!.latitude,
+      result.description,
+      [],
+    );
+    await _traceService.addTrace(result.media, dto);
   }
 
   Future<void> _initLocationService() async {
@@ -170,7 +178,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
             SimpleAttributionWidget(
               source: const Text('OpenStreetMap'),
               onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.topLeft,
             ),
           ],
         ),

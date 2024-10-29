@@ -7,6 +7,7 @@ class NearbyPanel extends StatelessWidget {
   const NearbyPanel({required this.scrollController, super.key});
 
   final ScrollController scrollController;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -31,7 +32,7 @@ class NearbyPanel extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Ślady w pobliżu:',
+                'Ślady w pobliżu',
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.left,
               ),
@@ -58,6 +59,7 @@ class NearbyPanel extends StatelessWidget {
           child: ListView.builder(
             controller: scrollController,
             itemCount: 10,
+            physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) {
               return NearbyTile();
             },
