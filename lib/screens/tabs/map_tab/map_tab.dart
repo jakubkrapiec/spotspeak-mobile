@@ -3,17 +3,22 @@ import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
-import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_tile_provider.dart';
+import 'package:flutter_map_cache/flutter_map_cache.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:spotspeak_mobile/di/custom_instance_names.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
+import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
-import 'package:spotspeak_mobile/screens/tabs/map_tab/location_marker.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
@@ -32,10 +37,13 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   final _locationService = getIt<LocationService>();
   final _traceService = getIt<TraceService>();
   final _dio = getIt<Dio>();
+  final _dioForOSM = getIt<Dio>(instanceName: dioForOSMInstanceName);
+  final _dbCacheStore = getIt<DbCacheStore>();
   StreamSubscription<Position>? _locationStreamSubscription;
   StreamSubscription<MapEvent>? _mapEventSubscription;
   bool _waitingForFirstLocation = true;
-  LatLng? _lastLocation;
+
+  Position? _lastLocation;
   Set<Trace> _traces = {};
   static const _defaultZoom = 16.5;
 
@@ -61,11 +69,13 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   void _onMoveToUserLocation() {
     if (_lastLocation != null) {
-      _mapController.animateTo(dest: _lastLocation, zoom: _defaultZoom);
+      _mapController.animateTo(dest: _lastLocation?.toLatLng(), zoom: _defaultZoom);
     }
   }
 
-  void _onAddTrace() {}
+  void _onAddTrace() {
+    showDialog<AddTraceDto?>(context: context, builder: (context) => const NewTraceDialog());
+  }
 
   Future<void> _initLocationService() async {
     if (!_locationService.initialized) {
@@ -77,10 +87,10 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   void _onLocationUpdate(Position position) {
     setState(() {
-      _lastLocation = LatLng(position.latitude, position.longitude);
+      _lastLocation = position;
     });
     if (_waitingForFirstLocation) {
-      _mapController.animateTo(dest: _lastLocation, zoom: _defaultZoom);
+      _mapController.animateTo(dest: _lastLocation?.toLatLng(), zoom: _defaultZoom);
       _waitingForFirstLocation = false;
     }
   }
@@ -91,14 +101,14 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   Future<void> _getVisibleTraces() async {
     final bounds = _mapController.mapController.camera.visibleBounds;
-    final traces = await _traceService.getTracesFor(bounds);
-    print('Bounds: $bounds');
-    if (mounted) {
-      setState(() {
-        _traces = traces;
-      });
-    }
-    print('Visible traces: $_traces');
+    //final traces = await _traceService.getTracesFor(bounds);
+    // print('Bounds: $bounds');
+    // if (mounted) {
+    //   setState(() {
+    //     _traces = traces;
+    //   });
+    // }
+    // print('Visible traces: $_traces');
   }
 
   @override
@@ -121,22 +131,22 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
           TileLayer(
             urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
-            tileProvider: CancellableNetworkTileProvider(dioClient: getIt()),
+            tileProvider: CachedTileProvider(dio: _dioForOSM, store: _dbCacheStore, maxStale: Duration(days: 30)),
             maxZoom: 19,
             minZoom: 2,
             retinaMode: false,
           ),
-          // User's current location layer
-          MarkerLayer(
-            markers: [
-              if (_lastLocation != null)
-                Marker(
-                  point: _lastLocation!,
-                  child: const LocationMarker(),
-                  height: LocationMarker.dimens,
-                  width: LocationMarker.dimens,
+          CurrentLocationLayer(
+            positionStream: _locationService.getLocationStream().map(
+                  (position) => LocationMarkerPosition(
+                    latitude: position.latitude,
+                    longitude: position.longitude,
+                    accuracy: position.accuracy,
+                  ),
                 ),
-            ],
+            headingStream: _locationService.getLocationStream().map(
+                  (position) => LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
+                ),
           ),
           // Traces layer
           MarkerLayer(

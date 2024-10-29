@@ -1,15 +1,37 @@
-import 'package:flutter_map/flutter_map.dart';
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:retrofit/retrofit.dart';
+import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
+import 'package:spotspeak_mobile/models/trace_location.dart';
+
+part 'trace_service.g.dart';
 
 @singleton
-class TraceService {
-  Future<Set<Trace>> getTracesFor(LatLngBounds bounds) async {
-    return {
-      const Trace(location: LatLng(51.11, 17.06)),
-      const Trace(location: LatLng(51.112, 17.0599)),
-      const Trace(location: LatLng(51.109, 17.058)),
-    };
-  }
+@RestApi(baseUrl: '/traces')
+abstract class TraceService {
+  @factoryMethod
+  factory TraceService(Dio dio) = _TraceService;
+
+  @POST('')
+  @MultiPart()
+  Future<Trace> addTrace(@Part() File file, AddTraceDto traceUploadDTO);
+
+  @GET('/{id}')
+  Future<Trace> getTrace(@Path() int id);
+
+  @DELETE('/{id}')
+  Future<void> deleteTrace(@Path() int id);
+
+  @GET('/nearby')
+  Future<List<TraceLocation>> getNearbyTraces(
+    @Query('latitude') double latitude,
+    @Query('longitude') double longitude,
+    @Query('distance') int distance,
+  );
+
+  @GET('/my')
+  Future<List<Trace>> getMyTraces();
 }
