@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class NearbyTile extends StatelessWidget {
-  const NearbyTile({super.key});
+  const NearbyTile({required this.trace, super.key});
 
+  final TraceLocation trace;
   @override
   Widget build(BuildContext context) {
     return Padding(

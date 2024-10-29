@@ -5,7 +5,7 @@ import 'package:spotspeak_mobile/services/authentication_service.dart';
 class AuthInterceptor extends Interceptor {
   late final _authService = getIt<AuthenticationService>();
 
-  static const _hostsWithAuth = ['keycloakspotspeakwebsite.website'];
+  static const _hostsWithAuth = ['keycloakspotspeakwebsite.website', '52.57.17.187'];
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
