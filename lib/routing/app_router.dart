@@ -18,7 +18,6 @@ class AppRouter extends RootStackRouter {
               children: [AutoRoute(page: UserProfileRoute.page)],
             ),
             AutoRoute(page: MapRoute.page, initial: true, title: (context, data) => 'Mapa'),
-            AutoRoute(page: NearbyRoute.page, title: (context, data) => 'W pobliżu'),
             AutoRoute(page: ProfileRoute.page, title: (context, data) => 'Twoje konto'),
             AutoRoute(page: AchievementsRoute.page, title: (context, data) => 'Osiągnięcia'),
           ],

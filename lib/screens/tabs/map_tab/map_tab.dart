@@ -11,12 +11,15 @@ import 'package:flutter_map_cancellable_tile_provider/flutter_map_cancellable_ti
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/location_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_panel.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
@@ -108,54 +111,59 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         onTapMoveToUserLocation: _onMoveToUserLocation,
         onTapAddTrace: _onAddTrace,
       ),
-      body: FlutterMap(
-        mapController: _mapController.mapController,
-        options: const MapOptions(
-          maxZoom: 19,
-          minZoom: 2,
-          interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
-          initialCenter: LatLng(52, 19),
-          initialZoom: 5.5,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-            userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
-            tileProvider: CancellableNetworkTileProvider(dioClient: getIt()),
+      body: SlidingUpPanel(
+        panelBuilder: (scrollController) => NearbyPanel(scrollController: scrollController),
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18)),
+        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? CustomColors.blue1 : CustomColors.grey5,
+        body: FlutterMap(
+          mapController: _mapController.mapController,
+          options: const MapOptions(
             maxZoom: 19,
             minZoom: 2,
-            retinaMode: false,
+            interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
+            initialCenter: LatLng(52, 19),
+            initialZoom: 5.5,
           ),
-          // User's current location layer
-          MarkerLayer(
-            markers: [
-              if (_lastLocation != null)
-                Marker(
-                  point: _lastLocation!,
-                  child: const LocationMarker(),
-                  height: LocationMarker.dimens,
-                  width: LocationMarker.dimens,
-                ),
-            ],
-          ),
-          // Traces layer
-          MarkerLayer(
-            markers: [
-              for (final trace in _traces)
-                Marker(
-                  point: trace.location,
-                  child: const TraceMarker(),
-                  height: TraceMarker.dimens,
-                  width: TraceMarker.dimens,
-                ),
-            ],
-          ),
-          SimpleAttributionWidget(
-            source: const Text('OpenStreetMap'),
-            onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-            alignment: Alignment.bottomLeft,
-          ),
-        ],
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
+              tileProvider: CancellableNetworkTileProvider(dioClient: getIt()),
+              maxZoom: 19,
+              minZoom: 2,
+              retinaMode: false,
+            ),
+            // User's current location layer
+            MarkerLayer(
+              markers: [
+                if (_lastLocation != null)
+                  Marker(
+                    point: _lastLocation!,
+                    child: const LocationMarker(),
+                    height: LocationMarker.dimens,
+                    width: LocationMarker.dimens,
+                  ),
+              ],
+            ),
+            // Traces layer
+            MarkerLayer(
+              markers: [
+                for (final trace in _traces)
+                  Marker(
+                    point: trace.location,
+                    child: const TraceMarker(),
+                    height: TraceMarker.dimens,
+                    width: TraceMarker.dimens,
+                  ),
+              ],
+            ),
+            SimpleAttributionWidget(
+              source: const Text('OpenStreetMap'),
+              onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+              alignment: Alignment.bottomLeft,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -169,21 +177,27 @@ class _FloatingActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        FloatingActionButton(
-          onPressed: onTapMoveToUserLocation,
-          heroTag: 'near_me',
-          child: const Icon(Icons.near_me),
+    return Align(
+      alignment: Alignment.topRight,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 30),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FloatingActionButton(
+              onPressed: onTapMoveToUserLocation,
+              heroTag: 'near_me',
+              child: const Icon(Icons.near_me),
+            ),
+            const Gap(8),
+            FloatingActionButton(
+              onPressed: onTapAddTrace,
+              heroTag: 'add_trace',
+              child: const Icon(Icons.add),
+            ),
+          ],
         ),
-        const Gap(8),
-        FloatingActionButton(
-          onPressed: onTapAddTrace,
-          heroTag: 'add_trace',
-          child: const Icon(Icons.add),
-        ),
-      ],
+      ),
     );
   }
 }

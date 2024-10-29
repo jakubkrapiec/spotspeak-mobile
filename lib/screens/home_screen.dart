@@ -18,10 +18,9 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       routes: const [
-        FriendsRoute(),
-        NearbyRoute(),
         MapRoute(),
         AchievementsRoute(),
+        FriendsRoute(),
         ProfileRoute(),
       ],
       bottomNavigationBuilder: (context, tabsRouter) {
@@ -29,10 +28,9 @@ class HomeScreen extends StatelessWidget {
           currentIndex: tabsRouter.activeIndex,
           onTap: tabsRouter.setActiveIndex,
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Znajomi'),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'W pobliżu'),
             BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-            BottomNavigationBarItem(icon: Icon(Icons.question_mark), label: 'Osiągnięcia'),
+            BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: 'Osiągnięcia'),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Znajomi'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           ],
         );
