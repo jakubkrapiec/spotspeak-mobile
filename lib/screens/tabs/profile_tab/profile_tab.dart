@@ -27,7 +27,7 @@ class ProfileTab extends StatelessWidget {
           StreamBuilder<AuthUser>(
             stream: _authService.user,
             builder: (context, snapshot) {
-              return Text(snapshot.data?.name ?? '', style: Theme.of(context).textTheme.bodyLarge);
+              return Text(snapshot.data?.name ?? 'Nieznany', style: Theme.of(context).textTheme.bodyLarge);
             },
           ),
           Text('2137 pkt', style: Theme.of(context).textTheme.bodySmall),
@@ -58,7 +58,7 @@ class ProfileTab extends StatelessWidget {
           TextButton(
             child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
             onPressed: () {
-              Navigator.pop(context);
+              context.router.replace(LoginRoute());
             },
           ),
         ],
