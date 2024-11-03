@@ -20,7 +20,7 @@ class Trace {
   factory Trace.fromJson(Map<String, Object?> json) => _$TraceFromJson(json);
 
   final int id;
-  final String resourceAccessUrl;
+  final String? resourceAccessUrl;
   final String description;
   final List<Comment>? comments;
   final List<Tag> traceTags;

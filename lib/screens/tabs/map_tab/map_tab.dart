@@ -13,12 +13,12 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:spotspeak_mobile/di/custom_instance_names.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:spotspeak_mobile/di/custom_instance_names.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
-import 'package:spotspeak_mobile/models/trace.dart';
+import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_panel.dart';
@@ -47,7 +47,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   bool _waitingForFirstLocation = true;
 
   Position? _lastLocation;
-  Set<Trace> _traces = {};
+  List<TraceLocation> _traces = [];
   static const _defaultZoom = 16.5;
 
   @override
@@ -76,8 +76,17 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     }
   }
 
-  void _onAddTrace() {
-    showDialog<AddTraceDto?>(context: context, builder: (context) => const NewTraceDialog());
+  Future<void> _onAddTrace() async {
+    final result = await showDialog<TraceDialogResult?>(context: context, builder: (context) => const NewTraceDialog());
+    if (result == null || _lastLocation == null) return;
+    final dto = AddTraceDto(
+      _lastLocation!.longitude,
+      _lastLocation!.latitude,
+      result.description,
+      [],
+    );
+    await _traceService.addTrace(result.media, dto);
+    unawaited(_getVisibleTraces());
   }
 
   Future<void> _initLocationService() async {
@@ -104,14 +113,15 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   Future<void> _getVisibleTraces() async {
     final bounds = _mapController.mapController.camera.visibleBounds;
-    //final traces = await _traceService.getTracesFor(bounds);
-    // print('Bounds: $bounds');
-    // if (mounted) {
-    //   setState(() {
-    //     _traces = traces;
-    //   });
-    // }
-    // print('Visible traces: $_traces');
+    final center = bounds.center;
+    final corner = bounds.northEast;
+    final radius = Geolocator.distanceBetween(center.latitude, center.longitude, corner.latitude, corner.longitude);
+    final traces = await _traceService.getNearbyTraces(center.latitude, center.longitude, radius.toInt());
+    if (mounted) {
+      setState(() {
+        _traces = traces;
+      });
+    }
   }
 
   @override
@@ -123,7 +133,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
       ),
       body: SlidingUpPanel(
         panelBuilder: (scrollController) => NearbyPanel(scrollController: scrollController),
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? CustomColors.blue1 : CustomColors.grey5,
         body: FlutterMap(
           mapController: _mapController.mapController,
@@ -160,7 +170,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
               markers: [
                 for (final trace in _traces)
                   Marker(
-                    point: trace.location,
+                    point: trace.toLatLng(),
                     child: const TraceMarker(),
                     height: TraceMarker.dimens,
                     width: TraceMarker.dimens,
@@ -170,7 +180,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
             SimpleAttributionWidget(
               source: const Text('OpenStreetMap'),
               onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.topLeft,
             ),
           ],
         ),

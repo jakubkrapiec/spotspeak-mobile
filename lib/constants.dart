@@ -1,1 +1,1 @@
-const kApiBaseUrl = 'http://52.57.17.187:8080/api';
+const kApiBaseUrl = 'http://34.118.97.103/api';

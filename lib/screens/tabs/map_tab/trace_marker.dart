@@ -7,10 +7,9 @@ class TraceMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-      width: dimens,
-      height: dimens,
+    return GestureDetector(
+      onTap: () {},
+      child: Image.asset('assets/trace_icon_colored.png', width: dimens),
     );
   }
 }

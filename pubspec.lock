@@ -114,10 +114,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: dd09dd4e2b078992f42aac7f1a622f01882a8492fef08486b27ddde929c19f04
+      sha256: "028819cfb90051c6b5440c7e574d1896f8037e3c96cf17aaeb054c9311cfbf4d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.12"
+    version: "2.4.13"
   build_runner_core:
     dependency: transitive
     description:
@@ -573,6 +573,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.7.0"
+  get_thumbnail_video:
+    dependency: "direct main"
+    description:
+      name: get_thumbnail_video
+      sha256: c0c47798f5a760820331ae41c66500ab62424f87d75f050ed09000610eda754b
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2"
   glob:
     dependency: transitive
     description:
@@ -830,13 +838,21 @@ packages:
     source: hosted
     version: "2.0.0"
   mime:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "2.0.0"
+  mutex:
+    dependency: "direct main"
+    description:
+      name: mutex
+      sha256: "8827da25de792088eb33e572115a5eb0d61d61a3c01acbc8bcbe76ed78f1a1f2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   nested:
     dependency: transitive
     description:
@@ -1382,10 +1398,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: d43c1d6b787bf0afad444700ae7f4db8827f701bc61c255ac8d328c6f4d52062
+      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   web_socket:
     dependency: transitive
     description:
@@ -1443,5 +1459,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.5.4 <4.0.0"
   flutter: ">=3.24.0"

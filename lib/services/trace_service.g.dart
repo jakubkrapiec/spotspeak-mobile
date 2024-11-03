@@ -24,50 +24,6 @@ class _TraceService implements TraceService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<Trace> addTrace(
-    File file,
-    AddTraceDto traceUploadDTO,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    final _data = FormData();
-    _data.files.add(MapEntry(
-      'file',
-      MultipartFile.fromFileSync(
-        file.path,
-        filename: file.path.split(Platform.pathSeparator).last,
-      ),
-    ));
-    final _options = _setStreamType<Trace>(Options(
-      method: 'POST',
-      headers: _headers,
-      extra: _extra,
-      contentType: 'multipart/form-data',
-    )
-        .compose(
-          _dio.options,
-          '',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Trace _value;
-    try {
-      _value = Trace.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
   Future<Trace> getTrace(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

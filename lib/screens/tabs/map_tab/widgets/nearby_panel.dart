@@ -76,9 +76,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        SizedBox(
-          height: 12,
-        ),
+        Gap(12),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -96,7 +94,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
           child: Row(
             children: [
               Text(
-                'Ślady w pobliżu:',
+                'Ślady w pobliżu',
                 style: Theme.of(context).textTheme.bodyLarge,
                 textAlign: TextAlign.left,
               ),
@@ -122,7 +120,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
         switch (_nearbyTraces) {
           null => CircularProgressIndicator(),
           [] => Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Text(
                 'W twoim pobliżu nie ma żadnych śladów :(',
                 style: Theme.of(context).textTheme.titleMedium,
@@ -133,6 +131,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
               child: ListView.builder(
                 controller: widget.scrollController,
                 itemCount: _nearbyTraces!.length,
+                physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return NearbyTile(trace: _nearbyTraces![index]);
                 },

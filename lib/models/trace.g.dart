@@ -8,7 +8,7 @@ part of 'trace.dart';
 
 Trace _$TraceFromJson(Map<String, dynamic> json) => Trace(
       id: (json['id'] as num).toInt(),
-      resourceAccessUrl: json['resourceAccessUrl'] as String,
+      resourceAccessUrl: json['resourceAccessUrl'] as String?,
       description: json['description'] as String,
       comments: (json['comments'] as List<dynamic>?)
           ?.map((e) => Comment.fromJson(e as Map<String, dynamic>))
