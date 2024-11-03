@@ -125,7 +125,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'W twoim pobliżu nie ma żadnych śladów :(',
-                style: Theme.of(context).textTheme.bodyLarge,
+                style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
             ),

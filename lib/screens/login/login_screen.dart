@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
+import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
@@ -15,6 +16,23 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   final _authService = getIt<AuthenticationService>();
+  final _userService = getIt<UserService>();
+
+  Future<void> _loginUser() async {
+    try {
+      await _authService.login();
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+  }
+
+  Future<void> _getUserAccount() async {
+    try {
+      await _userService.syncUser();
+    } catch (e) {
+      debugPrint('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +75,8 @@ class LoginScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(16),
                         child: ElevatedButton(
                           onPressed: () async {
-                            try {
-                              await _authService.login();
-                            } catch (e) {
-                              debugPrint('Error: $e');
-                            }
+                            await _loginUser();
+                            await _getUserAccount();
                             if (!context.mounted) return;
                             unawaited(context.router.replace(HomeRoute()));
                           },

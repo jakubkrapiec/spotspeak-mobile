@@ -19,9 +19,11 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
+import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
+import 'package:spotspeak_mobile/services/user_service.dart' as _i448;
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -56,6 +58,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i274.DbCacheStore>(() => registerModule
         .dbCacheStore(gh<_i497.Directory>(instanceName: 'documentsDir')));
     gh.factory<_i361.Dio>(() => registerModule.dio(gh<_i655.PackageInfo>()));
+    gh.singleton<_i643.UserRepository>(
+        () => _i643.UserRepository(gh<_i361.Dio>()));
     gh.singleton<_i192.TraceService>(() => _i192.TraceService(gh<_i361.Dio>()));
     gh.singleton<_i281.AuthenticationService>(
       () => _i281.AuthenticationService(
@@ -65,6 +69,8 @@ extension GetItInjectableX on _i174.GetIt {
       ),
       dispose: (i) => i.dispose(),
     );
+    gh.singleton<_i448.UserService>(
+        () => _i448.UserService(gh<_i643.UserRepository>()));
     return this;
   }
 }

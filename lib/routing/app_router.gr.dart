@@ -35,10 +35,14 @@ import 'package:spotspeak_mobile/screens/users_traces/user_traces_screen.dart'
 
 /// generated route for
 /// [_i1.AccountSettingsScreen]
-class AccountSettingsRoute extends _i14.PageRouteInfo<void> {
-  const AccountSettingsRoute({List<_i14.PageRouteInfo>? children})
-      : super(
+class AccountSettingsRoute
+    extends _i14.PageRouteInfo<AccountSettingsRouteArgs> {
+  AccountSettingsRoute({
+    _i15.Key? key,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
           AccountSettingsRoute.name,
+          args: AccountSettingsRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -47,9 +51,22 @@ class AccountSettingsRoute extends _i14.PageRouteInfo<void> {
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i1.AccountSettingsScreen();
+      final args = data.argsAs<AccountSettingsRouteArgs>(
+          orElse: () => const AccountSettingsRouteArgs());
+      return _i1.AccountSettingsScreen(key: args.key);
     },
   );
+}
+
+class AccountSettingsRouteArgs {
+  const AccountSettingsRouteArgs({this.key});
+
+  final _i15.Key? key;
+
+  @override
+  String toString() {
+    return 'AccountSettingsRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -277,13 +294,10 @@ class MapRoute extends _i14.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i10.ProfileTab]
-class ProfileRoute extends _i14.PageRouteInfo<ProfileRouteArgs> {
-  ProfileRoute({
-    _i15.Key? key,
-    List<_i14.PageRouteInfo>? children,
-  }) : super(
+class ProfileRoute extends _i14.PageRouteInfo<void> {
+  const ProfileRoute({List<_i14.PageRouteInfo>? children})
+      : super(
           ProfileRoute.name,
-          args: ProfileRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -292,22 +306,9 @@ class ProfileRoute extends _i14.PageRouteInfo<ProfileRouteArgs> {
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      final args =
-          data.argsAs<ProfileRouteArgs>(orElse: () => const ProfileRouteArgs());
-      return _i10.ProfileTab(key: args.key);
+      return const _i10.ProfileTab();
     },
   );
-}
-
-class ProfileRouteArgs {
-  const ProfileRouteArgs({this.key});
-
-  final _i15.Key? key;
-
-  @override
-  String toString() {
-    return 'ProfileRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for
