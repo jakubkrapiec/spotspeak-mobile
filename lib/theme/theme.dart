@@ -132,6 +132,9 @@ abstract class CustomTheme {
     dividerTheme: DividerThemeData(
       color: CustomColors.blue7,
     ),
+    dialogTheme: DialogTheme(
+      titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
 
@@ -278,6 +281,9 @@ abstract class CustomTheme {
     ),
     dividerTheme: DividerThemeData(
       color: CustomColors.green3,
+    ),
+    dialogTheme: DialogTheme(
+      titleTextStyle: TextStyle(fontSize: 22, fontFamily: 'Inconsolata', color: CustomColors.green6),
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
   );

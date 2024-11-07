@@ -26,6 +26,8 @@ class AuthenticationService {
 
   final _loginInfo = LoginInfo();
 
+  UserType userType = UserType.guest;
+
   Future<String?> get accessToken async {
     if (_tokenExpirationTimestamp != null && _tokenExpirationTimestamp!.isAfter(DateTime.now())) {
       return _accessToken;
@@ -129,6 +131,7 @@ class AuthenticationService {
 
     if (await _setLocalVariables(result)) {
       final authUser = await getUserDetails(_accessToken!);
+      userType = UserType.normal;
       return authUser;
     } else {
       throw Exception('Failed to login');
@@ -147,6 +150,7 @@ class AuthenticationService {
 
     await _appAuth.endSession(request);
     _loginInfo.isLoggedIn = false;
+    userType = UserType.guest;
   }
 
   AuthIdToken _parseIdToken(String idToken) {
@@ -190,3 +194,5 @@ class LoginInfo extends ChangeNotifier {
 }
 
 enum AuthResult { success, mustLogIn, error }
+
+enum UserType { guest, google, normal }

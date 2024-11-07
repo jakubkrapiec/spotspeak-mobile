@@ -9,6 +9,7 @@ environment:
 dependencies:
   auto_route: ^9.2.2
   bloc: ^8.1.4
+  cached_network_image: ^3.4.1
   dio: ^5.7.0
   dio_cache_interceptor: ^3.5.0
   dio_cache_interceptor_db_store: ^5.1.1

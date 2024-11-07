@@ -31,3 +31,5 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: UserTracesRoute.page),
       ];
 }
+
+enum ScreenType { home, profile, friends, achievements }

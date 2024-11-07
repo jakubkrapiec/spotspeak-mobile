@@ -1,9 +1,12 @@
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -12,6 +15,7 @@ import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 enum PermissionType {
   camera,
@@ -19,9 +23,14 @@ enum PermissionType {
 }
 
 @RoutePage()
-class AccountSettingsScreen extends StatelessWidget {
-  AccountSettingsScreen({super.key});
+class AccountSettingsScreen extends StatefulWidget {
+  const AccountSettingsScreen({super.key});
 
+  @override
+  State<AccountSettingsScreen> createState() => _AccountSettingsScreenState();
+}
+
+class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   final _userService = getIt<UserService>();
 
   Future<void> _pickImage(ImageSource source) async {
@@ -34,7 +43,20 @@ class AccountSettingsScreen extends StatelessWidget {
   }
 
   Future<void> _uploadImage(File picture) async {
-    await _userService.userRepo.addPicture(picture);
+    final formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(
+        picture.path,
+        filename: picture.path.split('/').last,
+        contentType: MediaType('image', 'jpeg'),
+      ),
+    });
+
+    await _userService.userRepo.addPicture(formData);
+    await _userService.syncUser();
+  }
+
+  Future<void> _deleteAccount() async {
+    await _userService.userRepo.deleteUser();
   }
 
   Future<bool> _getPermission(PermissionType type) async {
@@ -66,7 +88,7 @@ class AccountSettingsScreen extends StatelessWidget {
                   dimension: 100,
                   child: GestureDetector(
                     onTap: () {
-                      showDialog(
+                      showDialog<void>(
                         context: context,
                         builder: (_) => AlertDialog(
                           title: Text('Dodaj zdjęcie'),
@@ -92,11 +114,27 @@ class AccountSettingsScreen extends StatelessWidget {
                     child: StreamBuilder<User>(
                       stream: _userService.user,
                       builder: (context, snapshot) {
-                        return ClipOval(
-                          child: Image.asset(
-                            snapshot.data?.profilePictureUrl ?? 'assets/default_icon.jpg',
-                          ),
-                        );
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasData &&
+                            snapshot.data?.profilePictureUrl != null &&
+                            snapshot.data!.profilePictureUrl!.isNotEmpty) {
+                          return ClipOval(
+                            child: CachedNetworkImage(
+                              imageUrl: snapshot.data!.profilePictureUrl!,
+                              width: 200,
+                              height: 200,
+                              errorWidget: (context, url, _) => Image.asset('assets/default_icon.jpg'),
+                            ),
+                          );
+                        } else {
+                          return ClipOval(
+                            child: Image.asset(
+                              'assets/default_icon.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
@@ -109,8 +147,8 @@ class AccountSettingsScreen extends StatelessWidget {
                     Gap(8),
                     Text(
                       maxLines: 3,
-                      'Format PNG lub JPG, maksymalny rozmiar 5MB',
-                      style: TextStyle(fontSize: 12),
+                      'Kliknij w zdjęcie, aby dodać nowe',
+                      style: TextStyle(fontSize: 14),
                     ),
                   ],
                 ),
@@ -138,7 +176,61 @@ class AccountSettingsScreen extends StatelessWidget {
               buttonText: 'Zmiana hasła',
             ),
             Gap(16),
-            ProfileButton(pressFunction: () {}, buttonText: 'Usunięcie konta'),
+            ProfileButton(
+              pressFunction: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    alignment: Alignment.center,
+                    title: Text(
+                      'Usunięcie konta',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: CustomColors.red1),
+                    ),
+                    content: Text(
+                      'Tej operacji nie można cofnąć, wszystkie dane dotyczące twojego konta zostaną usunięte. Czy na pewno chcesz usunąć konto?',
+                      textAlign: TextAlign.center,
+                    ),
+                    actionsAlignment: MainAxisAlignment.center,
+                    actions: [
+                      ElevatedButton(
+                        child: Text(
+                          'Usuń konto',
+                          style: TextStyle(color: CustomColors.red1),
+                        ),
+                        onPressed: () async {
+                          try {
+                            await _deleteAccount();
+                          } catch (exception) {
+                            await Fluttertoast.showToast(
+                              msg: 'W trakcie usuwania konta wystąpił błąd',
+                              toastLength: Toast.LENGTH_LONG,
+                            );
+                            Navigator.of(context).pop();
+                            return;
+                          }
+
+                          await Fluttertoast.showToast(
+                            msg: 'Konto zostało usunięte',
+                            toastLength: Toast.LENGTH_LONG,
+                          );
+
+                          Navigator.of(context).pop();
+                          await context.router.replace(LoginRoute());
+                        },
+                      ),
+                      ElevatedButton(
+                        child: Text('Anuluj'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+              buttonText: 'Usunięcie konta',
+            ),
           ],
         ),
       ),

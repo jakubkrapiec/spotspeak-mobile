@@ -5,6 +5,7 @@ import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 @RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(

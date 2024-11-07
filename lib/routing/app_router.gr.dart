@@ -35,14 +35,10 @@ import 'package:spotspeak_mobile/screens/users_traces/user_traces_screen.dart'
 
 /// generated route for
 /// [_i1.AccountSettingsScreen]
-class AccountSettingsRoute
-    extends _i14.PageRouteInfo<AccountSettingsRouteArgs> {
-  AccountSettingsRoute({
-    _i15.Key? key,
-    List<_i14.PageRouteInfo>? children,
-  }) : super(
+class AccountSettingsRoute extends _i14.PageRouteInfo<void> {
+  const AccountSettingsRoute({List<_i14.PageRouteInfo>? children})
+      : super(
           AccountSettingsRoute.name,
-          args: AccountSettingsRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -51,30 +47,20 @@ class AccountSettingsRoute
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AccountSettingsRouteArgs>(
-          orElse: () => const AccountSettingsRouteArgs());
-      return _i1.AccountSettingsScreen(key: args.key);
+      return const _i1.AccountSettingsScreen();
     },
   );
 }
 
-class AccountSettingsRouteArgs {
-  const AccountSettingsRouteArgs({this.key});
-
-  final _i15.Key? key;
-
-  @override
-  String toString() {
-    return 'AccountSettingsRouteArgs{key: $key}';
-  }
-}
-
 /// generated route for
 /// [_i2.AchievementsTab]
-class AchievementsRoute extends _i14.PageRouteInfo<void> {
-  const AchievementsRoute({List<_i14.PageRouteInfo>? children})
-      : super(
+class AchievementsRoute extends _i14.PageRouteInfo<AchievementsRouteArgs> {
+  AchievementsRoute({
+    _i15.Key? key,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
           AchievementsRoute.name,
+          args: AchievementsRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -83,9 +69,22 @@ class AchievementsRoute extends _i14.PageRouteInfo<void> {
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i2.AchievementsTab();
+      final args = data.argsAs<AchievementsRouteArgs>(
+          orElse: () => const AchievementsRouteArgs());
+      return _i2.AchievementsTab(key: args.key);
     },
   );
+}
+
+class AchievementsRouteArgs {
+  const AchievementsRouteArgs({this.key});
+
+  final _i15.Key? key;
+
+  @override
+  String toString() {
+    return 'AchievementsRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -202,10 +201,13 @@ class ChangeAppDataRouteArgs {
 
 /// generated route for
 /// [_i6.FriendsTab]
-class FriendsRoute extends _i14.PageRouteInfo<void> {
-  const FriendsRoute({List<_i14.PageRouteInfo>? children})
-      : super(
+class FriendsRoute extends _i14.PageRouteInfo<FriendsRouteArgs> {
+  FriendsRoute({
+    _i15.Key? key,
+    List<_i14.PageRouteInfo>? children,
+  }) : super(
           FriendsRoute.name,
+          args: FriendsRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -214,9 +216,22 @@ class FriendsRoute extends _i14.PageRouteInfo<void> {
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      return const _i6.FriendsTab();
+      final args =
+          data.argsAs<FriendsRouteArgs>(orElse: () => const FriendsRouteArgs());
+      return _i6.FriendsTab(key: args.key);
     },
   );
+}
+
+class FriendsRouteArgs {
+  const FriendsRouteArgs({this.key});
+
+  final _i15.Key? key;
+
+  @override
+  String toString() {
+    return 'FriendsRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -240,13 +255,10 @@ class HomeRoute extends _i14.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i8.LoginScreen]
-class LoginRoute extends _i14.PageRouteInfo<LoginRouteArgs> {
-  LoginRoute({
-    _i15.Key? key,
-    List<_i14.PageRouteInfo>? children,
-  }) : super(
+class LoginRoute extends _i14.PageRouteInfo<void> {
+  const LoginRoute({List<_i14.PageRouteInfo>? children})
+      : super(
           LoginRoute.name,
-          args: LoginRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -255,22 +267,9 @@ class LoginRoute extends _i14.PageRouteInfo<LoginRouteArgs> {
   static _i14.PageInfo page = _i14.PageInfo(
     name,
     builder: (data) {
-      final args =
-          data.argsAs<LoginRouteArgs>(orElse: () => const LoginRouteArgs());
-      return _i8.LoginScreen(key: args.key);
+      return const _i8.LoginScreen();
     },
   );
-}
-
-class LoginRouteArgs {
-  const LoginRouteArgs({this.key});
-
-  final _i15.Key? key;
-
-  @override
-  String toString() {
-    return 'LoginRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for

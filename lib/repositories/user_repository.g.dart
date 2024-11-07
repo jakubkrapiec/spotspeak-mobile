@@ -57,11 +57,12 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<void> editUser() async {
+  Future<void> updateUser(EditUserDto editUserDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(editUserDto.toJson());
     final _options = _setStreamType<void>(Options(
       method: 'PUT',
       headers: _headers,
@@ -107,17 +108,12 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<void> updatePassword(
-    String currentPassword,
-    String newPassword,
-  ) async {
+  Future<void> updatePassword(UpdatePasswordDto updatePasswordDto) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'currentPassword': currentPassword,
-      r'newPassword': newPassword,
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(updatePasswordDto.toJson());
     final _options = _setStreamType<void>(Options(
       method: 'PUT',
       headers: _headers,
@@ -138,22 +134,16 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<void> addPicture(File file) async {
+  Future<void> addPicture(FormData data) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = FormData();
-    _data.files.add(MapEntry(
-      'file',
-      MultipartFile.fromFileSync(
-        file.path,
-        filename: file.path.split(Platform.pathSeparator).last,
-      ),
-    ));
+    final _data = data;
     final _options = _setStreamType<void>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
+      contentType: 'multipart/form-data',
     )
         .compose(
           _dio.options,
