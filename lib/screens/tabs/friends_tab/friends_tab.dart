@@ -18,65 +18,68 @@ class FriendsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = List<String>.generate(10000, (i) => 'Item $i');
-    return _authService.userType == UserType.guest
-        ? GuestScreen(
-            screen: ScreenType.friends,
-          )
-        : DefaultTabController(
-            length: 3,
-            child: Scaffold(
-              appBar: PreferredSize(
-                preferredSize: Size.fromHeight(kToolbarHeight),
-                child: AppBar(
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(text: 'Znajomi'),
-                      Tab(text: 'Zaproszenia'),
-                      Tab(text: 'Wyszukaj'),
+    return ValueListenableBuilder<UserType>(
+      valueListenable: _authService.userTypeNotifier,
+      builder: (context, userType, _) {
+        return userType == UserType.guest
+            ? GuestScreen(screen: ScreenType.friends)
+            : DefaultTabController(
+                length: 3,
+                child: Scaffold(
+                  appBar: PreferredSize(
+                    preferredSize: Size.fromHeight(kToolbarHeight),
+                    child: AppBar(
+                      bottom: TabBar(
+                        tabs: [
+                          Tab(text: 'Znajomi'),
+                          Tab(text: 'Zaproszenia'),
+                          Tab(text: 'Wyszukaj'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  body: TabBarView(
+                    children: [
+                      Column(
+                        children: [
+                          FriendsSearch(
+                            pressFunction: (value) {},
+                          ),
+                          FriendsList(
+                            items: items,
+                            tapFunction: () {
+                              context.router.push(UserProfileRoute(status: FriendshipStatus.friends));
+                            },
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          FriendsSearch(pressFunction: (value) {}),
+                          FriendsList(
+                            items: items,
+                            tapFunction: () {
+                              context.router.push(UserProfileRoute(status: FriendshipStatus.request));
+                            },
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          FriendsSearch(pressFunction: (value) {}),
+                          FriendsList(
+                            items: items,
+                            tapFunction: () {
+                              context.router.push(UserProfileRoute(status: FriendshipStatus.stranger));
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-              body: TabBarView(
-                children: [
-                  Column(
-                    children: [
-                      FriendsSearch(
-                        pressFunction: (value) {},
-                      ),
-                      FriendsList(
-                        items: items,
-                        tapFunction: () {
-                          context.router.push(UserProfileRoute(status: FriendshipStatus.friends));
-                        },
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      FriendsSearch(pressFunction: (value) {}),
-                      FriendsList(
-                        items: items,
-                        tapFunction: () {
-                          context.router.push(UserProfileRoute(status: FriendshipStatus.request));
-                        },
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      FriendsSearch(pressFunction: (value) {}),
-                      FriendsList(
-                        items: items,
-                        tapFunction: () {
-                          context.router.push(UserProfileRoute(status: FriendshipStatus.stranger));
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
+              );
+      },
+    );
   }
 }

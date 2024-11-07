@@ -26,7 +26,9 @@ class AuthenticationService {
 
   final _loginInfo = LoginInfo();
 
-  UserType userType = UserType.guest;
+  // UserType userType = UserType.guest;
+
+  ValueNotifier<UserType> userTypeNotifier = ValueNotifier<UserType>(UserType.guest);
 
   Future<String?> get accessToken async {
     if (_tokenExpirationTimestamp != null && _tokenExpirationTimestamp!.isAfter(DateTime.now())) {
@@ -131,7 +133,8 @@ class AuthenticationService {
 
     if (await _setLocalVariables(result)) {
       final authUser = await getUserDetails(_accessToken!);
-      userType = UserType.normal;
+      userTypeNotifier.value = UserType.normal;
+      // userType = UserType.normal;
       return authUser;
     } else {
       throw Exception('Failed to login');
@@ -140,6 +143,8 @@ class AuthenticationService {
 
   Future<void> logout() async {
     _loginInfo.isLoggedIn = false;
+    userTypeNotifier.value = UserType.guest;
+    // userType = UserType.guest;
     await _secureStoreage.delete(key: kAuthRefreshTokenKey);
 
     final request = EndSessionRequest(
@@ -150,7 +155,7 @@ class AuthenticationService {
 
     await _appAuth.endSession(request);
     _loginInfo.isLoggedIn = false;
-    userType = UserType.guest;
+    // userType = UserType.guest;
   }
 
   AuthIdToken _parseIdToken(String idToken) {

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:auto_route/auto_route.dart';
@@ -14,8 +15,10 @@ import 'package:spotspeak_mobile/models/user.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
+import 'package:spotspeak_mobile/theme/theme.dart';
 
 enum PermissionType {
   camera,
@@ -32,6 +35,7 @@ class AccountSettingsScreen extends StatefulWidget {
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   final _userService = getIt<UserService>();
+  final _authService = getIt<AuthenticationService>();
 
   Future<void> _pickImage(ImageSource source) async {
     if (await _getPermission(source == ImageSource.camera ? PermissionType.camera : PermissionType.gallery) == false) {
@@ -119,20 +123,57 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                         } else if (snapshot.hasData &&
                             snapshot.data?.profilePictureUrl != null &&
                             snapshot.data!.profilePictureUrl!.isNotEmpty) {
-                          return ClipOval(
-                            child: CachedNetworkImage(
-                              imageUrl: snapshot.data!.profilePictureUrl!,
-                              width: 200,
-                              height: 200,
-                              errorWidget: (context, url, _) => Image.asset('assets/default_icon.jpg'),
-                            ),
+                          return Stack(
+                            children: [
+                              SizedBox(
+                                width: 200,
+                                height: 200,
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data!.profilePictureUrl!,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, _) => Image.asset('assets/default_icon.jpg'),
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                                      ? CustomTheme.darkPhotoIconStyle
+                                      : CustomTheme.lightPhotoIconStyle,
+                                  child: Icon(
+                                    Icons.photo_camera,
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         } else {
-                          return ClipOval(
-                            child: Image.asset(
-                              'assets/default_icon.jpg',
-                              fit: BoxFit.cover,
-                            ),
+                          return Stack(
+                            children: [
+                              ClipOval(
+                                child: Image.asset(
+                                  'assets/default_icon.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                                      ? CustomTheme.darkPhotoIconStyle
+                                      : CustomTheme.lightPhotoIconStyle,
+                                  child: Icon(
+                                    Icons.photo_camera,
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         }
                       },
@@ -162,19 +203,21 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               buttonText: 'Zmiana nazwy użytkownika',
             ),
             Gap(16),
-            ProfileButton(
-              pressFunction: () {
-                context.router.push(ChangeAccountDataRoute(accountData: AccountData.email));
-              },
-              buttonText: 'Zmiana adresu email',
-            ),
+            if (_authService.userTypeNotifier.value != UserType.google)
+              ProfileButton(
+                pressFunction: () {
+                  context.router.push(ChangeAccountDataRoute(accountData: AccountData.email));
+                },
+                buttonText: 'Zmiana adresu email',
+              ),
             Gap(16),
-            ProfileButton(
-              pressFunction: () {
-                context.router.push(ChangeAccountDataRoute(accountData: AccountData.password));
-              },
-              buttonText: 'Zmiana hasła',
-            ),
+            if (_authService.userTypeNotifier.value != UserType.google)
+              ProfileButton(
+                pressFunction: () {
+                  context.router.push(ChangeAccountDataRoute(accountData: AccountData.password));
+                },
+                buttonText: 'Zmiana hasła',
+              ),
             Gap(16),
             ProfileButton(
               pressFunction: () {
@@ -206,6 +249,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                               msg: 'W trakcie usuwania konta wystąpił błąd',
                               toastLength: Toast.LENGTH_LONG,
                             );
+                            if (!context.mounted) return;
                             Navigator.of(context).pop();
                             return;
                           }
@@ -214,7 +258,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                             msg: 'Konto zostało usunięte',
                             toastLength: Toast.LENGTH_LONG,
                           );
-
+                          if (!context.mounted) return;
                           Navigator.of(context).pop();
                           await context.router.replace(LoginRoute());
                         },

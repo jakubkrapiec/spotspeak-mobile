@@ -4,20 +4,25 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
-import 'package:spotspeak_mobile/routing/app_router.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
-class LoginWidget extends StatelessWidget {
-  LoginWidget({this.screen = ScreenType.home, super.key});
+class LoginWidget extends StatefulWidget {
+  const LoginWidget({this.isFirstLogin = false, super.key});
 
+  final bool isFirstLogin;
+
+  @override
+  State<LoginWidget> createState() => _LoginWidgetState();
+}
+
+class _LoginWidgetState extends State<LoginWidget> {
   final _authService = getIt<AuthenticationService>();
-  final _userService = getIt<UserService>();
 
-  final ScreenType screen;
+  final _userService = getIt<UserService>();
 
   Future<void> _loginUser() async {
     try {
@@ -43,7 +48,7 @@ class LoginWidget extends StatelessWidget {
         width: double.infinity,
         decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
             ? CustomTheme.lightContainerStyle.copyWith(color: Colors.white)
-            : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey5),
+            : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey6),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -60,20 +65,9 @@ class LoginWidget extends StatelessWidget {
                   onPressed: () async {
                     await _loginUser();
                     await _getUserAccount();
-                    if (!context.mounted) return;
-                    switch (screen) {
-                      case ScreenType.home:
-                        unawaited(context.router.replace(HomeRoute()));
-                        return;
-                      case ScreenType.friends:
-                        unawaited(context.router.replace(FriendsRoute()));
-                        return;
-                      case ScreenType.profile:
-                        unawaited(context.router.replace(ProfileRoute()));
-                        return;
-                      case ScreenType.achievements:
-                        unawaited(context.router.replace(AchievementsRoute()));
-                        return;
+                    if (widget.isFirstLogin) {
+                      if (!context.mounted) return;
+                      unawaited(context.router.replace(HomeRoute()));
                     }
                   },
                   child: const Padding(

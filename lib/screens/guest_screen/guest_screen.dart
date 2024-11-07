@@ -21,7 +21,7 @@ class GuestScreen extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           Gap(32),
-          LoginWidget(screen: screen),
+          LoginWidget(),
         ],
       ),
     );

@@ -151,6 +151,11 @@ abstract class CustomTheme {
     ],
   );
 
+  static final lightPhotoIconStyle = BoxDecoration(
+    color: CustomColors.blue1,
+    shape: BoxShape.circle,
+  );
+
   static final lightSliderButton =
       BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.all(Radius.circular(12)));
 
@@ -299,6 +304,11 @@ abstract class CustomTheme {
         offset: const Offset(5, 3),
       ),
     ],
+  );
+
+  static final darkPhotoIconStyle = BoxDecoration(
+    color: CustomColors.grey5,
+    shape: BoxShape.circle,
   );
 
   static final darkSliderButton =

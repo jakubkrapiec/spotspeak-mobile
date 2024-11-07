@@ -13,10 +13,15 @@ class AchievementsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _authService.userType == UserType.guest
-        ? GuestScreen(
-            screen: ScreenType.achievements,
-          )
-        : Container();
+    return ValueListenableBuilder<UserType>(
+      valueListenable: _authService.userTypeNotifier,
+      builder: (context, userType, _) {
+        return userType == UserType.guest
+            ? GuestScreen(screen: ScreenType.achievements)
+            : Container(
+                child: Text('User Content'),
+              );
+      },
+    );
   }
 }
