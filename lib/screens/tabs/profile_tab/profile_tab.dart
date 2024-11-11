@@ -83,7 +83,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         );
                       },
                     ),
-                    Text('2137 pkt', style: Theme.of(context).textTheme.bodySmall),
+                    Text('2100 pkt', style: Theme.of(context).textTheme.bodySmall),
                     ProfileButton(
                       pressFunction: () {
                         context.router.push(FriendsRoute());

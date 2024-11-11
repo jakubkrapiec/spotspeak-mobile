@@ -26,8 +26,6 @@ class AuthenticationService {
 
   final _loginInfo = LoginInfo();
 
-  // UserType userType = UserType.guest;
-
   ValueNotifier<UserType> userTypeNotifier = ValueNotifier<UserType>(UserType.guest);
 
   Future<String?> get accessToken async {
@@ -134,7 +132,6 @@ class AuthenticationService {
     if (await _setLocalVariables(result)) {
       final authUser = await getUserDetails(_accessToken!);
       userTypeNotifier.value = UserType.normal;
-      // userType = UserType.normal;
       return authUser;
     } else {
       throw Exception('Failed to login');

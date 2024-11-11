@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -32,6 +34,8 @@ class _PasswordFormState extends State<PasswordForm> {
     }
 
     await _userService.syncUser();
+    if (!context.mounted) return;
+    Navigator.of(context).pop();
   }
 
   @override

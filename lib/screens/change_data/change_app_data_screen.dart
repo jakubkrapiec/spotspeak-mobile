@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 
 enum AppData {
   notifications,
@@ -68,19 +70,60 @@ class AppThemePanel extends StatefulWidget {
 }
 
 class _AppThemePanelState extends State<AppThemePanel> {
+  final _appService = getIt<AppService>();
+
+  bool isSystemTheme = true;
+  bool isLightMode = false;
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SwitchPanel(
-          panelTitle: 'Zgodnie z systemem',
+        // SwitchPanel(
+        //   panelTitle: 'Zgodnie z systemem',
+        // ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Zgodnie z systemem'),
+            Switch(
+              value: isSystemTheme,
+              onChanged: (bool value) {
+                setState(() {
+                  isSystemTheme = value;
+                  if (isSystemTheme) {
+                    isLightMode = false;
+                    _appService.changeTheme(ThemeMode.system);
+                  } else {
+                    _appService.changeTheme(isLightMode ? ThemeMode.light : ThemeMode.dark);
+                  }
+                });
+              },
+            ),
+          ],
         ),
         Gap(8),
         Divider(),
         Gap(32),
-        SwitchPanel(
-          panelTitle: 'Jasny motyw',
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Jasny motyw'),
+            Switch(
+              value: isLightMode,
+              onChanged: (bool value) {
+                setState(() {
+                  if (isSystemTheme) return;
+                  isLightMode = value;
+                  _appService.changeTheme(isLightMode ? ThemeMode.light : ThemeMode.dark);
+                });
+              },
+            ),
+          ],
         ),
+        // SwitchPanel(
+        //   panelTitle: 'Jasny motyw',
+        // ),
       ],
     );
   }

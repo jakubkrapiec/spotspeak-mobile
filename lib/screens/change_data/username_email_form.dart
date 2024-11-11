@@ -58,6 +58,10 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
           msg: 'Dane zostały poprawnie zmienione',
           toastLength: Toast.LENGTH_LONG,
         );
+
+        if (!context.mounted) return;
+        Navigator.of(context).pop();
+
       case PasswordChallengeFailedWrongPassword _:
         await Fluttertoast.showToast(
           msg: 'Wprowadzono niepoprawne hasło, dane nie zostały zmienione',

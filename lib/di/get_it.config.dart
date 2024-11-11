@@ -20,6 +20,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
+import 'package:spotspeak_mobile/services/app_service.dart' as _i724;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
@@ -44,6 +45,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.packageInfo,
       preResolve: true,
     );
+    gh.singleton<_i724.AppService>(() => _i724.AppService());
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
     await gh.singletonAsync<_i497.Directory>(
       () => registerModule.documentsDir,

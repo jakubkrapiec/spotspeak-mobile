@@ -30,7 +30,9 @@ class LoginScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const Gap(48),
-            LoginWidget(),
+            LoginWidget(
+              isFirstLogin: true,
+            ),
             TextButton(
               child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
               onPressed: () {
