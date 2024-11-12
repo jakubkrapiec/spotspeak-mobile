@@ -10,10 +10,12 @@ AuthUser _$AuthUserFromJson(Map<String, dynamic> json) => AuthUser(
       sub: json['sub'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
+      identityProvider: json['identity_provider'] as String?,
     );
 
 Map<String, dynamic> _$AuthUserToJson(AuthUser instance) => <String, dynamic>{
       'sub': instance.sub,
       'name': instance.name,
       'email': instance.email,
+      'identity_provider': instance.identityProvider,
     };

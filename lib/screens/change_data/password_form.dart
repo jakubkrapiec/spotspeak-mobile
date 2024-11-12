@@ -34,7 +34,7 @@ class _PasswordFormState extends State<PasswordForm> {
     }
 
     await _userService.syncUser();
-    if (!context.mounted) return;
+    if (!mounted) return;
     Navigator.of(context).pop();
   }
 

@@ -204,21 +204,24 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             Gap(16),
             if (_authService.userTypeNotifier.value != UserType.google)
-              ProfileButton(
-                pressFunction: () {
-                  context.router.push(ChangeAccountDataRoute(accountData: AccountData.email));
-                },
-                buttonText: 'Zmiana adresu email',
+              Column(
+                children: [
+                  ProfileButton(
+                    pressFunction: () {
+                      context.router.push(ChangeAccountDataRoute(accountData: AccountData.email));
+                    },
+                    buttonText: 'Zmiana adresu email',
+                  ),
+                  const Gap(16),
+                  ProfileButton(
+                    pressFunction: () {
+                      context.router.push(ChangeAccountDataRoute(accountData: AccountData.password));
+                    },
+                    buttonText: 'Zmiana hasła',
+                  ),
+                  const Gap(16),
+                ],
               ),
-            Gap(16),
-            if (_authService.userTypeNotifier.value != UserType.google)
-              ProfileButton(
-                pressFunction: () {
-                  context.router.push(ChangeAccountDataRoute(accountData: AccountData.password));
-                },
-                buttonText: 'Zmiana hasła',
-              ),
-            Gap(16),
             ProfileButton(
               pressFunction: () {
                 showDialog<void>(

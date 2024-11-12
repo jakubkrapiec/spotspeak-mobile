@@ -5,6 +5,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/edit_user_dto.dart';
 import 'package:spotspeak_mobile/repositories/user_repository.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
@@ -28,9 +29,12 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
   bool obscureText = true;
 
   final _userService = getIt<UserService>();
+  final _authService = getIt<AuthenticationService>();
 
   Future<void> _changeData(String currentPassword, String newData, AccountData dataType) async {
-    final response = await _checkPassword(currentPassword);
+    final response = _authService.userTypeNotifier.value != UserType.google
+        ? await _checkPassword(currentPassword)
+        : PasswordChallengeSuccessForGoogleAccount;
 
     switch (response) {
       case final PasswordChallengeSuccess success:
@@ -59,7 +63,34 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
           toastLength: Toast.LENGTH_LONG,
         );
 
-        if (!context.mounted) return;
+        if (!mounted) return;
+        Navigator.of(context).pop();
+
+      case PasswordChallengeSuccessForGoogleAccount _:
+        try {
+          dataType == AccountData.username
+              ? await _userService.userRepo.updateUser(EditUserDto(username: newData))
+              : await _userService.userRepo.updateUser(EditUserDto(email: newData));
+        } catch (exception) {
+          dataType == AccountData.username
+              ? await Fluttertoast.showToast(
+                  msg: 'Użytkownik o podanej nazwie już istnieje',
+                  toastLength: Toast.LENGTH_LONG,
+                )
+              : await Fluttertoast.showToast(
+                  msg: 'Użytkownik o podanym adresie email już istnieje',
+                  toastLength: Toast.LENGTH_LONG,
+                );
+          return;
+        }
+
+        await _userService.syncUser();
+        await Fluttertoast.showToast(
+          msg: 'Dane zostały poprawnie zmienione',
+          toastLength: Toast.LENGTH_LONG,
+        );
+
+        if (!mounted) return;
         Navigator.of(context).pop();
 
       case PasswordChallengeFailedWrongPassword _:
@@ -110,32 +141,38 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                   : null,
             ),
             Gap(16),
-            Text('Potwierdź hasło:'),
-            Gap(8),
-            TextFormField(
-              obscureText: obscureText,
-              style: TextStyle(fontSize: 22),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Musisz wpisać hasło';
-                }
-                return null;
-              },
-              onSaved: (value) {
-                _password = value;
-              },
-              decoration: InputDecoration(
-                fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
-                suffixIcon: IconButton(
-                  icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      obscureText = !obscureText;
-                    });
-                  },
-                ),
+            if (_authService.userTypeNotifier.value != UserType.google)
+              Column(
+                children: [
+                  Text('Potwierdź hasło:'),
+                  Gap(8),
+                  TextFormField(
+                    obscureText: obscureText,
+                    style: TextStyle(fontSize: 22),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Musisz wpisać hasło';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      _password = value;
+                    },
+                    decoration: InputDecoration(
+                      fillColor:
+                          MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
+                      suffixIcon: IconButton(
+                        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+                        onPressed: () {
+                          setState(() {
+                            obscureText = !obscureText;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
             Gap(16),
             Center(
               child: ElevatedButton(

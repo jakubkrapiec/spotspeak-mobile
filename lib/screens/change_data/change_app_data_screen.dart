@@ -79,9 +79,6 @@ class _AppThemePanelState extends State<AppThemePanel> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // SwitchPanel(
-        //   panelTitle: 'Zgodnie z systemem',
-        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -93,9 +90,9 @@ class _AppThemePanelState extends State<AppThemePanel> {
                   isSystemTheme = value;
                   if (isSystemTheme) {
                     isLightMode = false;
-                    _appService.changeTheme(ThemeMode.system);
+                    _appService.themeMode = ThemeMode.system;
                   } else {
-                    _appService.changeTheme(isLightMode ? ThemeMode.light : ThemeMode.dark);
+                    _appService.themeMode = isLightMode ? ThemeMode.light : ThemeMode.dark;
                   }
                 });
               },
@@ -115,15 +112,12 @@ class _AppThemePanelState extends State<AppThemePanel> {
                 setState(() {
                   if (isSystemTheme) return;
                   isLightMode = value;
-                  _appService.changeTheme(isLightMode ? ThemeMode.light : ThemeMode.dark);
+                  _appService.themeMode = isLightMode ? ThemeMode.light : ThemeMode.dark;
                 });
               },
             ),
           ],
         ),
-        // SwitchPanel(
-        //   panelTitle: 'Jasny motyw',
-        // ),
       ],
     );
   }

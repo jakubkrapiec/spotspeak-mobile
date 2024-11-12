@@ -100,10 +100,13 @@ class AuthenticationService {
       _accessToken = result!.accessToken;
       _idTokenRaw = result.idToken;
       _tokenExpirationTimestamp = result.accessTokenExpirationDateTime;
+
       //_authIdToken = _parseIdToken(_idTokenRaw!);
 
       final profile = await getUserDetails(_accessToken!);
       _userController.add(profile);
+
+      userTypeNotifier.value = profile.identityProvider == null ? UserType.normal : UserType.google;
 
       if (result.refreshToken != null) {
         await _secureStoreage.write(key: kAuthRefreshTokenKey, value: result.refreshToken);
@@ -131,7 +134,7 @@ class AuthenticationService {
 
     if (await _setLocalVariables(result)) {
       final authUser = await getUserDetails(_accessToken!);
-      userTypeNotifier.value = UserType.normal;
+
       return authUser;
     } else {
       throw Exception('Failed to login');
@@ -141,7 +144,6 @@ class AuthenticationService {
   Future<void> logout() async {
     _loginInfo.isLoggedIn = false;
     userTypeNotifier.value = UserType.guest;
-    // userType = UserType.guest;
     await _secureStoreage.delete(key: kAuthRefreshTokenKey);
 
     final request = EndSessionRequest(
@@ -152,7 +154,6 @@ class AuthenticationService {
 
     await _appAuth.endSession(request);
     _loginInfo.isLoggedIn = false;
-    // userType = UserType.guest;
   }
 
   AuthIdToken _parseIdToken(String idToken) {

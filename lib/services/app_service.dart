@@ -7,7 +7,9 @@ class AppService {
 
   ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
 
-  void changeTheme(ThemeMode themeMode) {
+  set themeMode(ThemeMode themeMode) {
     themeModeNotifier.value = themeMode;
   }
+
+  ThemeMode get themeMode => themeModeNotifier.value;
 }

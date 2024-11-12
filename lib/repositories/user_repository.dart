@@ -68,6 +68,8 @@ class PasswordChallengeFailedWrongPassword extends PasswordChallengeResult {}
 
 class PasswordChallengeFailedOtherError extends PasswordChallengeResult {}
 
+class PasswordChallengeSuccessForGoogleAccount extends PasswordChallengeResult {}
+
 class PasswordChallengeSuccess extends PasswordChallengeResult {
   PasswordChallengeSuccess(this.token);
   final String token;

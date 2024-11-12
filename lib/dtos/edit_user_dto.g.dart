@@ -7,7 +7,7 @@ part of 'edit_user_dto.dart';
 // **************************************************************************
 
 EditUserDto _$EditUserDtoFromJson(Map<String, dynamic> json) => EditUserDto(
-      passwordChallengeToken: json['passwordChallengeToken'] as String,
+      passwordChallengeToken: json['passwordChallengeToken'] as String?,
       firstName: json['firstName'] as String?,
       lastName: json['lastName'] as String?,
       email: json['email'] as String?,
