@@ -32,9 +32,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
   final _authService = getIt<AuthenticationService>();
 
   Future<void> _changeData(String currentPassword, String newData, AccountData dataType) async {
-    final response = _authService.userTypeNotifier.value != UserType.google
-        ? await _checkPassword(currentPassword)
-        : PasswordChallengeSuccessForGoogleAccount;
+    final response = await _checkPassword(currentPassword);
 
     switch (response) {
       case final PasswordChallengeSuccess success:
@@ -65,34 +63,6 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
 
         if (!mounted) return;
         Navigator.of(context).pop();
-
-      case PasswordChallengeSuccessForGoogleAccount _:
-        try {
-          dataType == AccountData.username
-              ? await _userService.userRepo.updateUser(EditUserDto(username: newData))
-              : await _userService.userRepo.updateUser(EditUserDto(email: newData));
-        } catch (exception) {
-          dataType == AccountData.username
-              ? await Fluttertoast.showToast(
-                  msg: 'Użytkownik o podanej nazwie już istnieje',
-                  toastLength: Toast.LENGTH_LONG,
-                )
-              : await Fluttertoast.showToast(
-                  msg: 'Użytkownik o podanym adresie email już istnieje',
-                  toastLength: Toast.LENGTH_LONG,
-                );
-          return;
-        }
-
-        await _userService.syncUser();
-        await Fluttertoast.showToast(
-          msg: 'Dane zostały poprawnie zmienione',
-          toastLength: Toast.LENGTH_LONG,
-        );
-
-        if (!mounted) return;
-        Navigator.of(context).pop();
-
       case PasswordChallengeFailedWrongPassword _:
         await Fluttertoast.showToast(
           msg: 'Wprowadzono niepoprawne hasło, dane nie zostały zmienione',
@@ -150,6 +120,9 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                     obscureText: obscureText,
                     style: TextStyle(fontSize: 22),
                     validator: (value) {
+                      if (_authService.userTypeNotifier.value == UserType.google) {
+                        return null;
+                      }
                       if (value == null || value.isEmpty) {
                         return 'Musisz wpisać hasło';
                       }
@@ -179,7 +152,11 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    await _changeData(_password!, _newValue!, widget.formType);
+                    if (_authService.userTypeNotifier.value == UserType.google) {
+                      await _changeData('', _newValue!, widget.formType);
+                    } else {
+                      await _changeData(_password!, _newValue!, widget.formType);
+                    }
                   }
                 },
                 child: Text('Zatwierdź'),
