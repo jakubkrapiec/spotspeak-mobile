@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'trace_service.dart';
+part of 'comment_service.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,13 +8,13 @@ part of 'trace_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _TraceService implements TraceService {
-  _TraceService(
+class _CommentService implements CommentService {
+  _CommentService(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= '/api/traces';
+    baseUrl ??= '/api/traces/comments';
   }
 
   final Dio _dio;
@@ -24,13 +24,54 @@ class _TraceService implements TraceService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<Trace> getTrace(int id) async {
+  Future<Comment> addCommentToTrace({
+    required int traceId,
+    required AddCommentDto addCommentDto,
+  }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Trace>(Options(
-      method: 'GET',
+    final _data = <String, dynamic>{};
+    _data.addAll(addCommentDto.toJson());
+    final _options = _setStreamType<Comment>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/${traceId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Comment _value;
+    try {
+      _value = Comment.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<Comment> editComment({
+    required int id,
+    required AddCommentDto addCommentDto,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(addCommentDto.toJson());
+    final _options = _setStreamType<Comment>(Options(
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
@@ -46,9 +87,9 @@ class _TraceService implements TraceService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Trace _value;
+    late Comment _value;
     try {
-      _value = Trace.fromJson(_result.data!);
+      _value = Comment.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -57,7 +98,42 @@ class _TraceService implements TraceService {
   }
 
   @override
-  Future<void> deleteTrace(int id) async {
+  Future<List<Comment>> getCommentsForTrace({required int traceId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<Comment>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/${traceId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Comment> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Comment.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<void> deleteComment(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -79,159 +155,6 @@ class _TraceService implements TraceService {
           baseUrl,
         )));
     await _dio.fetch<void>(_options);
-  }
-
-  @override
-  Future<List<TraceLocation>> getNearbyTraces(
-    double latitude,
-    double longitude,
-    int distance,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'latitude': latitude,
-      r'longitude': longitude,
-      r'distance': distance,
-    };
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<TraceLocation>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/nearby',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<TraceLocation> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => TraceLocation.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<List<Trace>> getMyTraces() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Trace>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/my',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Trace> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => Trace.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<Trace> discoverTrace(
-    int traceId,
-    double longitude,
-    double latitude,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'currentLongitude': longitude,
-      r'currentLatitude': latitude,
-    };
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Trace>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/discover/${traceId}',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Trace _value;
-    try {
-      _value = Trace.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<List<Tag>> getTags() async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Tag>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/tags',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Tag> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => Tag.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

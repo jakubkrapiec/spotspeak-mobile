@@ -11,6 +11,8 @@ TraceLocation _$TraceLocationFromJson(Map<String, dynamic> json) =>
       (json['id'] as num).toInt(),
       json['longitude'] as num,
       json['latitude'] as num,
+      json['hasDiscovered'] as bool,
+      $enumDecode(_$TraceTypeEnumMap, json['type']),
     );
 
 Map<String, dynamic> _$TraceLocationToJson(TraceLocation instance) =>
@@ -18,4 +20,12 @@ Map<String, dynamic> _$TraceLocationToJson(TraceLocation instance) =>
       'id': instance.id,
       'longitude': instance.longitude,
       'latitude': instance.latitude,
+      'hasDiscovered': instance.hasDiscovered,
+      'type': _$TraceTypeEnumMap[instance.type]!,
     };
+
+const _$TraceTypeEnumMap = {
+  TraceType.text: 'TEXTONLY',
+  TraceType.image: 'PHOTO',
+  TraceType.video: 'VIDEO',
+};

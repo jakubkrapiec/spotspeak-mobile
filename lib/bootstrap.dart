@@ -8,6 +8,7 @@ import 'package:spotspeak_mobile/app.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/firebase_options.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -39,6 +40,8 @@ Future<void> bootstrap() async {
   await configureDependencies();
 
   await getIt<AuthenticationService>().init();
+
+  timeago.setLocaleMessages('pl', timeago.PlMessages());
 
   runApp(App());
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -33,12 +34,7 @@ abstract class RegisterModule {
     );
     if (kDebugMode) {
       dio.interceptors.add(
-        PrettyDioLogger(
-          requestHeader: true,
-          requestBody: true,
-          responseHeader: true,
-          maxWidth: 120,
-        ),
+        PrettyDioLogger(requestHeader: true, requestBody: true, responseHeader: true, maxWidth: 120),
       );
     }
     dio.interceptors.add(AuthInterceptor());
@@ -50,7 +46,8 @@ abstract class RegisterModule {
   @Named(dioForOSMInstanceName)
   Future<Dio> get dioForOSM async {
     final packageInfo = await PackageInfo.fromPlatform();
-    final dio = Dio(BaseOptions(headers: {HttpHeaders.userAgentHeader: 'SpotSpeakMobile/${packageInfo.version}'}));
+    final dio = Dio(BaseOptions(headers: {HttpHeaders.userAgentHeader: 'SpotSpeakMobile/${packageInfo.version}'}))
+      ..httpClientAdapter = Http2Adapter(ConnectionManager());
     return dio;
   }
 

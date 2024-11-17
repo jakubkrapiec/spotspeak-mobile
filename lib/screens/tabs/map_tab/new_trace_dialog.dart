@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:spotspeak_mobile/common/widgets/spotspeak_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/trace_media_thumbnail.dart';
 
 class NewTraceDialog extends StatefulWidget {
@@ -39,90 +40,68 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Opacity(
-                  opacity: 0,
-                  child: IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.close),
-                  ),
-                ),
-                Text('Nowy ślad'),
-                IconButton(
-                  onPressed: Navigator.of(context).pop,
-                  icon: Icon(Icons.close),
-                ),
-              ],
-            ),
-            const Gap(16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextFormField(
-                controller: _descriptionController,
-                style: Theme.of(context).textTheme.bodySmall,
-                maxLines: 3,
-                maxLength: 140,
-              ),
-            ),
-            if (_media == null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.camera_alt),
-                    onPressed: () async {
-                      final result = await _picker.pickImage(source: ImageSource.camera);
-                      if (result == null || !mounted) return;
-                      _setMediaFile(result.path);
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.video_call),
-                    onPressed: () async {
-                      final result = await _picker.pickVideo(source: ImageSource.camera);
-                      if (result == null || !mounted) return;
-                      _setMediaFile(result.path);
-                    },
-                    iconSize: 32,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.image),
-                    onPressed: () async {
-                      final result = await _picker.pickMedia();
-                      if (result == null || !mounted) return;
-                      _setMediaFile(result.path);
-                    },
-                  ),
-                ],
-              )
-            else
-              TraceMediaThumbnail(
-                media: _media!,
-                onRemove: () => setState(() => _media = null),
-              ),
-            const Gap(16),
-            ElevatedButton(
-              onPressed: () {
-                if (!_formKey.currentState!.validate()) return;
-                final result = TraceDialogResult(_descriptionController.text, _media);
-                Navigator.of(context).pop(result);
-              },
-              child: Text('Dodaj ślad'),
-            ),
-            const Gap(24),
-          ],
+    return SpotSpeakDialog(
+      title: 'Nowy ślad',
+      children: [
+        Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: _descriptionController,
+            style: Theme.of(context).textTheme.bodySmall,
+            maxLines: 3,
+            maxLength: 140,
+            decoration: InputDecoration(hintText: 'Opisz swój ślad'),
+          ),
         ),
-      ),
+        if (_media == null)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                icon: Icon(Icons.camera_alt),
+                onPressed: () async {
+                  final result = await _picker.pickImage(source: ImageSource.camera);
+                  if (result == null || !mounted) return;
+                  _setMediaFile(result.path);
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.video_call),
+                onPressed: () async {
+                  final result = await _picker.pickVideo(
+                    source: ImageSource.camera,
+                    maxDuration: const Duration(seconds: 10),
+                  );
+                  if (result == null || !mounted) return;
+                  _setMediaFile(result.path);
+                },
+                iconSize: 32,
+              ),
+              IconButton(
+                icon: Icon(Icons.image),
+                onPressed: () async {
+                  final result = await _picker.pickMedia();
+                  if (result == null || !mounted) return;
+                  _setMediaFile(result.path);
+                },
+              ),
+            ],
+          )
+        else
+          TraceMediaThumbnail(
+            media: _media!,
+            onRemove: () => setState(() => _media = null),
+          ),
+        const Gap(16),
+        ElevatedButton(
+          onPressed: () {
+            if (!_formKey.currentState!.validate()) return;
+            final result = TraceDialogResult(_descriptionController.text, _media);
+            Navigator.of(context).pop(result);
+          },
+          child: Text('Dodaj ślad'),
+        ),
+      ],
     );
   }
 }

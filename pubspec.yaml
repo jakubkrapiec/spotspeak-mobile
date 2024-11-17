@@ -9,9 +9,12 @@ environment:
 dependencies:
   auto_route: ^9.2.2
   bloc: ^8.1.4
+  cached_network_image: ^3.4.1
+  cached_video_player_plus: ^3.0.3
   dio: ^5.7.0
   dio_cache_interceptor: ^3.5.0
   dio_cache_interceptor_db_store: ^5.1.1
+  dio_http2_adapter: ^2.5.3
   easy_debounce: ^2.0.3
   firebase_core: ^3.5.0
   firebase_messaging: ^15.1.2
@@ -24,6 +27,7 @@ dependencies:
   flutter_map_cache: ^1.5.1
   flutter_map_cancellable_tile_provider: ^3.0.2
   flutter_map_location_marker: ^9.1.1
+  flutter_map_polywidget: ^1.1.0-dev.7
   flutter_secure_storage: ^4.2.1
   flutter_svg: ^2.0.10+1
   gap: ^3.0.1
@@ -45,6 +49,7 @@ dependencies:
   rxdart: ^0.28.0
   sliding_up_panel: ^2.0.0+1
   sqlite3_flutter_libs: ^0.5.24
+  timeago: ^3.7.0
   url_launcher: ^6.3.0
 
 dev_dependencies:
@@ -62,7 +67,9 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - path: assets/
+    - assets/
+    - assets/trace_icons_hidden/
+    - assets/trace_icons_discovered/
   fonts:
     - family: Inconsolata
       fonts:

@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/models/comment.dart';
 import 'package:spotspeak_mobile/models/tag.dart';
+import 'package:spotspeak_mobile/models/trace_author.dart';
+import 'package:spotspeak_mobile/models/trace_type.dart';
 
 part 'trace.g.dart';
 
@@ -15,6 +17,9 @@ class Trace {
     required this.traceTags,
     required this.latitude,
     required this.longitude,
+    required this.createdAt,
+    required this.author,
+    required this.type,
   });
 
   factory Trace.fromJson(Map<String, Object?> json) => _$TraceFromJson(json);
@@ -22,10 +27,13 @@ class Trace {
   final int id;
   final String? resourceAccessUrl;
   final String description;
-  final List<Comment>? comments;
+  final List<Comment> comments;
   final List<Tag> traceTags;
   final num latitude;
   final num longitude;
+  final DateTime createdAt;
+  final TraceAuthor author;
+  final TraceType type;
 
   LatLng get location => LatLng(latitude.toDouble(), longitude.toDouble());
 
