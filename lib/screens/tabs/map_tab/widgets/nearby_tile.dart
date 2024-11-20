@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class NearbyTile extends StatelessWidget {
-  const NearbyTile({required this.trace, super.key});
+  NearbyTile({required this.trace, super.key});
+
+  final _appService = getIt<AppService>();
 
   final TraceLocation trace;
   @override
@@ -12,15 +16,11 @@ class NearbyTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
       child: Container(
         padding: EdgeInsets.all(4),
-        decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-            ? CustomTheme.lightContainerStyle
-            : CustomTheme.darkContainerStyle,
+        decoration: _appService.isDarkMode(context) ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
         child: ListTile(
           onTap: () {},
           leading: Image.asset(
-            MediaQuery.platformBrightnessOf(context) == Brightness.light
-                ? 'assets/trace_icon.png'
-                : 'assets/trace_icon_white.png',
+            _appService.isDarkMode(context) ? 'assets/trace_icon_white.png' : 'assets/trace_icon.png',
           ),
           title: Text('900 m'),
           trailing: IconButton(

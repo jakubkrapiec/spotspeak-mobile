@@ -15,6 +15,7 @@ import 'package:spotspeak_mobile/models/user.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
 import 'package:spotspeak_mobile/screens/tabs/profile_tab/profile_button.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
@@ -36,6 +37,7 @@ class AccountSettingsScreen extends StatefulWidget {
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   final _userService = getIt<UserService>();
   final _authService = getIt<AuthenticationService>();
+  final _appService = getIt<AppService>();
 
   Future<void> _pickImage(ImageSource source) async {
     if (await _getPermission(source == ImageSource.camera ? PermissionType.camera : PermissionType.gallery) == false) {
@@ -141,7 +143,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                 bottom: 0,
                                 child: Container(
                                   padding: EdgeInsets.all(5),
-                                  decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                                  decoration: _appService.isDarkMode(context)
                                       ? CustomTheme.darkPhotoIconStyle
                                       : CustomTheme.lightPhotoIconStyle,
                                   child: Icon(
@@ -165,7 +167,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                                 bottom: 0,
                                 child: Container(
                                   padding: EdgeInsets.all(5),
-                                  decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                                  decoration: _appService.themeMode == ThemeMode.dark
                                       ? CustomTheme.darkPhotoIconStyle
                                       : CustomTheme.lightPhotoIconStyle,
                                   child: Icon(

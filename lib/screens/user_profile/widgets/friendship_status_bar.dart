@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class FriendshipStatusBar extends StatelessWidget {
-  const FriendshipStatusBar({super.key});
+  FriendshipStatusBar({super.key});
+
+  final _appService = getIt<AppService>();
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +19,8 @@ class FriendshipStatusBar extends StatelessWidget {
           Expanded(
             child: Container(
               padding: EdgeInsets.all(16),
-              decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                  ? CustomTheme.lightContainerStyle
-                  : CustomTheme.darkContainerStyle,
+              decoration:
+                  _appService.isDarkMode(context) ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
               child: Row(
                 children: [
                   Icon(Icons.people),
@@ -30,7 +33,7 @@ class FriendshipStatusBar extends StatelessWidget {
           Gap(16),
           GestureDetector(
             child: Container(
-              decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
+              decoration: _appService.themeMode == ThemeMode.light
                   ? CustomTheme.lightContainerStyle.copyWith(color: CustomColors.blue2)
                   : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey4),
               padding: EdgeInsets.all(16),

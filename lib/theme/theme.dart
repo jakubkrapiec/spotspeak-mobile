@@ -135,6 +135,11 @@ abstract class CustomTheme {
     dialogTheme: DialogTheme(
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.blue7),
     ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: CustomColors.blue5,
+      linearTrackColor: CustomColors.grey12,
+      linearMinHeight: 16,
+    ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.lightBottomNavBarTheme,
   );
 
@@ -185,7 +190,7 @@ abstract class CustomTheme {
         fontFamily: 'Inconsolata',
         fontWeight: FontWeight.bold,
         fontSize: 22,
-        color: CustomColors.green3,
+        color: CustomColors.green4,
       ),
       bodySmall: TextStyle(
         fontFamily: 'Inconsolata',
@@ -289,6 +294,11 @@ abstract class CustomTheme {
     ),
     dialogTheme: DialogTheme(
       titleTextStyle: TextStyle(fontSize: 22, fontFamily: 'Inconsolata', color: CustomColors.green6),
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: CustomColors.green5,
+      linearTrackColor: CustomColors.grey12,
+      linearMinHeight: 16,
     ),
     bottomNavigationBarTheme: CustomBottomNavBarTheme.darkBottomNavBarTheme,
   );

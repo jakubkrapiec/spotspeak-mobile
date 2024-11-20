@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -77,9 +78,10 @@ class _ProfileTabState extends State<ProfileTab> {
                     StreamBuilder<User>(
                       stream: _userService.user,
                       builder: (context, snapshot) {
-                        return Text(
+                        return AutoSizeText(
                           snapshot.data?.username ?? 'Nieznany',
                           style: Theme.of(context).textTheme.bodyLarge,
+                          maxLines: 1,
                         );
                       },
                     ),
@@ -92,7 +94,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     ),
                     ProfileButton(
                       pressFunction: () {
-                        context.router.push(const UserTracesRoute());
+                        context.router.push(UserTracesRoute());
                       },
                       buttonText: 'Dodane ślady',
                     ),

@@ -1,27 +1,22 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:spotspeak_mobile/models/remote_file.dart';
 
 part 'achievement.g.dart';
 
 @JsonSerializable()
 class Achievement {
   const Achievement({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.points,
-    required this.iconUrl,
-    required this.createdAt,
+    required this.userAchievementId,
+    required this.achievementName,
+    required this.resourceAccessUrl,
+    required this.completedAt,
   });
 
   factory Achievement.fromJson(Map<String, Object?> json) => _$AchievementFromJson(json);
 
-  final int id;
-  final String name;
-  final String description;
-  final int points;
-  final RemoteFile iconUrl;
-  final DateTime createdAt;
+  final int userAchievementId;
+  final String achievementName;
+  final String resourceAccessUrl;
+  final DateTime? completedAt;
 
   Map<String, Object?> toJson() => _$AchievementToJson(this);
 }

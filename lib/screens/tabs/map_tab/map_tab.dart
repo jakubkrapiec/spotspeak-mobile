@@ -22,6 +22,7 @@ import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_panel.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
@@ -39,6 +40,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   late final AnimatedMapController _mapController;
   final _locationService = getIt<LocationService>();
   final _traceService = getIt<TraceService>();
+  final _appService = getIt<AppService>();
   final _dio = getIt<Dio>();
   final _dioForOSM = getIt<Dio>(instanceName: dioForOSMInstanceName);
   final _dbCacheStore = getIt<DbCacheStore>();
@@ -134,7 +136,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
       body: SlidingUpPanel(
         panelBuilder: (scrollController) => NearbyPanel(scrollController: scrollController),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-        color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? CustomColors.blue1 : CustomColors.grey5,
+        color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
         body: FlutterMap(
           mapController: _mapController.mapController,
           options: const MapOptions(

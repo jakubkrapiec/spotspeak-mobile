@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/screens/users_traces/trace_tile.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 enum SortingType {
@@ -14,7 +16,9 @@ enum SortingType {
 
 @RoutePage()
 class UserTracesScreen extends StatelessWidget {
-  const UserTracesScreen({super.key});
+  UserTracesScreen({super.key});
+
+  final _appService = getIt<AppService>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +36,9 @@ class UserTracesScreen extends StatelessWidget {
                 Expanded(
                   child: Container(
                     padding: EdgeInsets.all(16),
-                    decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                        ? CustomTheme.lightContainerStyle
-                        : CustomTheme.darkContainerStyle,
+                    decoration: _appService.isDarkMode(context)
+                        ? CustomTheme.darkContainerStyle
+                        : CustomTheme.lightContainerStyle,
                     child: Text(
                       'Twoje dodane ślady:',
                       style: Theme.of(context).textTheme.titleMedium,
@@ -45,9 +49,9 @@ class UserTracesScreen extends StatelessWidget {
                 Gap(16),
                 Container(
                   padding: EdgeInsets.all(16),
-                  decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                      ? CustomTheme.lightContainerStyle
-                      : CustomTheme.darkContainerStyle,
+                  decoration: _appService.isDarkMode(context)
+                      ? CustomTheme.darkContainerStyle
+                      : CustomTheme.lightContainerStyle,
                   child: PopupMenuButton(
                     onSelected: (sortingType) {},
                     itemBuilder: generatePopupItems,

@@ -1,9 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/common/widgets/horizontal_user_list.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/models/other_user.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/friendship_status_bar.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/manage_request_buttons.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/send_request_button.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 enum FriendshipStatus {
@@ -14,7 +18,9 @@ enum FriendshipStatus {
 
 @RoutePage()
 class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({required this.status, super.key});
+  UserProfileScreen({required this.status, super.key});
+
+  final _appService = getIt<AppService>();
 
   final FriendshipStatus status;
 
@@ -59,31 +65,13 @@ class UserProfileScreen extends StatelessWidget {
               child: Text('Wspólni znajomi:'),
             ),
           ),
-          SizedBox(
-            height: 120,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: items.length,
-              separatorBuilder: (context, index) => Gap(16),
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () {},
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/default_icon.jpg',
-                          width: 90,
-                          height: 90,
-                        ),
-                      ),
-                    ),
-                    Text('username'),
-                  ],
-                );
-              },
-            ),
+          HorizontalUserList(
+            friendsList: [
+              OtherUser(id: '12312', username: 'dsadas'),
+              OtherUser(id: '42342', username: 'aaaa'),
+              OtherUser(id: '4342', username: 'anka'),
+              OtherUser(id: '1231', username: 'username'),
+            ],
           ),
           SizedBox(height: 10),
           SizedBox(
@@ -107,9 +95,9 @@ class UserProfileScreen extends StatelessWidget {
                     margin: EdgeInsets.symmetric(vertical: 8),
                     padding: const EdgeInsets.all(10),
                     width: 120,
-                    decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-                        ? CustomTheme.lightContainerStyle
-                        : CustomTheme.darkContainerStyle,
+                    decoration: _appService.isDarkMode(context)
+                        ? CustomTheme.darkContainerStyle
+                        : CustomTheme.lightContainerStyle,
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

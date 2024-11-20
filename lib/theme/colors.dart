@@ -31,6 +31,7 @@ abstract class CustomColors {
   /// Grey:
 
   static const grey1 = Color(0xFFF6F7F5);
+  static const grey12 = Color(0xFFD9DCE1);
   static const grey2 = Color(0xFFA3B1CC);
   static const grey3 = Color(0xFF666E80);
   static const grey4 = Color(0xFF3D424D);

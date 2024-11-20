@@ -72,51 +72,49 @@ class AppThemePanel extends StatefulWidget {
 class _AppThemePanelState extends State<AppThemePanel> {
   final _appService = getIt<AppService>();
 
-  bool isSystemTheme = true;
-  bool isLightMode = false;
+  late ThemeMode themeMode = _appService.themeMode;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Zgodnie z systemem'),
-            Switch(
-              value: isSystemTheme,
-              onChanged: (bool value) {
-                setState(() {
-                  isSystemTheme = value;
-                  if (isSystemTheme) {
-                    isLightMode = false;
-                    _appService.themeMode = ThemeMode.system;
-                  } else {
-                    _appService.themeMode = isLightMode ? ThemeMode.light : ThemeMode.dark;
-                  }
-                });
-              },
-            ),
-          ],
+        RadioListTile<ThemeMode>(
+          title: const Text('Zgodnie z systemem'),
+          value: ThemeMode.system,
+          groupValue: _appService.themeMode,
+          onChanged: (ThemeMode? value) {
+            if (value != null) {
+              setState(() {
+                _appService.themeModeNotifier.value = value;
+              });
+            }
+          },
         ),
-        Gap(8),
-        Divider(),
-        Gap(32),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Jasny motyw'),
-            Switch(
-              value: isLightMode,
-              onChanged: (bool value) {
-                setState(() {
-                  if (isSystemTheme) return;
-                  isLightMode = value;
-                  _appService.themeMode = isLightMode ? ThemeMode.light : ThemeMode.dark;
-                });
-              },
-            ),
-          ],
+        Gap(16),
+        RadioListTile<ThemeMode>(
+          title: const Text('Jasny motyw'),
+          value: ThemeMode.light,
+          groupValue: _appService.themeMode,
+          onChanged: (ThemeMode? value) {
+            if (value != null) {
+              setState(() {
+                _appService.themeModeNotifier.value = value;
+              });
+            }
+          },
+        ),
+        Gap(16),
+        RadioListTile<ThemeMode>(
+          title: const Text('Ciemny motyw'),
+          value: ThemeMode.dark,
+          groupValue: _appService.themeMode,
+          onChanged: (ThemeMode? value) {
+            if (value != null) {
+              setState(() {
+                _appService.themeModeNotifier.value = value;
+              });
+            }
+          },
         ),
       ],
     );

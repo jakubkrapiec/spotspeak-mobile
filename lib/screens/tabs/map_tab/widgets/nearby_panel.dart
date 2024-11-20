@@ -8,6 +8,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_tile.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
@@ -23,8 +24,8 @@ class NearbyPanel extends StatefulWidget {
 
 class _NearbyPanelState extends State<NearbyPanel> {
   final _traceService = getIt<TraceService>();
-
   final _locationService = getIt<LocationService>();
+  final _appService = getIt<AppService>();
 
   StreamSubscription<Position>? _locationStreamSubscription;
 
@@ -83,7 +84,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
             Container(
               width: 30,
               height: 5,
-              decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
+              decoration: _appService.themeMode == ThemeMode.light
                   ? CustomTheme.lightSliderButton
                   : CustomTheme.darkSliderButton,
             ),

@@ -20,6 +20,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
+import 'package:spotspeak_mobile/services/achievement_service.dart' as _i77;
 import 'package:spotspeak_mobile/services/app_service.dart' as _i724;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
@@ -62,6 +63,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i361.Dio>(() => registerModule.dio(gh<_i655.PackageInfo>()));
     gh.singleton<_i643.UserRepository>(
         () => _i643.UserRepository(gh<_i361.Dio>()));
+    gh.singleton<_i77.AchievementService>(
+        () => _i77.AchievementService(gh<_i361.Dio>()));
     gh.singleton<_i192.TraceService>(() => _i192.TraceService(gh<_i361.Dio>()));
     gh.singleton<_i281.AuthenticationService>(
       () => _i281.AuthenticationService(

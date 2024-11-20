@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
 class TraceTile extends StatelessWidget {
-  const TraceTile({required this.isActive, super.key});
+  TraceTile({required this.isActive, super.key});
 
   final bool isActive;
+
+  final _appService = getIt<AppService>();
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +18,11 @@ class TraceTile extends StatelessWidget {
         onTap: () {},
         tileColor: isActive
             ? null
-            : MediaQuery.platformBrightnessOf(context) == Brightness.light
+            : _appService.themeMode == ThemeMode.light
                 ? CustomColors.grey2
                 : CustomColors.grey3,
         leading: Image.asset(
-          MediaQuery.platformBrightnessOf(context) == Brightness.light || !isActive
+          _appService.themeMode == ThemeMode.light || !isActive
               ? 'assets/trace_icon.png'
               : 'assets/trace_icon_white.png',
         ),
@@ -30,7 +34,7 @@ class TraceTile extends StatelessWidget {
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
-                        : MediaQuery.platformBrightnessOf(context) == Brightness.light
+                        : _appService.themeMode == ThemeMode.light
                             ? CustomColors.grey4
                             : CustomColors.grey5,
                   ),
@@ -40,7 +44,7 @@ class TraceTile extends StatelessWidget {
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
-                        : MediaQuery.platformBrightnessOf(context) == Brightness.light
+                        : _appService.themeMode == ThemeMode.light
                             ? CustomColors.grey4
                             : CustomColors.grey5,
                   ),

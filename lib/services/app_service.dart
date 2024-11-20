@@ -7,9 +7,11 @@ class AppService {
 
   ValueNotifier<ThemeMode> themeModeNotifier = ValueNotifier<ThemeMode>(ThemeMode.system);
 
-  set themeMode(ThemeMode themeMode) {
-    themeModeNotifier.value = themeMode;
-  }
-
   ThemeMode get themeMode => themeModeNotifier.value;
+
+  bool isDarkMode(BuildContext context) {
+    return themeModeNotifier.value == ThemeMode.system
+        ? MediaQuery.platformBrightnessOf(context) == Brightness.dark
+        : themeModeNotifier.value == ThemeMode.dark;
+  }
 }

@@ -5,6 +5,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/edit_user_dto.dart';
 import 'package:spotspeak_mobile/repositories/user_repository.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
@@ -30,6 +31,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
 
   final _userService = getIt<UserService>();
   final _authService = getIt<AuthenticationService>();
+  final _appService = getIt<AppService>();
 
   Future<void> _changeData(String currentPassword, String newData, AccountData dataType) async {
     final response = await _checkPassword(currentPassword);
@@ -96,15 +98,25 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
               initialValue: widget.initValue,
               style: TextStyle(fontSize: 22),
               validator: (value) {
+                const emailPattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';
+                final emailRegex = RegExp(emailPattern);
+
+                const nicknamePattern = r'^[a-zA-Z0-9._-]+$';
+                final nicknameRegex = RegExp(nicknamePattern);
+
                 if (value == null || value.isEmpty) {
                   return 'Musisz wpisać tekst';
+                } else if (widget.formType == AccountData.email && !emailRegex.hasMatch(value)) {
+                  return 'Nieprawidłowy adres email';
+                } else if (widget.formType == AccountData.username && !nicknameRegex.hasMatch(value)) {
+                  return 'Nieprawidłowa nazwa użytkownika';
                 }
                 return null;
               },
               onSaved: (value) {
                 _newValue = value;
               },
-              decoration: MediaQuery.platformBrightnessOf(context) == Brightness.dark
+              decoration: _appService.themeMode == ThemeMode.dark
                   ? InputDecoration(
                       fillColor: CustomColors.grey6,
                     )
@@ -132,8 +144,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                       _password = value;
                     },
                     decoration: InputDecoration(
-                      fillColor:
-                          MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
+                      fillColor: _appService.themeMode == ThemeMode.dark ? CustomColors.grey6 : null,
                       suffixIcon: IconButton(
                         icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
                         onPressed: () {

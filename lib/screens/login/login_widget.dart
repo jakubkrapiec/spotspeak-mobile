@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
@@ -21,8 +22,8 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   final _authService = getIt<AuthenticationService>();
-
   final _userService = getIt<UserService>();
+  final _appService = getIt<AppService>();
 
   Future<void> _loginUser() async {
     try {
@@ -46,9 +47,9 @@ class _LoginWidgetState extends State<LoginWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
       child: Container(
         width: double.infinity,
-        decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
-            ? CustomTheme.lightContainerStyle.copyWith(color: Colors.white)
-            : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey6),
+        decoration: _appService.isDarkMode(context)
+            ? CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey6)
+            : CustomTheme.lightContainerStyle.copyWith(color: Colors.white),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

@@ -7,20 +7,18 @@ part of 'achievement.dart';
 // **************************************************************************
 
 Achievement _$AchievementFromJson(Map<String, dynamic> json) => Achievement(
-      id: (json['id'] as num).toInt(),
-      name: json['name'] as String,
-      description: json['description'] as String,
-      points: (json['points'] as num).toInt(),
-      iconUrl: RemoteFile.fromJson(json['iconUrl'] as Map<String, dynamic>),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      userAchievementId: (json['userAchievementId'] as num).toInt(),
+      achievementName: json['achievementName'] as String,
+      resourceAccessUrl: json['resourceAccessUrl'] as String,
+      completedAt: json['completedAt'] == null
+          ? null
+          : DateTime.parse(json['completedAt'] as String),
     );
 
 Map<String, dynamic> _$AchievementToJson(Achievement instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'description': instance.description,
-      'points': instance.points,
-      'iconUrl': instance.iconUrl,
-      'createdAt': instance.createdAt.toIso8601String(),
+      'userAchievementId': instance.userAchievementId,
+      'achievementName': instance.achievementName,
+      'resourceAccessUrl': instance.resourceAccessUrl,
+      'completedAt': instance.completedAt?.toIso8601String(),
     };

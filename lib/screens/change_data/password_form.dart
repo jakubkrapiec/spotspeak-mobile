@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/update_password_dto.dart';
+import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
@@ -18,10 +19,11 @@ class PasswordForm extends StatefulWidget {
 class _PasswordFormState extends State<PasswordForm> {
   final _formKey = GlobalKey<FormState>();
   final _userService = getIt<UserService>();
+  final _appService = getIt<AppService>();
 
-  bool obscureText1 = true;
-  bool obscureText2 = true;
-  bool obscureText3 = true;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
+  bool _obscureText3 = true;
 
   Future<void> _changePassword(String currentPassword, String newPassword) async {
     try {
@@ -54,7 +56,7 @@ class _PasswordFormState extends State<PasswordForm> {
             Text('Stare hasło:'),
             Gap(8),
             TextFormField(
-              obscureText: obscureText1,
+              obscureText: _obscureText1,
               style: TextStyle(fontSize: 22),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -66,12 +68,12 @@ class _PasswordFormState extends State<PasswordForm> {
                 oldPassword = value;
               },
               decoration: InputDecoration(
-                fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
+                fillColor: _appService.themeMode == ThemeMode.dark ? CustomColors.grey6 : null,
                 suffixIcon: GestureDetector(
-                  child: Icon(obscureText1 ? Icons.visibility_off : Icons.visibility),
+                  child: Icon(_obscureText1 ? Icons.visibility_off : Icons.visibility),
                   onTap: () {
                     setState(() {
-                      obscureText1 = !obscureText1;
+                      _obscureText1 = !_obscureText1;
                     });
                   },
                 ),
@@ -81,7 +83,7 @@ class _PasswordFormState extends State<PasswordForm> {
             Text('Nowe hasło:'),
             Gap(8),
             TextFormField(
-              obscureText: obscureText2,
+              obscureText: _obscureText2,
               style: TextStyle(fontSize: 22),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -93,12 +95,12 @@ class _PasswordFormState extends State<PasswordForm> {
                 newPassword = value;
               },
               decoration: InputDecoration(
-                fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
+                fillColor: _appService.themeMode == ThemeMode.dark ? CustomColors.grey6 : null,
                 suffixIcon: IconButton(
-                  icon: Icon(obscureText2 ? Icons.visibility_off : Icons.visibility),
+                  icon: Icon(_obscureText2 ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
                     setState(() {
-                      obscureText2 = !obscureText2;
+                      _obscureText2 = !_obscureText2;
                     });
                   },
                 ),
@@ -108,7 +110,7 @@ class _PasswordFormState extends State<PasswordForm> {
             Text('Powtórz hasło:'),
             Gap(8),
             TextFormField(
-              obscureText: obscureText3,
+              obscureText: _obscureText3,
               style: TextStyle(fontSize: 22),
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -120,12 +122,12 @@ class _PasswordFormState extends State<PasswordForm> {
                 newPasswordRepeat = value;
               },
               decoration: InputDecoration(
-                fillColor: MediaQuery.platformBrightnessOf(context) == Brightness.dark ? CustomColors.grey6 : null,
+                fillColor: _appService.themeMode == ThemeMode.dark ? CustomColors.grey6 : null,
                 suffixIcon: IconButton(
-                  icon: Icon(obscureText3 ? Icons.visibility_off : Icons.visibility),
+                  icon: Icon(_obscureText3 ? Icons.visibility_off : Icons.visibility),
                   onPressed: () {
                     setState(() {
-                      obscureText3 = !obscureText3;
+                      _obscureText3 = !_obscureText3;
                     });
                   },
                 ),
