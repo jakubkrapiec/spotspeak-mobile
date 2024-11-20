@@ -50,7 +50,7 @@ dependencies:
   sliding_up_panel: ^2.0.0+1
   sqlite3_flutter_libs: ^0.5.24
   timeago: ^3.7.0
-  url_launcher: ^6.3.0
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   auto_route_generator: ^9.0.0
