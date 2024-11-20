@@ -1,9 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:spotspeak_mobile/routing/app_router.gr.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_list.dart';
-import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_search.dart';
-import 'package:spotspeak_mobile/screens/user_profile/user_profile_screen.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friend_requests_tab/friend_requests_tab.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_tab.dart';
 
 @RoutePage()
 class FriendsTab extends StatelessWidget {
@@ -11,7 +9,6 @@ class FriendsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = List<String>.generate(10000, (i) => 'Item $i');
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -30,40 +27,10 @@ class FriendsTab extends StatelessWidget {
         body: TabBarView(
           children: [
             Column(
-              children: [
-                FriendsSearch(
-                  pressFunction: (value) {},
-                ),
-                FriendsList(
-                  items: items,
-                  tapFunction: () {
-                    context.router.push(UserProfileRoute(status: FriendshipStatus.friends));
-                  },
-                ),
-              ],
+              children: [],
             ),
-            Column(
-              children: [
-                FriendsSearch(pressFunction: (value) {}),
-                FriendsList(
-                  items: items,
-                  tapFunction: () {
-                    context.router.push(UserProfileRoute(status: FriendshipStatus.request));
-                  },
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                FriendsSearch(pressFunction: (value) {}),
-                FriendsList(
-                  items: items,
-                  tapFunction: () {
-                    context.router.push(UserProfileRoute(status: FriendshipStatus.stranger));
-                  },
-                ),
-              ],
-            ),
+            FriendRequestsTab(),
+            SearchFriendsTab(),
           ],
         ),
       ),

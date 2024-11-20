@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:spotspeak_mobile/models/search_user.dart';
 
 class FriendTile extends StatelessWidget {
-  const FriendTile({
-    required this.username,
-    required this.tapFunction,
-    super.key,
-  });
+  const FriendTile({required this.user, required this.tapFunction, super.key});
 
-  final String username;
+  final SearchUser user;
   final VoidCallback tapFunction;
 
   @override
@@ -18,7 +15,7 @@ class FriendTile extends StatelessWidget {
         dimension: 45,
         child: ClipOval(child: Image.asset('assets/default_icon.jpg')),
       ),
-      title: Text(username),
+      title: Text(user.username),
       trailing: Wrap(
         spacing: 12,
         children: [

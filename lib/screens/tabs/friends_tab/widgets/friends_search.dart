@@ -3,19 +3,16 @@ import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class FriendsSearch extends StatelessWidget {
-  const FriendsSearch({
-    required this.pressFunction,
-    super.key,
-  });
+  const FriendsSearch({required this.controller, super.key});
 
-  final void Function(String val) pressFunction;
+  final TextEditingController controller;
+
   @override
   Widget build(BuildContext context) {
-    var textPattern = '';
     return ColoredBox(
       color: MediaQuery.platformBrightnessOf(context) == Brightness.light ? CustomColors.blue1 : CustomColors.grey5,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Container(
           decoration: MediaQuery.platformBrightnessOf(context) == Brightness.light
               ? CustomTheme.lightContainerStyle
@@ -25,21 +22,10 @@ class FriendsSearch extends StatelessWidget {
             children: [
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Wyszukaj znajomego',
-                  ),
-                  onChanged: (value) => {textPattern = value},
+                  decoration: const InputDecoration(hintText: 'Wyszukaj znajomego'),
+                  controller: controller,
                   style: const TextStyle(fontSize: 16),
                 ),
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
-                ),
-                onPressed: () {
-                  pressFunction(textPattern);
-                },
               ),
             ],
           ),
