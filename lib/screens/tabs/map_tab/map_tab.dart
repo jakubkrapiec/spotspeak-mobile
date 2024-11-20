@@ -10,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_polywidget/flutter_map_polywidget.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -47,6 +48,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   StreamSubscription<Position>? _locationStreamSubscription;
   StreamSubscription<MapEvent>? _mapEventSubscription;
   bool _waitingForFirstLocation = true;
+  bool _addingTrace = false;
 
   Position? _lastLocation;
   List<TraceLocation> _traces = [];
@@ -81,14 +83,25 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   Future<void> _onAddTrace() async {
     final result = await showDialog<TraceDialogResult?>(context: context, builder: (context) => const NewTraceDialog());
     if (result == null || _lastLocation == null) return;
-    final dto = AddTraceDto(
-      _lastLocation!.longitude,
-      _lastLocation!.latitude,
-      result.description,
-      [],
-    );
-    await _traceService.addTrace(result.media, dto);
-    unawaited(_getVisibleTraces());
+    final dto = AddTraceDto(_lastLocation!.longitude, _lastLocation!.latitude, result.description, []);
+    setState(() {
+      _addingTrace = true;
+    });
+    try {
+      await _traceService.addTrace(result.media, dto);
+      await _getVisibleTraces();
+    } catch (e, st) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nie udało się dodać śladu')));
+      }
+      debugPrint('Failed to add trace: $e\n$st');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _addingTrace = false;
+        });
+      }
+    }
   }
 
   Future<void> _initLocationService() async {
@@ -132,6 +145,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
       floatingActionButton: _FloatingActionButtons(
         onTapMoveToUserLocation: _onMoveToUserLocation,
         onTapAddTrace: _onAddTrace,
+        addingTrace: _addingTrace,
       ),
       body: SlidingUpPanel(
         panelBuilder: (scrollController) => NearbyPanel(scrollController: scrollController),
@@ -155,6 +169,22 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
               minZoom: 2,
               retinaMode: false,
             ),
+            PolyWidgetLayer(
+              polyWidgets: [
+                if (_lastLocation != null)
+                  PolyWidget(
+                    center: _lastLocation!.toLatLng(),
+                    widthInMeters: 100,
+                    heightInMeters: 100,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.3),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
             CurrentLocationLayer(
               positionStream: _locationService.getLocationStream().map(
                     (position) => LocationMarkerPosition(
@@ -173,7 +203,11 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                 for (final trace in _traces)
                   Marker(
                     point: trace.toLatLng(),
-                    child: const TraceMarker(),
+                    child: TraceMarker(
+                      trace: trace,
+                      currentUserLocation: _lastLocation?.toLatLng(),
+                      onRefreshTraces: _getVisibleTraces,
+                    ),
                     height: TraceMarker.dimens,
                     width: TraceMarker.dimens,
                   ),
@@ -192,10 +226,15 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 }
 
 class _FloatingActionButtons extends StatelessWidget {
-  const _FloatingActionButtons({required this.onTapMoveToUserLocation, required this.onTapAddTrace});
+  const _FloatingActionButtons({
+    required this.onTapMoveToUserLocation,
+    required this.onTapAddTrace,
+    required this.addingTrace,
+  });
 
   final VoidCallback onTapMoveToUserLocation;
   final VoidCallback onTapAddTrace;
+  final bool addingTrace;
 
   @override
   Widget build(BuildContext context) {
@@ -213,9 +252,9 @@ class _FloatingActionButtons extends StatelessWidget {
             ),
             const Gap(8),
             FloatingActionButton(
-              onPressed: onTapAddTrace,
+              onPressed: addingTrace ? null : onTapAddTrace,
               heroTag: 'add_trace',
-              child: const Icon(Icons.add),
+              child: addingTrace ? const CircularProgressIndicator() : const Icon(Icons.add),
             ),
           ],
         ),

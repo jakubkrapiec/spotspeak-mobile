@@ -20,9 +20,15 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friend_requests_tab/friend_requests_bloc.dart'
+    as _i488;
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_bloc.dart'
+    as _i868;
 import 'package:spotspeak_mobile/services/achievement_service.dart' as _i77;
 import 'package:spotspeak_mobile/services/app_service.dart' as _i724;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
+import 'package:spotspeak_mobile/services/comment_service.dart' as _i547;
+import 'package:spotspeak_mobile/services/friend_service.dart' as _i100;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
 import 'package:spotspeak_mobile/services/user_service.dart' as _i448;
@@ -65,6 +71,10 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i643.UserRepository(gh<_i361.Dio>()));
     gh.singleton<_i77.AchievementService>(
         () => _i77.AchievementService(gh<_i361.Dio>()));
+    gh.singleton<_i547.CommentService>(
+        () => _i547.CommentService(gh<_i361.Dio>()));
+    gh.singleton<_i100.FriendService>(
+        () => _i100.FriendService(gh<_i361.Dio>()));
     gh.singleton<_i192.TraceService>(() => _i192.TraceService(gh<_i361.Dio>()));
     gh.singleton<_i281.AuthenticationService>(
       () => _i281.AuthenticationService(
@@ -76,6 +86,10 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i448.UserService>(
         () => _i448.UserService(gh<_i643.UserRepository>()));
+    gh.factory<_i488.FriendRequestsBloc>(
+        () => _i488.FriendRequestsBloc(gh<_i100.FriendService>()));
+    gh.factory<_i868.SearchFriendsBloc>(
+        () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
     return this;
   }
 }

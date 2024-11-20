@@ -6,6 +6,7 @@ import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 class TraceMediaThumbnail extends StatefulWidget {
   TraceMediaThumbnail({required this.media, required this.onRemove, this.radius = 120, super.key})
@@ -70,12 +71,14 @@ class _TraceMediaThumbnailState extends State<TraceMediaThumbnail> {
         Positioned(
           right: 0,
           top: 0,
-          child: IconButton(
-            icon: Icon(Icons.close),
-            visualDensity: VisualDensity.compact,
-            iconSize: 32,
-            padding: EdgeInsets.zero,
-            onPressed: widget.onRemove,
+          child: Container(
+            decoration: BoxDecoration(color: CustomColors.blue1, shape: BoxShape.circle),
+            child: IconButton(
+              icon: Icon(Icons.close),
+              visualDensity: VisualDensity.compact,
+              padding: EdgeInsets.zero,
+              onPressed: widget.onRemove,
+            ),
           ),
         ),
       ],
