@@ -16,7 +16,7 @@ dependencies:
   dio_cache_interceptor_db_store: ^5.1.1
   dio_http2_adapter: ^2.5.3
   easy_debounce: ^2.0.3
-  firebase_core: ^3.5.0
+  firebase_core: ^3.8.0
   firebase_messaging: ^15.1.2
   flutter:
     sdk: flutter
