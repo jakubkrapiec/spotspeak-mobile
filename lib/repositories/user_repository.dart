@@ -40,6 +40,11 @@ abstract class UserRepository {
   @DELETE('/picture')
   @MultiPart()
   Future<void> deletePicture();
+
+  @PUT('/fcm-token')
+  Future<void> updatefCMToken(
+    @Body() String fcmToken,
+  );
 }
 
 extension UserRepositoryX on UserRepository {

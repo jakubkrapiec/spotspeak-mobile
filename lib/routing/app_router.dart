@@ -15,6 +15,7 @@ class AppRouter extends RootStackRouter {
           children: [
             AutoRoute(
               page: FriendsRoute.page,
+              path: 'friendship-requests',
               title: (context, data) => 'Znajomi',
               children: [AutoRoute(page: UserProfileRoute.page)],
             ),
@@ -31,6 +32,25 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: UserTracesRoute.page),
         AutoRoute(page: SingleAchievementRoute.page),
       ];
+
+  @override
+  DeepLinkBuilder get deepLinkBuilder => (deepLink) {
+        // Example: Validate or modify the deep link
+        if (deepLink.path.startsWith('/home')) {
+          // Navigate to the HomeRoute
+          return deepLink;
+        } else if (deepLink.path.startsWith('friendship-requests')) {
+          // Navigate to the ProfileRoute with arguments
+          return DeepLink([FriendsRoute(initialTabIndex: 1)]);
+        }
+        // else if (deepLink.path.startsWith('/user')) {
+        //   // Navigate to UserProfileRoute with a dynamic ID
+        //   final id = deepLink.path.split('/').last; // Extract the ID from the path
+        //   return DeepLink([UserProfileRoute(userId: id)]);
+        // }
+        // Fallback to default or root route
+        return DeepLink.defaultPath;
+      };
 }
 
 enum ScreenType { home, profile, friends, achievements }

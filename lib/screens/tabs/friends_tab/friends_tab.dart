@@ -5,12 +5,15 @@ import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/sea
 
 @RoutePage()
 class FriendsTab extends StatelessWidget {
-  const FriendsTab({super.key});
+  const FriendsTab({this.initialTabIndex = 0, super.key});
+
+  final int initialTabIndex;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
+      initialIndex: initialTabIndex,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),

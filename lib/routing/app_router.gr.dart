@@ -207,11 +207,15 @@ class ChangeAppDataRouteArgs {
 /// [_i6.FriendsTab]
 class FriendsRoute extends _i15.PageRouteInfo<FriendsRouteArgs> {
   FriendsRoute({
+    int initialTabIndex = 0,
     _i16.Key? key,
     List<_i15.PageRouteInfo>? children,
   }) : super(
           FriendsRoute.name,
-          args: FriendsRouteArgs(key: key),
+          args: FriendsRouteArgs(
+            initialTabIndex: initialTabIndex,
+            key: key,
+          ),
           initialChildren: children,
         );
 
@@ -222,19 +226,27 @@ class FriendsRoute extends _i15.PageRouteInfo<FriendsRouteArgs> {
     builder: (data) {
       final args =
           data.argsAs<FriendsRouteArgs>(orElse: () => const FriendsRouteArgs());
-      return _i6.FriendsTab(key: args.key);
+      return _i6.FriendsTab(
+        initialTabIndex: args.initialTabIndex,
+        key: args.key,
+      );
     },
   );
 }
 
 class FriendsRouteArgs {
-  const FriendsRouteArgs({this.key});
+  const FriendsRouteArgs({
+    this.initialTabIndex = 0,
+    this.key,
+  });
+
+  final int initialTabIndex;
 
   final _i16.Key? key;
 
   @override
   String toString() {
-    return 'FriendsRouteArgs{key: $key}';
+    return 'FriendsRouteArgs{initialTabIndex: $initialTabIndex, key: $key}';
   }
 }
 

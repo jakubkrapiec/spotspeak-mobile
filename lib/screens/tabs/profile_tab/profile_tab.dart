@@ -85,7 +85,15 @@ class _ProfileTabState extends State<ProfileTab> {
                         );
                       },
                     ),
-                    Text('2100 pkt', style: Theme.of(context).textTheme.bodySmall),
+                    StreamBuilder<User>(
+                      stream: _userService.user,
+                      builder: (context, snapshot) {
+                        return Text(
+                          snapshot.data?.totalPoints != null ? '${snapshot.data?.totalPoints} pkt' : '0 pkt',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        );
+                      },
+                    ),
                     ProfileButton(
                       pressFunction: () {
                         context.router.push(FriendsRoute());

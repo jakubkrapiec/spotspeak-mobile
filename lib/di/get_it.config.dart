@@ -30,6 +30,7 @@ import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/comment_service.dart' as _i547;
 import 'package:spotspeak_mobile/services/friend_service.dart' as _i100;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
+import 'package:spotspeak_mobile/services/notification_service.dart' as _i127;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
 import 'package:spotspeak_mobile/services/user_service.dart' as _i448;
 
@@ -54,6 +55,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i724.AppService>(() => _i724.AppService());
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
+    gh.singleton<_i127.NotificationService>(() => _i127.NotificationService());
     await gh.singletonAsync<_i497.Directory>(
       () => registerModule.documentsDir,
       instanceName: 'documentsDir',
