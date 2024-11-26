@@ -186,11 +186,12 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<void> updatefCMToken(String fcmToken) async {
+  Future<void> updatefCMToken(FcmTokenDto fcmTokenDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = fcmToken;
+    final _data = <String, dynamic>{};
+    _data.addAll(fcmTokenDto.toJson());
     final _options = _setStreamType<void>(Options(
       method: 'PUT',
       headers: _headers,

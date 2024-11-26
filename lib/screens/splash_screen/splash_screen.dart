@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
+import 'package:spotspeak_mobile/services/notification_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 
 @RoutePage()
@@ -19,6 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
   final _authService = getIt<AuthenticationService>();
 
   final _userService = getIt<UserService>();
+
+  final _notificationService = getIt<NotificationService>();
 
   Future<void> _getUserAccount() async {
     try {
@@ -46,6 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _tryReathenticate();
+    _notificationService.initNotifications();
   }
 
   @override
