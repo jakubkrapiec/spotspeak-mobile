@@ -470,11 +470,16 @@ class UserProfileRouteArgs {
 /// [_i14.UserTracesScreen]
 class UserTracesRoute extends _i15.PageRouteInfo<UserTracesRouteArgs> {
   UserTracesRoute({
+    int? traceId,
     _i16.Key? key,
     List<_i15.PageRouteInfo>? children,
   }) : super(
           UserTracesRoute.name,
-          args: UserTracesRouteArgs(key: key),
+          args: UserTracesRouteArgs(
+            traceId: traceId,
+            key: key,
+          ),
+          rawQueryParams: {'traceId': traceId},
           initialChildren: children,
         );
 
@@ -483,20 +488,30 @@ class UserTracesRoute extends _i15.PageRouteInfo<UserTracesRouteArgs> {
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
+      final queryParams = data.queryParams;
       final args = data.argsAs<UserTracesRouteArgs>(
-          orElse: () => const UserTracesRouteArgs());
-      return _i14.UserTracesScreen(key: args.key);
+          orElse: () =>
+              UserTracesRouteArgs(traceId: queryParams.optInt('traceId')));
+      return _i14.UserTracesScreen(
+        traceId: args.traceId,
+        key: args.key,
+      );
     },
   );
 }
 
 class UserTracesRouteArgs {
-  const UserTracesRouteArgs({this.key});
+  const UserTracesRouteArgs({
+    this.traceId,
+    this.key,
+  });
+
+  final int? traceId;
 
   final _i16.Key? key;
 
   @override
   String toString() {
-    return 'UserTracesRouteArgs{key: $key}';
+    return 'UserTracesRouteArgs{traceId: $traceId, key: $key}';
   }
 }

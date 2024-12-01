@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/users_traces/trace_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
@@ -21,8 +23,9 @@ enum SortingType {
 
 @RoutePage()
 class UserTracesScreen extends StatefulWidget {
-  const UserTracesScreen({super.key});
+  const UserTracesScreen({@QueryParam('traceId') this.traceId, super.key});
 
+  final int? traceId;
   @override
   State<UserTracesScreen> createState() => _UserTracesScreenState();
 }
@@ -47,6 +50,14 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
     return currentLocation;
   }
 
+  void _openTraceDialog(int traceId) {
+    final trace = traces.firstWhere((t) => t.id == traceId);
+    showDialog<TraceDialogResult?>(
+      context: context,
+      builder: (context) => TraceDialog(trace: trace),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +69,9 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
     currentLocation = await _getCurrentLocation();
     _originalTraces = List.from(traces);
     setState(() {});
+    if (widget.traceId != null) {
+      _openTraceDialog(widget.traceId!);
+    }
   }
 
   void _applySorting() {
