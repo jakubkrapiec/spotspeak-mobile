@@ -7,7 +7,9 @@ import 'package:spotspeak_mobile/theme/theme.dart';
 class App extends StatelessWidget {
   App({super.key});
 
-  final _router = AppRouter();
+  // final _router = AppRouter();
+
+  final _router = getIt<AppRouter>();
 
   final _appService = getIt<AppService>();
 

@@ -20,6 +20,7 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
+import 'package:spotspeak_mobile/routing/app_router.dart' as _i457;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/friend_requests_tab/friend_requests_bloc.dart'
     as _i488;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_bloc.dart'
@@ -53,6 +54,7 @@ extension GetItInjectableX on _i174.GetIt {
       () => registerModule.packageInfo,
       preResolve: true,
     );
+    gh.singleton<_i457.AppRouter>(() => _i457.AppRouter());
     gh.singleton<_i724.AppService>(() => _i724.AppService());
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
     gh.singleton<_i127.NotificationService>(() => _i127.NotificationService());

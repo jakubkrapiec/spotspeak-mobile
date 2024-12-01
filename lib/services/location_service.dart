@@ -27,6 +27,11 @@ class LocationService {
     });
   }
 
+  Future<Position> getCurrentLocation([LocationSettings? locationSettings]) async {
+    final position = await Geolocator.getCurrentPosition(locationSettings: locationSettings);
+    return position;
+  }
+
   Stream<Position> getLocationStream([LocationSettings? locationSettings]) =>
       Geolocator.getPositionStream(locationSettings: locationSettings);
 }

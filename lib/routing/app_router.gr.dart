@@ -216,6 +216,7 @@ class FriendsRoute extends _i15.PageRouteInfo<FriendsRouteArgs> {
             initialTabIndex: initialTabIndex,
             key: key,
           ),
+          rawQueryParams: {'initialTabIndex': initialTabIndex},
           initialChildren: children,
         );
 
@@ -224,8 +225,13 @@ class FriendsRoute extends _i15.PageRouteInfo<FriendsRouteArgs> {
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
-      final args =
-          data.argsAs<FriendsRouteArgs>(orElse: () => const FriendsRouteArgs());
+      final queryParams = data.queryParams;
+      final args = data.argsAs<FriendsRouteArgs>(
+          orElse: () => FriendsRouteArgs(
+                  initialTabIndex: queryParams.getInt(
+                'initialTabIndex',
+                0,
+              )));
       return _i6.FriendsTab(
         initialTabIndex: args.initialTabIndex,
         key: args.key,

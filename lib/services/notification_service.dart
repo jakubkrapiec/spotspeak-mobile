@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:injectable/injectable.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/fcm_token_dto.dart';
@@ -13,7 +17,6 @@ class NotificationService {
   }
 
   final _firebaseMessaging = FirebaseMessaging.instance;
-  late final AppRouter appRouter;
 
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
@@ -25,17 +28,43 @@ class NotificationService {
     }
 
     FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
+
+    FirebaseMessaging.onMessage.listen(_handleForegroundNotification);
   }
 }
 
-@pragma('vm:entry-point')
-Future<void> _handleBackgroundMessage(RemoteMessage remoteMessage) async {
-  debugPrint('title: ${remoteMessage.notification?.title}');
-  debugPrint('body: ${remoteMessage.notification?.body}');
-  debugPrint('Payload: ${remoteMessage.data}');
+Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+  debugPrint('title: ${message.notification?.title}');
+  debugPrint('body: ${message.notification?.body}');
+  debugPrint('Payload: ${message.data}');
+}
 
-  final deepLink = remoteMessage.data['deep_link'] as String;
-
+void _handleNotificationTap(RemoteMessage message) {
+  final deepLink = message.data['deep_link'] as String;
   final uri = Uri.parse(deepLink);
-  await getIt<NotificationService>().appRouter.pushNamed(uri.path);
+  final fullPath = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
+
+  getIt<AppRouter>().pushNamed(fullPath);
+}
+
+void _handleForegroundNotification(RemoteMessage message) {
+  debugPrint('Foreground Notification Received:');
+  debugPrint('Title: ${message.notification?.title}');
+  debugPrint('Body: ${message.notification?.body}');
+  debugPrint('Data: ${message.data}');
+
+  _showInAppNotification(message);
+}
+
+void _showInAppNotification(RemoteMessage message) {
+  Fluttertoast.showToast(
+    msg: message.notification?.title ?? 'Nowe powiadomienie',
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.TOP,
+    fontSize: 18,
+    // backgroundColor: CustomColors.blue1,
+    // textColor: CustomColors.blue7,
+  );
 }

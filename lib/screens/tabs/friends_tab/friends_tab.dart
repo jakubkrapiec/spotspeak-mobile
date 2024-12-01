@@ -5,7 +5,7 @@ import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/sea
 
 @RoutePage()
 class FriendsTab extends StatelessWidget {
-  const FriendsTab({this.initialTabIndex = 0, super.key});
+  const FriendsTab({@QueryParam('initialTabIndex') this.initialTabIndex = 0, super.key});
 
   final int initialTabIndex;
 

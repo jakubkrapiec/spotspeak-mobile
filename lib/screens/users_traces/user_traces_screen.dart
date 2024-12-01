@@ -1,9 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/screens/users_traces/trace_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
+import 'package:spotspeak_mobile/services/location_service.dart';
+import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 enum SortingType {
@@ -15,10 +20,85 @@ enum SortingType {
 }
 
 @RoutePage()
-class UserTracesScreen extends StatelessWidget {
-  UserTracesScreen({super.key});
+class UserTracesScreen extends StatefulWidget {
+  const UserTracesScreen({super.key});
 
+  @override
+  State<UserTracesScreen> createState() => _UserTracesScreenState();
+}
+
+class _UserTracesScreenState extends State<UserTracesScreen> {
   final _appService = getIt<AppService>();
+
+  final _traceService = getIt<TraceService>();
+  final _locationService = getIt<LocationService>();
+  List<Trace> traces = [];
+  List<Trace> _originalTraces = [];
+  Position? currentLocation;
+  SortingType _currentSorting = SortingType.defaultType;
+
+  Future<List<Trace>> _getTraces() async {
+    final traces = await _traceService.getMyTraces();
+    return traces;
+  }
+
+  Future<Position> _getCurrentLocation() async {
+    final currentLocation = await _locationService.getCurrentLocation();
+    return currentLocation;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    traces = await _getTraces();
+    currentLocation = await _getCurrentLocation();
+    _originalTraces = List.from(traces);
+    setState(() {});
+  }
+
+  void _applySorting() {
+    switch (_currentSorting) {
+      case SortingType.oldestFirst:
+        traces.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+      case SortingType.newestFirst:
+        traces.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      case SortingType.closestFirst:
+        if (currentLocation != null) {
+          final currentLatLng = LatLng(
+            currentLocation!.latitude,
+            currentLocation!.longitude,
+          );
+          traces.sort((a, b) => a.calculateDistance(currentLatLng).compareTo(b.calculateDistance(currentLatLng)));
+        }
+
+      case SortingType.farthestFirst:
+        if (currentLocation != null) {
+          final currentLatLng = LatLng(
+            currentLocation!.latitude,
+            currentLocation!.longitude,
+          );
+          traces.sort(
+            (a, b) => b.calculateDistance(currentLatLng).compareTo(a.calculateDistance(currentLatLng)),
+          );
+        }
+
+      case SortingType.defaultType:
+        traces = List.from(_originalTraces);
+    }
+  }
+
+  void _onSortingSelected(SortingType sortingType) {
+    setState(() {
+      _currentSorting = sortingType;
+      _applySorting();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,62 +108,65 @@ class UserTracesScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: _appService.isDarkMode(context)
-                        ? CustomTheme.darkContainerStyle
-                        : CustomTheme.lightContainerStyle,
-                    child: Text(
-                      'Twoje dodane ślady:',
-                      style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.center,
+        child: traces.isEmpty || currentLocation == null
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: _appService.isDarkMode(context)
+                              ? CustomTheme.darkContainerStyle
+                              : CustomTheme.lightContainerStyle,
+                          child: Text(
+                            'Twoje dodane ślady:',
+                            style: Theme.of(context).textTheme.titleMedium,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      Gap(16),
+                      Container(
+                        padding: EdgeInsets.all(16),
+                        decoration: _appService.isDarkMode(context)
+                            ? CustomTheme.darkContainerStyle
+                            : CustomTheme.lightContainerStyle,
+                        child: PopupMenuButton(
+                          onSelected: _onSortingSelected,
+                          itemBuilder: generatePopupItems,
+                          child: Icon(
+                            Icons.filter_list,
+                            size: 36,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(16),
+                  Text(
+                    'Całkowita liczba śladów: ${traces.length}',
+                    style: Theme.of(context).textTheme.titleSmall,
+                    textAlign: TextAlign.center,
+                  ),
+                  Gap(8),
+                  Divider(),
+                  Gap(16),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: traces.length,
+                      itemBuilder: (context, index) {
+                        return TraceTile(
+                          trace: traces[index],
+                          currentLocation: currentLocation!,
+                        );
+                      },
                     ),
                   ),
-                ),
-                Gap(16),
-                Container(
-                  padding: EdgeInsets.all(16),
-                  decoration: _appService.isDarkMode(context)
-                      ? CustomTheme.darkContainerStyle
-                      : CustomTheme.lightContainerStyle,
-                  child: PopupMenuButton(
-                    onSelected: (sortingType) {},
-                    itemBuilder: generatePopupItems,
-                    child: Icon(
-                      Icons.filter_list,
-                      size: 36,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Gap(16),
-            Text(
-              'Całkowita liczba śladów: 5',
-              style: Theme.of(context).textTheme.titleSmall,
-              textAlign: TextAlign.center,
-            ),
-            Gap(8),
-            Divider(),
-            Gap(16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return TraceTile(
-                    isActive: index / 2 != 2,
-                  );
-                },
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

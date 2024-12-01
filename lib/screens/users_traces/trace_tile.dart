@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/extensions/position_extensions.dart';
+import 'package:spotspeak_mobile/models/trace.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
 class TraceTile extends StatelessWidget {
-  TraceTile({required this.isActive, super.key});
+  TraceTile({required this.trace, required this.currentLocation, super.key});
 
-  final bool isActive;
+  final Trace trace;
+  final Position currentLocation;
 
   final _appService = getIt<AppService>();
 
   @override
   Widget build(BuildContext context) {
+    final isActive = trace.isActive();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ListTile(
-        onTap: () {},
+        onTap: () async {
+          await showDialog<TraceDialogResult?>(context: context, builder: (context) => TraceDialog(trace: trace));
+        },
         tileColor: isActive
             ? null
             : _appService.themeMode == ThemeMode.light
@@ -30,7 +40,7 @@ class TraceTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Odległość: 12km',
+              'Odległość: ${trace.convertedDistance(currentLocation.toLatLng())}',
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
@@ -40,7 +50,7 @@ class TraceTile extends StatelessWidget {
                   ),
             ),
             Text(
-              'Data dodania: 12-10-24',
+              'Data dodania: ${DateFormat('yyyy-MM-dd').format(trace.createdAt)}',
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
