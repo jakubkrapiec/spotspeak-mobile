@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
@@ -14,9 +16,19 @@ import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class NearbyPanel extends StatefulWidget {
-  const NearbyPanel({required this.scrollController, super.key});
+  const NearbyPanel({
+    required this.scrollController,
+    required this.mapController,
+    required this.panelController,
+    required this.refreshStream,
+    super.key,
+  });
 
   final ScrollController scrollController;
+  final AnimatedMapController mapController;
+  final PanelController panelController;
+
+  final Stream<void> refreshStream;
 
   @override
   State<NearbyPanel> createState() => _NearbyPanelState();
@@ -29,16 +41,32 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   StreamSubscription<Position>? _locationStreamSubscription;
 
+  late final StreamSubscription<void> _refreshStreamSubscription;
+
   LatLng? _lastCoordinatesSync;
 
-  List<TraceLocation>? _nearbyTraces;
+  List<TraceLocation>? _nearbyTraces = [];
+
+  List<TraceLocation> _nearbyTracesCopy = [];
 
   bool _isFirstSync = true;
+
+  bool _fromClosest = true;
+
+  bool _nonDiscoveredOnly = false;
+
+  static const _defaultZoom = 16.5;
 
   @override
   void initState() {
     super.initState();
     _initLocationService();
+    _refreshStreamSubscription = widget.refreshStream.listen((_) async {
+      _nearbyTraces =
+          await _traceService.getNearbyTraces(_lastCoordinatesSync!.latitude, _lastCoordinatesSync!.longitude, 1000);
+      _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _sortTraces(_fromClosest);
+    });
   }
 
   Future<void> _initLocationService() async {
@@ -47,6 +75,27 @@ class _NearbyPanelState extends State<NearbyPanel> {
       if (!hasPermission) return;
     }
     _locationStreamSubscription = _locationService.getLocationStream().listen(_onLocationChanged);
+  }
+
+  void _sortTraces(bool isFromClosest) {
+    if (isFromClosest) {
+      _nearbyTracesCopy.sort(
+        (a, b) => a.calculateDistance(_lastCoordinatesSync!).compareTo(b.calculateDistance(_lastCoordinatesSync!)),
+      );
+    } else {
+      _nearbyTracesCopy.sort(
+        (a, b) => b.calculateDistance(_lastCoordinatesSync!).compareTo(a.calculateDistance(_lastCoordinatesSync!)),
+      );
+    }
+  }
+
+  void _selectNonDiscoveredTraces(bool nonDiscoveredOnly) {
+    if (nonDiscoveredOnly) {
+      _nearbyTracesCopy = [];
+      _nearbyTracesCopy = _nearbyTraces!.where((trace) => !trace.hasDiscovered).toList();
+    } else {
+      _nearbyTracesCopy = List.from(_nearbyTraces!);
+    }
   }
 
   Future<void> _onLocationChanged(Position position) async {
@@ -62,14 +111,25 @@ class _NearbyPanelState extends State<NearbyPanel> {
     if (!mounted) return;
     setState(() {
       _nearbyTraces = traces;
+      _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _sortTraces(_fromClosest);
     });
     _lastCoordinatesSync = position.toLatLng();
     _isFirstSync = false;
   }
 
+  void _onMoveToTraceLocation(TraceLocation trace) {
+    widget.mapController.animateTo(dest: trace.toLatLng(), zoom: _defaultZoom);
+    if (mounted) {
+      widget.panelController.close();
+    }
+  }
+
   @override
   void dispose() {
     _locationStreamSubscription?.cancel();
+    widget.mapController.dispose();
+    _refreshStreamSubscription.cancel();
     super.dispose();
   }
 
@@ -101,15 +161,25 @@ class _NearbyPanelState extends State<NearbyPanel> {
               ),
               Expanded(child: SizedBox()),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    _nonDiscoveredOnly = !_nonDiscoveredOnly;
+                    _selectNonDiscoveredTraces(_nonDiscoveredOnly);
+                  });
+                },
                 child: Icon(
-                  Icons.visibility,
+                  _nonDiscoveredOnly ? Icons.visibility_off : Icons.visibility,
                   size: 28,
                 ),
               ),
               Gap(8),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  setState(() {
+                    _sortTraces(_fromClosest);
+                    _fromClosest = !_fromClosest;
+                  });
+                },
                 child: Icon(
                   Icons.swap_vert,
                   size: 28,
@@ -131,10 +201,14 @@ class _NearbyPanelState extends State<NearbyPanel> {
           _ => Expanded(
               child: ListView.builder(
                 controller: widget.scrollController,
-                itemCount: _nearbyTraces!.length,
+                itemCount: _nearbyTracesCopy.length,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return NearbyTile(trace: _nearbyTraces![index]);
+                  return NearbyTile(
+                    trace: _nearbyTracesCopy[index],
+                    currentPostion: _lastCoordinatesSync!,
+                    onTapFunction: () => _onMoveToTraceLocation(_nearbyTraces![index]),
+                  );
                 },
               ),
             ),

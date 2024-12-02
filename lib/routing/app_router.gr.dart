@@ -312,10 +312,18 @@ class LoginRouteArgs {
 
 /// generated route for
 /// [_i9.MapTab]
-class MapRoute extends _i15.PageRouteInfo<void> {
-  const MapRoute({List<_i15.PageRouteInfo>? children})
-      : super(
+class MapRoute extends _i15.PageRouteInfo<MapRouteArgs> {
+  MapRoute({
+    int? traceId,
+    _i16.Key? key,
+    List<_i15.PageRouteInfo>? children,
+  }) : super(
           MapRoute.name,
+          args: MapRouteArgs(
+            traceId: traceId,
+            key: key,
+          ),
+          rawQueryParams: {'traceId': traceId},
           initialChildren: children,
         );
 
@@ -324,9 +332,31 @@ class MapRoute extends _i15.PageRouteInfo<void> {
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
-      return const _i9.MapTab();
+      final queryParams = data.queryParams;
+      final args = data.argsAs<MapRouteArgs>(
+          orElse: () => MapRouteArgs(traceId: queryParams.optInt('traceId')));
+      return _i9.MapTab(
+        traceId: args.traceId,
+        key: args.key,
+      );
     },
   );
+}
+
+class MapRouteArgs {
+  const MapRouteArgs({
+    this.traceId,
+    this.key,
+  });
+
+  final int? traceId;
+
+  final _i16.Key? key;
+
+  @override
+  String toString() {
+    return 'MapRouteArgs{traceId: $traceId, key: $key}';
+  }
 }
 
 /// generated route for

@@ -11,6 +11,7 @@ import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_polywidget/flutter_map_polywidget.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
@@ -19,8 +20,10 @@ import 'package:spotspeak_mobile/di/custom_instance_names.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
+import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_panel.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
@@ -31,8 +34,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
 class MapTab extends StatefulWidget {
-  const MapTab({super.key});
+  const MapTab({@QueryParam('traceId') this.traceId, super.key});
 
+  final int? traceId;
   @override
   State<MapTab> createState() => _MapTabState();
 }
@@ -50,20 +54,28 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   bool _waitingForFirstLocation = true;
   bool _addingTrace = false;
 
+  late final StreamController<void> _refreshPanelController;
+
   Position? _lastLocation;
   List<TraceLocation> _traces = [];
   static const _defaultZoom = 16.5;
+
+  final PanelController _panelController = PanelController();
 
   @override
   void initState() {
     super.initState();
     _mapController = AnimatedMapController(vsync: this);
+    _refreshPanelController = StreamController();
     _initLocationService();
     _mapEventSubscription = _mapController.mapController.mapEventStream.listen((event) {
       if (event is MapEventMove) {
         _onMapScrolled(_mapController.mapController.camera.visibleBounds);
       }
     });
+    if (widget.traceId != null) {
+      _showTraceFromNotification();
+    }
   }
 
   @override
@@ -71,6 +83,8 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     _mapController.dispose();
     _mapEventSubscription?.cancel();
     _locationStreamSubscription?.cancel();
+    _refreshPanelController.close();
+
     super.dispose();
   }
 
@@ -89,6 +103,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     });
     try {
       await _traceService.addTrace(result.media, dto);
+      _refreshPanelController.add(null);
       await _getVisibleTraces();
     } catch (e, st) {
       if (mounted) {
@@ -139,6 +154,25 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     }
   }
 
+  Future<void> _showTraceFromNotification() async {
+    final trace = await _traceService.getTrace(widget.traceId!);
+    if (trace.isActive() && mounted) {
+      _onMoveToTraceLocation(trace);
+      await showDialog<void>(context: context, builder: (context) => TraceDialog(trace: trace));
+    } else {
+      await Fluttertoast.showToast(
+        msg: 'Ślad nie jest już aktywny',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.TOP,
+        fontSize: 18,
+      );
+    }
+  }
+
+  void _onMoveToTraceLocation(Trace trace) {
+    _mapController.animateTo(dest: trace.location, zoom: _defaultZoom);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -148,7 +182,13 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         addingTrace: _addingTrace,
       ),
       body: SlidingUpPanel(
-        panelBuilder: (scrollController) => NearbyPanel(scrollController: scrollController),
+        controller: _panelController,
+        panelBuilder: (scrollController) => NearbyPanel(
+          scrollController: scrollController,
+          mapController: _mapController,
+          panelController: _panelController,
+          refreshStream: _refreshPanelController.stream,
+        ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
         body: FlutterMap(

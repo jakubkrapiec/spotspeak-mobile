@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
+import 'package:geolocator/geolocator.dart';
 
 part 'trace_location.g.dart';
 
@@ -20,4 +21,18 @@ class TraceLocation {
   Map<String, Object?> toJson() => _$TraceLocationToJson(this);
 
   LatLng toLatLng() => LatLng(latitude.toDouble(), longitude.toDouble());
+
+  double calculateDistance(LatLng currentLocation) {
+    return Geolocator.distanceBetween(
+      latitude.toDouble(),
+      longitude.toDouble(),
+      currentLocation.latitude,
+      currentLocation.longitude,
+    );
+  }
+
+  String convertedDistance(LatLng currentLocation) {
+    final distance = calculateDistance(currentLocation);
+    return distance < 1000 ? '${distance.toInt()} m' : '${(distance / 1000).toStringAsFixed(0)} km';
+  }
 }
