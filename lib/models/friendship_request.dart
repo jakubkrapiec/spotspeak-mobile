@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:spotspeak_mobile/models/friendship_request_status.dart';
 
 part 'friendship_request.g.dart';
 
@@ -18,8 +19,7 @@ class FriendshipRequest {
   final int id;
   final String sender;
   final String receiver;
-  // TODO: replace with enum
-  final String status;
+  final FriendshipRequestStatus status;
   final DateTime sentAt;
   final DateTime? acceptedAt;
 

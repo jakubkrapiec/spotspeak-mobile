@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class SpotSpeakDialog extends StatelessWidget {
-  const SpotSpeakDialog({required this.children, this.title, super.key});
+  const SpotSpeakDialog({required this.children, this.title, this.scrollController, super.key});
 
   final String? title;
   final List<Widget> children;
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,7 @@ class SpotSpeakDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 48),
       child: ListView(
         shrinkWrap: true,
+        controller: scrollController,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

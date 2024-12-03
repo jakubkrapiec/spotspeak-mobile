@@ -27,6 +27,7 @@ class FriendsSearch extends StatelessWidget {
                   decoration: const InputDecoration(hintText: 'Wyszukaj znajomego'),
                   controller: controller,
                   style: const TextStyle(fontSize: 16),
+                  autofocus: true,
                 ),
               ),
             ],

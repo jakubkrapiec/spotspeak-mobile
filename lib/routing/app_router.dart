@@ -37,6 +37,7 @@ class AppRouter extends RootStackRouter {
           path: '/user-traces',
         ),
         AutoRoute(page: SingleAchievementRoute.page),
+        AutoRoute(page: RankingRoute.page),
       ];
 }
 

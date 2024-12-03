@@ -2,8 +2,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/models/comment.dart';
+import 'package:spotspeak_mobile/models/content_author.dart';
 import 'package:spotspeak_mobile/models/tag.dart';
-import 'package:spotspeak_mobile/models/trace_author.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
 
 part 'trace.g.dart';
@@ -33,7 +33,7 @@ class Trace {
   final num latitude;
   final num longitude;
   final DateTime createdAt;
-  final TraceAuthor author;
+  final ContentAuthor author;
   final TraceType type;
 
   LatLng get location => LatLng(latitude.toDouble(), longitude.toDouble());
@@ -59,4 +59,6 @@ class Trace {
   }
 
   Map<String, Object?> toJson() => _$TraceToJson(this);
+
+  Duration get timeLeft => createdAt.add(Duration(days: 1)).difference(DateTime.now());
 }

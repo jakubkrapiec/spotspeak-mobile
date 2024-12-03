@@ -11,7 +11,7 @@ FriendshipRequest _$FriendshipRequestFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num).toInt(),
       sender: json['sender'] as String,
       receiver: json['receiver'] as String,
-      status: json['status'] as String,
+      status: $enumDecode(_$FriendshipRequestStatusEnumMap, json['status']),
       sentAt: DateTime.parse(json['sentAt'] as String),
       acceptedAt: json['acceptedAt'] == null
           ? null
@@ -23,7 +23,13 @@ Map<String, dynamic> _$FriendshipRequestToJson(FriendshipRequest instance) =>
       'id': instance.id,
       'sender': instance.sender,
       'receiver': instance.receiver,
-      'status': instance.status,
+      'status': _$FriendshipRequestStatusEnumMap[instance.status]!,
       'sentAt': instance.sentAt.toIso8601String(),
       'acceptedAt': instance.acceptedAt?.toIso8601String(),
     };
+
+const _$FriendshipRequestStatusEnumMap = {
+  FriendshipRequestStatus.pending: 'PENDING',
+  FriendshipRequestStatus.accepted: 'ACCEPTED',
+  FriendshipRequestStatus.rejected: 'REJECTED',
+};

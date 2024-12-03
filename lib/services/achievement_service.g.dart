@@ -59,7 +59,7 @@ class _AchievementService implements AchievementService {
   }
 
   @override
-  Future<List<Achievement>> getUsersAchievements() async {
+  Future<List<Achievement>> getMyAchievements() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

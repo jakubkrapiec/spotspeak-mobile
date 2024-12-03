@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/friend_requests_tab/friend_requests_tab.dart';
+import 'package:spotspeak_mobile/screens/tabs/friends_tab/friends_list_tab/friends_list_tab.dart';
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_tab.dart';
 
 @RoutePage()
@@ -29,9 +30,7 @@ class FriendsTab extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [],
-            ),
+            FriendsListTab(),
             FriendRequestsTab(),
             SearchFriendsTab(),
           ],

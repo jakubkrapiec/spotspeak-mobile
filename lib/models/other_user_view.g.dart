@@ -10,13 +10,20 @@ OtherUserView _$OtherUserViewFromJson(Map<String, dynamic> json) =>
     OtherUserView(
       userProfile:
           OtherUser.fromJson(json['userProfile'] as Map<String, dynamic>),
-      totalPoints: (json['totalPoints'] as num).toInt(),
-      friendshipStatus: json['friendshipStatus'] as String,
+      relationshipStatus:
+          $enumDecode(_$FriendshipStatusEnumMap, json['relationshipStatus']),
     );
 
 Map<String, dynamic> _$OtherUserViewToJson(OtherUserView instance) =>
     <String, dynamic>{
       'userProfile': instance.userProfile,
-      'totalPoints': instance.totalPoints,
-      'friendshipStatus': instance.friendshipStatus,
+      'relationshipStatus':
+          _$FriendshipStatusEnumMap[instance.relationshipStatus]!,
     };
+
+const _$FriendshipStatusEnumMap = {
+  FriendshipStatus.friends: 'FRIENDS',
+  FriendshipStatus.noRelation: 'NO_RELATION',
+  FriendshipStatus.invitationSent: 'INVITATION_SENT',
+  FriendshipStatus.invitationReceived: 'INVITATION_RECEIVED',
+};

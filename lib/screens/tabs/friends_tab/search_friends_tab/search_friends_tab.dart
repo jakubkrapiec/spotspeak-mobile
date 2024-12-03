@@ -1,9 +1,11 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/common/widgets/loading_error.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/misc/loading_status.dart';
+import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_bloc.dart';
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friend_tile.dart';
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friends_search.dart';
@@ -27,6 +29,13 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
     _searchQueryController = TextEditingController();
     _scrollController = ScrollController();
     _searchQueryController.addListener(_onQueryChanged);
+  }
+
+  @override
+  void deactivate() {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    super.deactivate();
   }
 
   @override
@@ -69,7 +78,13 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
                       itemCount: state.users.length,
                       itemBuilder: (context, index) => FriendTile(
                         user: state.users[index],
-                        tapFunction: () {},
+                        onTap: () => context.router.push(UserProfileRoute(userId: state.users[index].id)),
+                        actions: [
+                          IconButton(
+                            icon: const Icon(Icons.person_add),
+                            onPressed: () => _bloc.add(SendFriendRequestEvent(state.users[index].id)),
+                          ),
+                        ],
                       ),
                     ),
                   ),

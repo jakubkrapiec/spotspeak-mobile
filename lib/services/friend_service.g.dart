@@ -24,6 +24,41 @@ class _FriendService implements FriendService {
   final ParseErrorLogger? errorLogger;
 
   @override
+  Future<List<Friendship>> getFriends() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<Friendship>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/friends',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<Friendship> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => Friendship.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<List<SearchUser>> searchUsers({required String username}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'username': username};
@@ -61,7 +96,7 @@ class _FriendService implements FriendService {
   @override
   Future<OtherUserView> getUser({required String userId}) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'userId': userId};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<OtherUserView>(Options(
@@ -71,7 +106,7 @@ class _FriendService implements FriendService {
     )
         .compose(
           _dio.options,
-          '/users/profile/{userId}',
+          '/users/profile/${userId}',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -276,6 +311,66 @@ class _FriendService implements FriendService {
         .compose(
           _dio.options,
           '/friend-requests/cancel/${requestId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<List<RankingUser>> getMutualFriends({required String userId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<RankingUser>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/friends/mutual/${userId}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<List<dynamic>>(_options);
+    late List<RankingUser> _value;
+    try {
+      _value = _result.data!
+          .map((dynamic i) => RankingUser.fromJson(i as Map<String, dynamic>))
+          .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<void> unfriend({required String friendId}) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/friends/${friendId}',
           queryParameters: queryParameters,
           data: _data,
         )

@@ -9,7 +9,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spotspeak_mobile/misc/auth_constants.dart';
-import 'package:spotspeak_mobile/models/auth_id_token.dart';
 import 'package:spotspeak_mobile/models/auth_user.dart';
 
 @singleton
@@ -156,14 +155,14 @@ class AuthenticationService {
     _loginInfo.isLoggedIn = false;
   }
 
-  AuthIdToken _parseIdToken(String idToken) {
-    final parts = idToken.split('.');
+  // AuthIdToken _parseIdToken(String idToken) {
+  //   final parts = idToken.split('.');
 
-    final Map<String, dynamic> json =
-        jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1])))) as Map<String, Object?>;
+  //   final Map<String, dynamic> json =
+  //       jsonDecode(utf8.decode(base64Url.decode(base64Url.normalize(parts[1])))) as Map<String, Object?>;
 
-    return AuthIdToken.fromJson(json);
-  }
+  //   return AuthIdToken.fromJson(json);
+  // }
 
   Future<AuthUser> getUserDetails(String accessToken) async {
     final url = Uri.https(kAuthDomain, '/realms/$kAuthRealms/protocol/openid-connect/userinfo');
