@@ -253,6 +253,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                             await Fluttertoast.showToast(
                               msg: 'W trakcie usuwania konta wystąpił błąd',
                               toastLength: Toast.LENGTH_LONG,
+                              backgroundColor: CustomColors.grey1,
+                              textColor: CustomColors.grey6,
                             );
                             if (!context.mounted) return;
                             Navigator.of(context).pop();
@@ -262,6 +264,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                           await Fluttertoast.showToast(
                             msg: 'Konto zostało usunięte',
                             toastLength: Toast.LENGTH_LONG,
+                            backgroundColor: CustomColors.grey1,
+                            textColor: CustomColors.grey6,
                           );
                           if (!context.mounted) return;
                           Navigator.of(context).pop();

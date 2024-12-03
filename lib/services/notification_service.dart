@@ -9,12 +9,11 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/fcm_token_dto.dart';
 import 'package:spotspeak_mobile/routing/app_router.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 @singleton
 class NotificationService {
-  NotificationService() {
-    // _initNotifications();
-  }
+  NotificationService();
 
   final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -64,7 +63,7 @@ void _showInAppNotification(RemoteMessage message) {
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.TOP,
     fontSize: 18,
-    // backgroundColor: CustomColors.blue1,
-    // textColor: CustomColors.blue7,
+    backgroundColor: CustomColors.grey1,
+    textColor: CustomColors.grey6,
   );
 }

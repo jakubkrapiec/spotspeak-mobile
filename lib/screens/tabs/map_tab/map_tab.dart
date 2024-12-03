@@ -165,6 +165,8 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.TOP,
         fontSize: 18,
+        backgroundColor: CustomColors.grey1,
+        textColor: CustomColors.grey6,
       );
     }
   }

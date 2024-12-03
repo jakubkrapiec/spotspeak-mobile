@@ -32,6 +32,8 @@ class _PasswordFormState extends State<PasswordForm> {
       await Fluttertoast.showToast(
         msg: 'W trakcie zmiany hasła wystąpił błąd: $exception',
         toastLength: Toast.LENGTH_LONG,
+        backgroundColor: CustomColors.grey1,
+        textColor: CustomColors.grey6,
       );
     }
 
@@ -143,6 +145,8 @@ class _PasswordFormState extends State<PasswordForm> {
                       await Fluttertoast.showToast(
                         msg: 'Nowe hasło i powtórzone hasło nie są takie same',
                         toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: CustomColors.grey1,
+                        textColor: CustomColors.grey6,
                       );
                       return;
                     }
@@ -150,6 +154,8 @@ class _PasswordFormState extends State<PasswordForm> {
                     await Fluttertoast.showToast(
                       msg: 'Hasło zostało prawidłowo zmienione',
                       toastLength: Toast.LENGTH_LONG,
+                      backgroundColor: CustomColors.grey1,
+                      textColor: CustomColors.grey6,
                     );
                   }
                 },

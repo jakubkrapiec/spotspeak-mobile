@@ -49,10 +49,14 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
               ? await Fluttertoast.showToast(
                   msg: 'Użytkownik o podanej nazwie już istnieje',
                   toastLength: Toast.LENGTH_LONG,
+                  backgroundColor: CustomColors.grey1,
+                  textColor: CustomColors.grey6,
                 )
               : await Fluttertoast.showToast(
                   msg: 'Użytkownik o podanym adresie email już istnieje',
                   toastLength: Toast.LENGTH_LONG,
+                  backgroundColor: CustomColors.grey1,
+                  textColor: CustomColors.grey6,
                 );
           return;
         }
@@ -61,6 +65,8 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
         await Fluttertoast.showToast(
           msg: 'Dane zostały poprawnie zmienione',
           toastLength: Toast.LENGTH_LONG,
+          backgroundColor: CustomColors.grey1,
+          textColor: CustomColors.grey6,
         );
 
         if (!mounted) return;
@@ -69,11 +75,15 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
         await Fluttertoast.showToast(
           msg: 'Wprowadzono niepoprawne hasło, dane nie zostały zmienione',
           toastLength: Toast.LENGTH_LONG,
+          backgroundColor: CustomColors.grey1,
+          textColor: CustomColors.grey6,
         );
       case PasswordChallengeFailedOtherError _:
         await Fluttertoast.showToast(
           msg: 'Wystąpił błąd, dane nie zostały zmienione',
           toastLength: Toast.LENGTH_LONG,
+          backgroundColor: CustomColors.grey1,
+          textColor: CustomColors.grey6,
         );
     }
   }

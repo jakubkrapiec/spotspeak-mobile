@@ -12,23 +12,30 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: pressFunction,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(16),
-        decoration: _appService.isDarkMode(context) ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              buttonText,
-              style: buttonText == 'Usunięcie konta' ? Theme.of(context).textTheme.labelMedium : null,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: _appService.themeModeNotifier,
+      builder: (context, themeMode, child) {
+        final isDarkMode = _appService.isDarkMode(context);
+
+        return GestureDetector(
+          onTap: pressFunction,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16),
+            decoration: isDarkMode ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  buttonText,
+                  style: buttonText == 'Usunięcie konta' ? Theme.of(context).textTheme.labelMedium : null,
+                ),
+                Icon(Icons.arrow_forward_ios),
+              ],
             ),
-            Icon(Icons.arrow_forward_ios),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
