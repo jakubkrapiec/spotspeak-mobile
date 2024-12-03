@@ -26,6 +26,16 @@ class _FriendRequestsTabState extends State<FriendRequestsTab> {
     _getRequests();
   }
 
+  Future<void> _onAcceptRequest(FriendRequestUserInfo request) async {
+    await _friendService.acceptRequest(requestId: request.id);
+    await _getRequests();
+  }
+
+  Future<void> _onRejectRequest(FriendRequestUserInfo request) async {
+    await _friendService.rejectRequest(requestId: request.id);
+    await _getRequests();
+  }
+
   Future<void> _getRequests() async {
     setState(() {
       _status = LoadingStatus.loading;
@@ -62,6 +72,18 @@ class _FriendRequestsTabState extends State<FriendRequestsTab> {
             return FriendTile(
               user: request.userInfo,
               onTap: () => context.router.push(UserProfileRoute(userId: request.userInfo.id)),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () => _onAcceptRequest(request),
+                  visualDensity: VisualDensity.compact,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => _onRejectRequest(request),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
             );
           },
         ),

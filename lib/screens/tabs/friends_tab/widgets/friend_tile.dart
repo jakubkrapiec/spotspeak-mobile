@@ -18,10 +18,7 @@ class FriendTile extends StatelessWidget {
         child: ClipOval(child: Image.asset('assets/default_icon.jpg')),
       ),
       title: AutoSizeText(user.username, maxLines: 1),
-      trailing: Wrap(
-        spacing: 12,
-        children: actions,
-      ),
+      trailing: Row(mainAxisSize: MainAxisSize.min, children: actions),
     );
   }
 }

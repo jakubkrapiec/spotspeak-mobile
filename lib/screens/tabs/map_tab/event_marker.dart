@@ -87,10 +87,9 @@ class _EventMarkerState extends State<EventMarker> with SingleTickerProviderStat
                     ),
                     Text(
                       '${widget.event.traces.length} śladów',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
                     ),
                   ],
                 ),

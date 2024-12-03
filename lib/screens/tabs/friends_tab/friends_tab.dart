@@ -9,11 +9,42 @@ import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/sea
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 
 @RoutePage()
-class FriendsTab extends StatelessWidget {
-  FriendsTab({@QueryParam('initialTabIndex') this.initialTabIndex = 0, super.key});
+class FriendsTab extends StatefulWidget {
+  const FriendsTab({@QueryParam('initialTabIndex') this.initialTabIndex = 0, super.key});
 
   final int initialTabIndex;
+
+  @override
+  State<FriendsTab> createState() => _FriendsTabState();
+}
+
+class _FriendsTabState extends State<FriendsTab> with SingleTickerProviderStateMixin {
   final _authService = getIt<AuthenticationService>();
+  late final TabController _tabController;
+  static const _tabAnimationDuration = Duration(milliseconds: 300);
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 3,
+      initialIndex: widget.initialTabIndex,
+      vsync: this,
+      animationDuration: _tabAnimationDuration,
+    );
+    _tabController.addListener(() async {
+      await Future<void>.delayed(_tabAnimationDuration);
+      if (!mounted) return;
+      if (_tabController.index == 2) return;
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,29 +53,27 @@ class FriendsTab extends StatelessWidget {
       builder: (context, userType, child) {
         return userType == UserType.guest
             ? GuestScreen(screen: ScreenType.achievements)
-            : DefaultTabController(
-                length: 3,
-                initialIndex: initialTabIndex,
-                child: Scaffold(
-                  appBar: PreferredSize(
-                    preferredSize: Size.fromHeight(kToolbarHeight),
-                    child: AppBar(
-                      bottom: TabBar(
-                        tabs: [
-                          Tab(text: 'Znajomi'),
-                          Tab(text: 'Zaproszenia'),
-                          Tab(text: 'Wyszukaj'),
-                        ],
-                      ),
+            : Scaffold(
+                appBar: PreferredSize(
+                  preferredSize: Size.fromHeight(kToolbarHeight),
+                  child: AppBar(
+                    bottom: TabBar(
+                      controller: _tabController,
+                      tabs: [
+                        Tab(text: 'Znajomi'),
+                        Tab(text: 'Zaproszenia'),
+                        Tab(text: 'Wyszukaj'),
+                      ],
                     ),
                   ),
-                  body: TabBarView(
-                    children: [
-                      FriendsListTab(),
-                      FriendRequestsTab(),
-                      SearchFriendsTab(),
-                    ],
-                  ),
+                ),
+                body: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    FriendsListTab(),
+                    FriendRequestsTab(),
+                    SearchFriendsTab(),
+                  ],
                 ),
               );
       },
