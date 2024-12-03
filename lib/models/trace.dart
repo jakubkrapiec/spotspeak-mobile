@@ -38,11 +38,7 @@ class Trace {
 
   LatLng get location => LatLng(latitude.toDouble(), longitude.toDouble());
 
-  bool isActive() {
-    final currentDate = DateTime.now();
-    final difference = createdAt.difference(currentDate);
-    return difference.inHours <= 24;
-  }
+  bool get isActive => timeLeft > Duration.zero;
 
   double calculateDistance(LatLng currentLocation) {
     return Geolocator.distanceBetween(

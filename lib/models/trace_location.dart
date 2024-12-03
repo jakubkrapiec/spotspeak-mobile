@@ -8,7 +8,7 @@ part 'trace_location.g.dart';
 @JsonSerializable()
 class TraceLocation {
   // ignore: avoid_positional_boolean_parameters
-  const TraceLocation(this.id, this.longitude, this.latitude, this.hasDiscovered, this.type);
+  const TraceLocation(this.id, this.longitude, this.latitude, this.hasDiscovered, this.type, this.createdAt);
 
   factory TraceLocation.fromJson(Map<String, Object?> json) => _$TraceLocationFromJson(json);
 
@@ -17,6 +17,7 @@ class TraceLocation {
   final num latitude;
   final bool hasDiscovered;
   final TraceType type;
+  final DateTime createdAt;
 
   Map<String, Object?> toJson() => _$TraceLocationToJson(this);
 
@@ -35,4 +36,6 @@ class TraceLocation {
     final distance = calculateDistance(currentLocation);
     return distance < 1000 ? '${distance.toInt()} m' : '${(distance / 1000).toStringAsFixed(0)} km';
   }
+
+  Duration get timeLeft => createdAt.add(Duration(days: 1)).difference(DateTime.now());
 }

@@ -26,20 +26,26 @@ class TraceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isActive = trace.isActive();
+    final isActive = trace.isActive;
+
     return ListTile(
       onTap: onTap,
       tileColor: isActive
           ? null
-          : _appService.themeMode == ThemeMode.light
-              ? CustomColors.grey2
-              : CustomColors.grey3,
+          : _appService.isDarkMode(context)
+              ? CustomColors.grey3
+              : CustomColors.grey2,
       leading: SvgPicture.asset(
         width: 40,
         height: 40,
-        theme: SvgTheme(currentColor: Theme.of(context).primaryColor),
+        theme: SvgTheme(
+          currentColor: isActive
+              ? Theme.of(context).primaryColor
+              : _appService.isDarkMode(context)
+                  ? CustomColors.grey5
+                  : CustomColors.grey4,
+        ),
         traceIconPath,
-        //_appService.isDarkMode(context) ? 'assets/trace_icon_white.png' : 'assets/trace_icon.png',
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,18 +59,18 @@ class TraceTile extends StatelessWidget {
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         color: isActive
                             ? null
-                            : _appService.themeMode == ThemeMode.light
-                                ? CustomColors.grey4
-                                : CustomColors.grey5,
+                            : _appService.isDarkMode(context)
+                                ? CustomColors.grey5
+                                : CustomColors.grey4,
                       ),
                 ),
               ],
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
-                        : _appService.themeMode == ThemeMode.light
-                            ? CustomColors.grey4
-                            : CustomColors.grey5,
+                        : _appService.isDarkMode(context)
+                            ? CustomColors.grey5
+                            : CustomColors.grey4,
                     fontWeight: FontWeight.normal,
                   ),
             ),
@@ -74,22 +80,22 @@ class TraceTile extends StatelessWidget {
               text: 'Data dodania: ',
               children: [
                 TextSpan(
-                  text: DateFormat('dd.MM.yyyy H:m').format(trace.createdAt),
+                  text: DateFormat('dd.MM.yyyy H:mm').format(trace.createdAt),
                   style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         color: isActive
                             ? null
-                            : _appService.themeMode == ThemeMode.light
-                                ? CustomColors.grey4
-                                : CustomColors.grey5,
+                            : _appService.isDarkMode(context)
+                                ? CustomColors.grey5
+                                : CustomColors.grey4,
                       ),
                 ),
               ],
               style: Theme.of(context).textTheme.labelSmall!.copyWith(
                     color: isActive
                         ? null
-                        : _appService.themeMode == ThemeMode.light
-                            ? CustomColors.grey4
-                            : CustomColors.grey5,
+                        : _appService.isDarkMode(context)
+                            ? CustomColors.grey5
+                            : CustomColors.grey4,
                     fontWeight: FontWeight.normal,
                   ),
             ),

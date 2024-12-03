@@ -18,13 +18,17 @@ class AppRouter extends RootStackRouter {
           children: [
             AutoRoute(
               page: FriendsRoute.page,
-              path: 'friendship-requests',
+              path: 'friends-tab',
               title: (context, data) => 'Znajomi',
               children: [AutoRoute(page: UserProfileRoute.page)],
             ),
             AutoRoute(page: MapRoute.page, path: 'map', initial: true, title: (context, data) => 'Mapa'),
             AutoRoute(page: ProfileRoute.page, title: (context, data) => 'Twoje konto'),
-            AutoRoute(page: AchievementsRoute.page, title: (context, data) => 'Osiągnięcia'),
+            AutoRoute(
+              page: AchievementsRoute.page,
+              path: 'achievements',
+              title: (context, data) => 'Osiągnięcia',
+            ),
           ],
         ),
         AutoRoute(page: AppSettingsRoute.page),
@@ -37,7 +41,10 @@ class AppRouter extends RootStackRouter {
           path: '/user-traces',
         ),
         AutoRoute(page: SingleAchievementRoute.page),
-        AutoRoute(page: RankingRoute.page),
+        AutoRoute(
+          page: RankingRoute.page,
+          path: '/ranking',
+        ),
       ];
 }
 

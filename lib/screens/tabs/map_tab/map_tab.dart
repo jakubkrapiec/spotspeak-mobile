@@ -143,6 +143,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   }
 
   Future<void> _getVisibleTraces() async {
+    _refreshPanelController.add(null);
     final bounds = _mapController.mapController.camera.visibleBounds;
     final center = bounds.center;
     final corner = bounds.northEast;
@@ -157,7 +158,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   Future<void> _showTraceFromNotification() async {
     final trace = await _traceService.getTrace(widget.traceId!);
-    if (trace.isActive() && mounted) {
+    if (trace.isActive && mounted) {
       _onMoveToTraceLocation(trace);
       await showDialog<void>(context: context, builder: (context) => TraceDialog(trace: trace));
     } else {

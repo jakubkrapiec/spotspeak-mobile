@@ -39,9 +39,26 @@ class NearbyTile extends StatelessWidget {
             height: 40,
             theme: SvgTheme(currentColor: Theme.of(context).primaryColor),
             traceIconPath,
-            //_appService.isDarkMode(context) ? 'assets/trace_icon_white.png' : 'assets/trace_icon.png',
           ),
           title: Text(trace.convertedDistance(currentPostion)),
+          subtitle: StreamBuilder<void>(
+            stream: Stream<void>.periodic(const Duration(seconds: 1)),
+            builder: (context, snapshot) {
+              return RichText(
+                text: TextSpan(
+                  text: 'Pozostało: ',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  children: [
+                    TextSpan(
+                      text:
+                          '${trace.timeLeft.inHours}:${trace.timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}:${trace.timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           trailing: Icon(Icons.location_on),
         ),
       ),

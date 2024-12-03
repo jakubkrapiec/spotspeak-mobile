@@ -3,20 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 
 @RoutePage()
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  HomeScreen({@QueryParam('initialIndex') this.initialIndex, super.key});
+
+  int? initialIndex;
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialIndex != null) {}
+  }
 
   @override
   Widget build(BuildContext context) {
     return AutoTabsScaffold(
       appBarBuilder: (context, router) => AppBar(
         title: Text(router.currentChild?.title(context) ?? 'SpotSpeak'),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.notifications),
-        //     onPressed: () {},
-        //   ),
-        // ],
       ),
       routes: [
         MapRoute(),

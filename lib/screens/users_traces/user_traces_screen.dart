@@ -15,7 +15,7 @@ import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
-enum _SortingType { defaultType, oldestFirst, newestFirst, closestFirst, farthestFirst }
+enum _SortingType { oldestFirst, newestFirst, closestFirst, farthestFirst }
 
 @RoutePage()
 class UserTracesScreen extends StatefulWidget {
@@ -32,9 +32,8 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
   final _traceService = getIt<TraceService>();
   final _locationService = getIt<LocationService>();
   List<Trace> _traces = [];
-  List<Trace> _originalTraces = [];
   Position? _currentLocation;
-  _SortingType _currentSorting = _SortingType.defaultType;
+  _SortingType _currentSorting = _SortingType.newestFirst;
 
   Future<List<Trace>> _getTraces() async {
     final traces = await _traceService.getMyTraces();
@@ -70,7 +69,8 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
   Future<void> _initializeData() async {
     _traces = await _getTraces();
     _currentLocation = await _getCurrentLocation();
-    _originalTraces = List.from(_traces);
+    _applySorting();
+
     setState(() {});
     if (widget.traceId != null) {
       unawaited(_openTraceDialog(widget.traceId!));
@@ -95,8 +95,6 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
             (a, b) => b.calculateDistance(currentLatLng).compareTo(a.calculateDistance(currentLatLng)),
           );
         }
-      case _SortingType.defaultType:
-        _traces = List.from(_originalTraces);
     }
   }
 
@@ -197,7 +195,6 @@ List<PopupMenuItem<_SortingType>> _generatePopupItems(BuildContext context) {
       _SortingType.newestFirst => 'Od najnowszego',
       _SortingType.closestFirst => 'Od najbliższego',
       _SortingType.farthestFirst => 'Od najdalszego',
-      _SortingType.defaultType => 'Domyślnie',
     };
 
     preparedWidgets.add(

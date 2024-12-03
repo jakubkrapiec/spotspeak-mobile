@@ -26,6 +26,12 @@ class NotificationService {
       await getIt<UserService>().userRepo.updatefCMToken(FcmTokenDto(fcmToken: fCMToken));
     }
 
+    // final initialMessage = await _firebaseMessaging.getInitialMessage();
+
+    // if (initialMessage != null) {
+    //   _handleNotificationTap(initialMessage);
+    // }
+
     FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
 
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
@@ -44,8 +50,11 @@ void _handleNotificationTap(RemoteMessage message) {
   final deepLink = message.data['deep_link'] as String;
   final uri = Uri.parse(deepLink);
   final fullPath = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
-
+  // if (fullPath.startsWith('/home')) {
+  //   getIt<AppRouter>().replaceNamed(fullPath);
+  // } else {
   getIt<AppRouter>().pushNamed(fullPath);
+  // }
 }
 
 void _handleForegroundNotification(RemoteMessage message) {
