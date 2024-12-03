@@ -12,9 +12,8 @@ import 'package:spotspeak_mobile/models/friendship_status.dart';
 import 'package:spotspeak_mobile/models/other_user_view.dart';
 import 'package:spotspeak_mobile/models/ranking_user.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
+import 'package:spotspeak_mobile/screens/user_profile/widgets/big_black_button.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/friendship_status_bar.dart';
-import 'package:spotspeak_mobile/screens/user_profile/widgets/manage_request_buttons.dart';
-import 'package:spotspeak_mobile/screens/user_profile/widgets/send_request_button.dart';
 import 'package:spotspeak_mobile/services/achievement_service.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/friend_service.dart';
@@ -43,13 +42,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _getUser();
+    _getUser(displaySpinner: true);
   }
 
-  Future<void> _getUser() async {
-    setState(() {
-      _status = LoadingStatus.loading;
-    });
+  Future<void> _getUser({required bool displaySpinner}) async {
+    if (displaySpinner) {
+      setState(() {
+        _status = LoadingStatus.loading;
+      });
+    }
+
     try {
       final results = await Future.wait(
         [
@@ -78,6 +80,124 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
+  bool _buttonLoading = false;
+
+  Future<void> _onRemoveFriend() async {
+    final shouldUnfriend = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Usuwanie znajomego', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: const Text('Czy na pewno chcesz usunąć tą znajomość?', style: TextStyle(fontSize: 16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Anuluj'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Usuń'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (shouldUnfriend ?? false) {
+      setState(() {
+        _buttonLoading = true;
+      });
+      try {
+        await _friendService.unfriend(friendId: widget.userId);
+        await _getUser(displaySpinner: false);
+      } catch (e, st) {
+        debugPrint('$e\n$st');
+      } finally {
+        if (mounted) {
+          setState(() {
+            _buttonLoading = false;
+          });
+        }
+      }
+    }
+  }
+
+  Future<void> _sendFriendRequest() async {
+    setState(() {
+      _buttonLoading = true;
+    });
+    try {
+      await _friendService.sendRequest(receiverId: widget.userId);
+      await _getUser(displaySpinner: false);
+    } catch (e, st) {
+      debugPrint('$e\n$st');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _buttonLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _cancelFriendRequest() async {
+    setState(() {
+      _buttonLoading = true;
+    });
+    try {
+      final myRequests = await _friendService.getSentRequests();
+      final requestId = myRequests.firstWhere((element) => element.userInfo.id == widget.userId).id;
+      await _friendService.cancelRequest(requestId: requestId);
+      await _getUser(displaySpinner: false);
+    } catch (e, st) {
+      debugPrint('$e\n$st');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _buttonLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _acceptFriendRequest() async {
+    setState(() {
+      _buttonLoading = true;
+    });
+    try {
+      final myRequests = await _friendService.getReceivedRequests();
+      final requestId = myRequests.firstWhere((element) => element.userInfo.id == widget.userId).id;
+      await _friendService.acceptRequest(requestId: requestId);
+      await _getUser(displaySpinner: false);
+    } catch (e, st) {
+      debugPrint('$e\n$st');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _buttonLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _rejectFriendRequest() async {
+    setState(() {
+      _buttonLoading = true;
+    });
+    try {
+      final myRequests = await _friendService.getReceivedRequests();
+      final requestId = myRequests.firstWhere((element) => element.userInfo.id == widget.userId).id;
+      await _friendService.rejectRequest(requestId: requestId);
+      await _getUser(displaySpinner: false);
+    } catch (e, st) {
+      debugPrint('$e\n$st');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _buttonLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +208,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ),
       ),
       body: switch (_status) {
-        LoadingStatus.error => Center(child: LoadingError(onRetry: _getUser)),
+        LoadingStatus.error => Center(child: LoadingError(onRetry: () => _getUser(displaySpinner: true))),
         LoadingStatus.loading => Center(child: CircularProgressIndicator()),
         LoadingStatus.loaded => SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
@@ -120,14 +240,53 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
+                const Gap(16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: _user!.relationshipStatus == FriendshipStatus.friends
-                      ? FriendshipStatusBar()
-                      : _user!.relationshipStatus == FriendshipStatus.invitationReceived
-                          ? ManageRequestButtons()
-                          : SendRequestButton(),
+                  child: AnimatedSize(
+                    duration: const Duration(milliseconds: 150),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: _buttonLoading
+                          ? Center(child: CircularProgressIndicator())
+                          : switch (_user!.relationshipStatus) {
+                              FriendshipStatus.friends => FriendshipStatusBar(
+                                  onRemoveFriend: _onRemoveFriend,
+                                ),
+                              FriendshipStatus.invitationReceived => Row(
+                                  children: [
+                                    Expanded(
+                                      child: BigBlackButton(
+                                        onTap: _acceptFriendRequest,
+                                        label: 'Akceptuj',
+                                        icon: Icon(Icons.person_add),
+                                      ),
+                                    ),
+                                    const Gap(16),
+                                    Expanded(
+                                      child: BigBlackButton(
+                                        onTap: _rejectFriendRequest,
+                                        label: 'Odrzuć',
+                                        icon: Icon(Icons.person_remove),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              FriendshipStatus.noRelation => BigBlackButton(
+                                  onTap: _sendFriendRequest,
+                                  label: 'Zaproś do znajomych',
+                                  icon: Icon(Icons.person_add),
+                                ),
+                              FriendshipStatus.invitationSent => BigBlackButton(
+                                  onTap: _cancelFriendRequest,
+                                  label: 'Anuluj zaproszenie',
+                                  icon: Icon(Icons.person_remove),
+                                ),
+                            },
+                    ),
+                  ),
                 ),
+                const Gap(16),
                 SizedBox(
                   width: double.infinity,
                   child: Padding(

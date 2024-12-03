@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
-import 'package:spotspeak_mobile/theme/colors.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
 class FriendshipStatusBar extends StatelessWidget {
-  FriendshipStatusBar({super.key});
+  FriendshipStatusBar({required this.onRemoveFriend, super.key});
 
   final _appService = getIt<AppService>();
+
+  final VoidCallback onRemoveFriend;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +32,7 @@ class FriendshipStatusBar extends StatelessWidget {
             ),
           ),
           Gap(16),
-          GestureDetector(
-            child: Container(
-              decoration: _appService.themeMode == ThemeMode.light
-                  ? CustomTheme.lightContainerStyle.copyWith(color: CustomColors.blue2)
-                  : CustomTheme.darkContainerStyle.copyWith(color: CustomColors.grey4),
-              padding: EdgeInsets.all(16),
-              child: Icon(Icons.person_remove),
-            ),
-          ),
+          IconButton(onPressed: onRemoveFriend, icon: Icon(Icons.person_remove)),
         ],
       ),
     );

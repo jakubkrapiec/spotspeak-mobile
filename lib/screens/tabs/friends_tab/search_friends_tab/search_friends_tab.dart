@@ -71,6 +71,9 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
                 LoadingStatus.loading => const SliverFillRemaining(
                     child: Center(child: CircularProgressIndicator()),
                   ),
+                LoadingStatus.loaded when state.users.isEmpty => SliverFillRemaining(
+                    child: Center(child: Text('Brak wyników')),
+                  ),
                 LoadingStatus.loaded => SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     sliver: SliverList.separated(
@@ -79,12 +82,6 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
                       itemBuilder: (context, index) => FriendTile(
                         user: state.users[index],
                         onTap: () => context.router.push(UserProfileRoute(userId: state.users[index].id)),
-                        actions: [
-                          IconButton(
-                            icon: const Icon(Icons.person_add),
-                            onPressed: () => _bloc.add(SendFriendRequestEvent(state.users[index].id)),
-                          ),
-                        ],
                       ),
                     ),
                   ),

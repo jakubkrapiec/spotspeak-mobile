@@ -277,7 +277,7 @@ abstract class CustomTheme {
     ),
     listTileTheme: ListTileThemeData(
       tileColor: CustomColors.grey6,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
       titleTextStyle: TextStyle(fontSize: 20, fontFamily: 'Inconsolata', color: CustomColors.green3),
       iconColor: CustomColors.green7,
     ),
@@ -305,7 +305,7 @@ abstract class CustomTheme {
 
   static final darkContainerStyle = BoxDecoration(
     color: CustomColors.grey6,
-    borderRadius: BorderRadius.all(Radius.circular(15)),
+    borderRadius: BorderRadius.all(Radius.circular(16)),
     boxShadow: [
       BoxShadow(
         color: CustomColors.grey3.withOpacity(0.2),
