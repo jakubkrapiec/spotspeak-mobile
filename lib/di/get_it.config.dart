@@ -27,6 +27,7 @@ import 'package:spotspeak_mobile/services/achievement_service.dart' as _i77;
 import 'package:spotspeak_mobile/services/app_service.dart' as _i724;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
 import 'package:spotspeak_mobile/services/comment_service.dart' as _i547;
+import 'package:spotspeak_mobile/services/event_service.dart' as _i356;
 import 'package:spotspeak_mobile/services/friend_service.dart' as _i100;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
 import 'package:spotspeak_mobile/services/notification_service.dart' as _i127;
@@ -76,6 +77,7 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i77.AchievementService(gh<_i361.Dio>()));
     gh.singleton<_i547.CommentService>(
         () => _i547.CommentService(gh<_i361.Dio>()));
+    gh.singleton<_i356.EventService>(() => _i356.EventService(gh<_i361.Dio>()));
     gh.singleton<_i100.FriendService>(
         () => _i100.FriendService(gh<_i361.Dio>()));
     gh.singleton<_i368.RankingService>(

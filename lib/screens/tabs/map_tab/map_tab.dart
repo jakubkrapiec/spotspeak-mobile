@@ -21,13 +21,16 @@ import 'package:spotspeak_mobile/di/custom_instance_names.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
+import 'package:spotspeak_mobile/models/event_location.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/event_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_marker.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_panel.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
+import 'package:spotspeak_mobile/services/event_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
@@ -47,6 +50,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   final _locationService = getIt<LocationService>();
   final _traceService = getIt<TraceService>();
   final _appService = getIt<AppService>();
+  final _eventService = getIt<EventService>();
   final _dio = getIt<Dio>();
   final _dioForOSM = getIt<Dio>(instanceName: dioForOSMInstanceName);
   final _dbCacheStore = getIt<DbCacheStore>();
@@ -59,14 +63,17 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   Position? _lastLocation;
   List<TraceLocation> _traces = [];
+  List<EventLocation> _events = [];
   static const _defaultZoom = 16.5;
+  static const _maxZoom = 19.0;
 
-  final PanelController _panelController = PanelController();
+  late final PanelController _panelController;
 
   @override
   void initState() {
     super.initState();
     _mapController = AnimatedMapController(vsync: this);
+    _panelController = PanelController();
     _refreshPanelController = StreamController();
     _initLocationService();
     _mapEventSubscription = _mapController.mapController.mapEventStream.listen((event) {
@@ -85,7 +92,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     _mapEventSubscription?.cancel();
     _locationStreamSubscription?.cancel();
     _refreshPanelController.close();
-
+    _panelController.close();
     super.dispose();
   }
 
@@ -105,7 +112,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     try {
       await _traceService.addTrace(result.media, dto);
       _refreshPanelController.add(null);
-      await _getVisibleTraces();
+      await _getVisibleTracesAndEvents();
     } catch (e, st) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nie udało się dodać śladu')));
@@ -139,19 +146,26 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   }
 
   Future<void> _onMapScrolled(LatLngBounds bounds) async {
-    EasyDebounce.debounce('get-traces', const Duration(milliseconds: 200), _getVisibleTraces);
+    EasyDebounce.debounce('get-traces', const Duration(milliseconds: 200), _getVisibleTracesAndEvents);
   }
 
-  Future<void> _getVisibleTraces() async {
+  Future<void> _getVisibleTracesAndEvents() async {
     _refreshPanelController.add(null);
     final bounds = _mapController.mapController.camera.visibleBounds;
     final center = bounds.center;
     final corner = bounds.northEast;
     final radius = Geolocator.distanceBetween(center.latitude, center.longitude, corner.latitude, corner.longitude);
-    final traces = await _traceService.getNearbyTraces(center.latitude, center.longitude, radius.toInt());
+    final tracesAndEvents = await Future.wait([
+      _traceService.getNearbyTraces(center.latitude, center.longitude, radius.toInt()),
+      _eventService.getNearbyEvents(latitude: center.latitude, longitude: center.longitude, distance: radius.toInt()),
+    ]);
+    final traces = tracesAndEvents[0] as List<TraceLocation>;
+    final events = tracesAndEvents[1] as List<EventLocation>;
+    //traces.removeWhere((trace) => )
     if (mounted) {
       setState(() {
         _traces = traces;
+        _events = events;
       });
     }
   }
@@ -198,7 +212,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         body: FlutterMap(
           mapController: _mapController.mapController,
           options: const MapOptions(
-            maxZoom: 19,
+            maxZoom: _maxZoom,
             minZoom: 2,
             interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
             initialCenter: LatLng(52, 19),
@@ -209,7 +223,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
               tileProvider: CachedTileProvider(dio: _dioForOSM, store: _dbCacheStore, maxStale: Duration(days: 30)),
-              maxZoom: 19,
+              maxZoom: _maxZoom,
               minZoom: 2,
               retinaMode: false,
             ),
@@ -247,7 +261,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                 //size: const Size(40, 40),
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(50),
-                maxZoom: 15,
+                maxZoom: _maxZoom,
                 markers: [
                   for (final trace in _traces)
                     Marker(
@@ -255,7 +269,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                       child: TraceMarker(
                         trace: trace,
                         currentUserLocation: _lastLocation?.toLatLng(),
-                        onRefreshTraces: _getVisibleTraces,
+                        onRefreshTraces: _getVisibleTracesAndEvents,
                       ),
                       height: TraceMarker.dimens,
                       width: TraceMarker.dimens,
@@ -274,6 +288,20 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                   ),
                 ),
               ),
+            ),
+            MarkerLayer(
+              markers: [
+                for (final event in _events)
+                  Marker(
+                    point: event.latLng,
+                    width: EventMarker.dimens,
+                    height: EventMarker.dimens,
+                    child: EventMarker(event: event),
+                  ),
+              ],
+            ),
+            PolyWidgetLayer(
+              polyWidgets: [],
             ),
             SimpleAttributionWidget(
               source: const Text('OpenStreetMap'),

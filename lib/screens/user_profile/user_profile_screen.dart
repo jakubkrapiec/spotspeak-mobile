@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:spotspeak_mobile/common/widgets/achievement_container.dart';
 import 'package:spotspeak_mobile/common/widgets/horizontal_user_list.dart';
 import 'package:spotspeak_mobile/common/widgets/loading_error.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -11,13 +12,10 @@ import 'package:spotspeak_mobile/models/achievement.dart';
 import 'package:spotspeak_mobile/models/friendship_status.dart';
 import 'package:spotspeak_mobile/models/other_user_view.dart';
 import 'package:spotspeak_mobile/models/ranking_user.dart';
-import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/big_black_button.dart';
 import 'package:spotspeak_mobile/screens/user_profile/widgets/friendship_status_bar.dart';
 import 'package:spotspeak_mobile/services/achievement_service.dart';
-import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/friend_service.dart';
-import 'package:spotspeak_mobile/theme/theme.dart';
 
 @RoutePage()
 class UserProfileScreen extends StatefulWidget {
@@ -30,7 +28,6 @@ class UserProfileScreen extends StatefulWidget {
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final _appService = getIt<AppService>();
   final _friendService = getIt<FriendService>();
   final _achievementService = getIt<AchievementService>();
 
@@ -198,6 +195,8 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
+  final _achievementsAutoSizeGroup = AutoSizeGroup();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,10 +217,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 const Gap(16),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ClipOval(
-                    child: _user?.userProfile.profilePictureUrl != null
-                        ? CachedNetworkImage(imageUrl: _user!.userProfile.profilePictureUrl!.toString())
-                        : Image.asset('assets/default_icon.jpg'),
+                  child: SizedBox.square(
+                    dimension: MediaQuery.sizeOf(context).width * 0.5,
+                    child: ClipOval(
+                      child: _user?.userProfile.profilePictureUrl != null
+                          ? CachedNetworkImage(
+                              imageUrl: _user!.userProfile.profilePictureUrl!.toString(),
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'assets/default_icon.jpg',
+                              fit: BoxFit.cover,
+                            ),
+                    ),
                   ),
                 ),
                 const Gap(16),
@@ -291,52 +299,40 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   width: double.infinity,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Wspólni znajomi:'),
+                    child: Text(
+                      'Wspólni znajomi:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-                HorizontalUserList(friendsList: _mutualFriends!),
+                HorizontalUserList(
+                  friendsList: _mutualFriends!,
+                  emptyText: 'Brak wspólnych znajomych',
+                ),
                 const Gap(16),
                 SizedBox(
                   width: double.infinity,
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Zdobyte osiągnięcia:'),
+                    child: Text('Zdobyte osiągnięcia:', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ),
                 SizedBox(
-                  height: 150,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: _achievements!.length,
-                    separatorBuilder: (context, index) => Gap(24),
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: () => context.router
-                          .push(SingleAchievementRoute(achievementId: _achievements![index].userAchievementId)),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: 8),
-                        padding: const EdgeInsets.all(10),
-                        width: 120,
-                        decoration: _appService.isDarkMode(context)
-                            ? CustomTheme.darkContainerStyle
-                            : CustomTheme.lightContainerStyle,
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.bed_rounded),
-                              Text(
-                                _achievements![index].achievementName,
-                                maxLines: 3,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                  height: 160,
+                  child: _achievements?.isEmpty ?? true
+                      ? Center(child: Text('Brak osiągnięć'))
+                      : ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _achievements!.length,
+                          separatorBuilder: (context, index) => Gap(24),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          itemBuilder: (context, index) => AchievementContainer(
+                            achievement: _achievements![index],
+                            autoSizeGroup: _achievementsAutoSizeGroup,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                 ),
+                const Gap(16),
               ],
             ),
           ),

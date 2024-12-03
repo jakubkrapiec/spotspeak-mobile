@@ -97,6 +97,7 @@ class _FriendsListTabState extends State<FriendsListTab> {
             ),
           ),
         LoadingStatus.loaded => ListView.separated(
+            padding: const EdgeInsets.all(16),
             itemBuilder: (context, index) {
               final friendship = _friendships![index];
               return FriendTile(
