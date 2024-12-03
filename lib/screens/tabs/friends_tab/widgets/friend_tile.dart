@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/models/search_user.dart';
 
@@ -16,7 +17,7 @@ class FriendTile extends StatelessWidget {
         dimension: 45,
         child: ClipOval(child: Image.asset('assets/default_icon.jpg')),
       ),
-      title: Text(user.username),
+      title: AutoSizeText(user.username, maxLines: 1),
       trailing: Wrap(
         spacing: 12,
         children: actions,

@@ -71,7 +71,7 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
       appBar: AppBar(title: const Text('Osiągnięcia')),
       body: switch (_status) {
         LoadingStatus.loading => const Center(child: CircularProgressIndicator()),
-        LoadingStatus.error => LoadingError(onRetry: _getFriendsAchievements),
+        LoadingStatus.error => Center(child: LoadingError(onRetry: _getFriendsAchievements)),
         LoadingStatus.loaded => Column(
             children: [
               const Gap(16),
@@ -119,7 +119,10 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
-                LoadingStatus.loaded => HorizontalUserList(friendsList: _achievementFriends ?? []),
+                LoadingStatus.loaded => HorizontalUserList(
+                    friendsList: _achievementFriends ?? [],
+                    emptyText: '',
+                  ),
               },
               const Gap(16),
             ],
