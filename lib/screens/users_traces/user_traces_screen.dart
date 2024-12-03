@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
+import 'package:spotspeak_mobile/models/trace_type.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/users_traces/trace_tile.dart';
@@ -114,6 +115,17 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
     });
   }
 
+  String _getUndiscoveredTraceIconPath(int id) {
+    final randomIndex = id.hashCode % 6;
+    return 'assets/trace_icons_hidden/trace_icon_hidden_$randomIndex.svg';
+  }
+
+  String _getDiscoveredTraceIconPath(TraceType type) => switch (type) {
+        TraceType.text => 'assets/trace_icons_discovered/text_trace.svg',
+        TraceType.image => 'assets/trace_icons_discovered/photo_trace.svg',
+        TraceType.video => 'assets/trace_icons_discovered/video_trace.svg',
+      };
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,6 +187,7 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
                         return TraceTile(
                           trace: traces[index],
                           currentLocation: currentLocation!,
+                          traceIconPath: _getDiscoveredTraceIconPath(traces[index].type),
                         );
                       },
                     ),

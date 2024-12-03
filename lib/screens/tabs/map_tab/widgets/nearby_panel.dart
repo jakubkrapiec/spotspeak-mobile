@@ -9,6 +9,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
+import 'package:spotspeak_mobile/models/trace_type.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
@@ -133,6 +134,17 @@ class _NearbyPanelState extends State<NearbyPanel> {
     super.dispose();
   }
 
+  String _getUndiscoveredTraceIconPath(int id) {
+    final randomIndex = id.hashCode % 6;
+    return 'assets/trace_icons_hidden/trace_icon_hidden_$randomIndex.svg';
+  }
+
+  String _getDiscoveredTraceIconPath(TraceType type) => switch (type) {
+        TraceType.text => 'assets/trace_icons_discovered/text_trace.svg',
+        TraceType.image => 'assets/trace_icons_discovered/photo_trace.svg',
+        TraceType.video => 'assets/trace_icons_discovered/video_trace.svg',
+      };
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -208,6 +220,9 @@ class _NearbyPanelState extends State<NearbyPanel> {
                     trace: _nearbyTracesCopy[index],
                     currentPostion: _lastCoordinatesSync!,
                     onTapFunction: () => _onMoveToTraceLocation(_nearbyTraces![index]),
+                    traceIconPath: _nearbyTracesCopy[index].hasDiscovered
+                        ? _getDiscoveredTraceIconPath(_nearbyTracesCopy[index].type)
+                        : _getUndiscoveredTraceIconPath(_nearbyTracesCopy[index].id),
                   );
                 },
               ),

@@ -11,12 +11,12 @@ class HomeScreen extends StatelessWidget {
     return AutoTabsScaffold(
       appBarBuilder: (context, router) => AppBar(
         title: Text(router.currentChild?.title(context) ?? 'SpotSpeak'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.notifications),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       routes: [
         MapRoute(),
