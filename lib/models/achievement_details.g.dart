@@ -16,7 +16,9 @@ AchievementDetails _$AchievementDetailsFromJson(Map<String, dynamic> json) =>
       requiredQuantity: (json['requiredQuantity'] as num).toInt(),
       quantityProgress: (json['quantityProgress'] as num).toInt(),
       currentStreak: (json['currentStreak'] as num).toInt(),
-      remainingTime: json['remainingTime'],
+      endTime: json['endTime'] == null
+          ? null
+          : DateTime.parse(json['endTime'] as String),
       completedAt: json['completedAt'] == null
           ? null
           : DateTime.parse(json['completedAt'] as String),
@@ -32,6 +34,6 @@ Map<String, dynamic> _$AchievementDetailsToJson(AchievementDetails instance) =>
       'requiredQuantity': instance.requiredQuantity,
       'quantityProgress': instance.quantityProgress,
       'currentStreak': instance.currentStreak,
-      'remainingTime': instance.remainingTime,
+      'endTime': instance.endTime?.toIso8601String(),
       'completedAt': instance.completedAt?.toIso8601String(),
     };

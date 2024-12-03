@@ -13,7 +13,7 @@ class AchievementDetails {
     required this.requiredQuantity,
     required this.quantityProgress,
     required this.currentStreak,
-    required this.remainingTime,
+    required this.endTime,
     required this.completedAt,
   });
 
@@ -27,8 +27,10 @@ class AchievementDetails {
   final int requiredQuantity;
   final int quantityProgress;
   final int currentStreak;
-  final Object? remainingTime;
+  final DateTime? endTime;
   final DateTime? completedAt;
+
+  Duration? get timeLeft => endTime?.difference(DateTime.now());
 
   Map<String, Object?> toJson() => _$AchievementDetailsToJson(this);
 }

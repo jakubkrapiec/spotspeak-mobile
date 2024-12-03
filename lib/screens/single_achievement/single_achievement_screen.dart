@@ -162,7 +162,7 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
             children: [
               Text('Pozostały czas:'),
               Text(
-                _achievement!.remainingTime == null ? 'brak limitu' : _achievement!.remainingTime.toString(),
+                _achievement!.endTime == null ? 'brak limitu' : _remainingTime,
                 style: Theme.of(context).textTheme.titleSmall,
               ),
             ],
@@ -170,6 +170,14 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
         ),
       ],
     );
+  }
+
+  String get _remainingTime {
+    final timeLeft = _achievement!.timeLeft!;
+    if (timeLeft > const Duration(days: 2)) {
+      return '${timeLeft.inDays} dni';
+    }
+    return '${timeLeft.inHours}:${(timeLeft.inMinutes % 60).toString().padLeft(2, '0')}:${(timeLeft.inSeconds % 60).toString().padLeft(2, '0')}';
   }
 
   Widget _buildCompletedSection(BuildContext context) {
