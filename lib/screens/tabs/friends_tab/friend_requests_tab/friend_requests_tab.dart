@@ -37,7 +37,7 @@ class _FriendRequestsTabState extends State<FriendRequestsTab> {
           itemCount: state.requests.length,
           itemBuilder: (context, index) => FriendTile(
             user: state.requests[index].userInfo,
-            tapFunction: () {},
+            onTap: () {},
           ),
         );
       },

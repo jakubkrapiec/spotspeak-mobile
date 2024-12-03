@@ -67,6 +67,15 @@ class SearchFriendsBloc extends Bloc<SearchFriendsEvent, SearchFriendsState> {
   Future<void> _onSendFriendRequestEvent(SendFriendRequestEvent event, Emitter<SearchFriendsState> emit) async {
     await _friendService.sendRequest(receiverId: event.userId);
   }
+
+  Future<void> _onFetchWaitingRequestsEvent(_FetchWaitingRequestsEvent event, Emitter<SearchFriendsState> emit) async {
+    final requests = await Future.wait([
+      _friendService.getReceivedRequests(),
+      _friendService.getSentRequests(),
+    ]);
+    final receivedRequests = requests[0];
+    final sentRequests = requests[1];
+  }
 }
 
 abstract class SearchFriendsEvent {
@@ -87,6 +96,10 @@ class SendFriendRequestEvent extends SearchFriendsEvent {
   const SendFriendRequestEvent(this.userId);
 
   final String userId;
+}
+
+class _FetchWaitingRequestsEvent extends SearchFriendsEvent {
+  const _FetchWaitingRequestsEvent();
 }
 
 @freezed

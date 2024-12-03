@@ -19,7 +19,7 @@ Trace _$TraceFromJson(Map<String, dynamic> json) => Trace(
       latitude: json['latitude'] as num,
       longitude: json['longitude'] as num,
       createdAt: DateTime.parse(json['createdAt'] as String),
-      author: TraceAuthor.fromJson(json['author'] as Map<String, dynamic>),
+      author: ContentAuthor.fromJson(json['author'] as Map<String, dynamic>),
       type: $enumDecode(_$TraceTypeEnumMap, json['type']),
     );
 

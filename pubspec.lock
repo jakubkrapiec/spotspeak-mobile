@@ -270,6 +270,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.7"
+  dateable:
+    dependency: "direct main"
+    description:
+      name: dateable
+      sha256: "5ac778840593d1f13a242c9365629d261e5bfb3b0d85f158ddce59f5ee83c5cc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   dio:
     dependency: "direct main"
     description:
@@ -495,10 +503,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_map_animations
-      sha256: a2135cd3cf36c07d821efeabb0be31aca380449528af80913c77b158e142eae9
+      sha256: "08233f89919049a3601e785d32e9d1d9e1faac6578190150f1d7495fc1050d36"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.8.0"
   flutter_map_cache:
     dependency: "direct main"
     description:
@@ -591,10 +599,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_svg
-      sha256: "578bd8c508144fdaffd4f77b8ef2d8c523602275cd697cc3db284dbd762ef4ce"
+      sha256: "54900a1a1243f3c4a5506d853a2b5c2dbc38d5f27e52a52618a8054401431123"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.14"
+    version: "2.0.16"
   flutter_test:
     dependency: "direct dev"
     description: flutter

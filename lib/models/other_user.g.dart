@@ -9,11 +9,15 @@ part of 'other_user.dart';
 OtherUser _$OtherUserFromJson(Map<String, dynamic> json) => OtherUser(
       id: json['id'] as String,
       username: json['username'] as String,
-      profilePictureUrl: json['profilePictureUrl'] as String?,
+      totalPoints: (json['totalPoints'] as num).toInt(),
+      profilePictureUrl: json['profilePictureUrl'] == null
+          ? null
+          : Uri.parse(json['profilePictureUrl'] as String),
     );
 
 Map<String, dynamic> _$OtherUserToJson(OtherUser instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'profilePictureUrl': instance.profilePictureUrl,
+      'totalPoints': instance.totalPoints,
+      'profilePictureUrl': instance.profilePictureUrl?.toString(),
     };

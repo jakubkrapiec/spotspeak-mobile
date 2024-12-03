@@ -17,7 +17,7 @@ abstract class AchievementService {
   Future<List<Achievement>> getAchievements(@Path() String userId);
 
   @GET('/my')
-  Future<List<Achievement>> getUsersAchievements();
+  Future<List<Achievement>> getMyAchievements();
 
   @GET('/details/{userAchievementId}')
   Future<AchievementDetails> getAchievementDetails(@Path() int userAchievementId);

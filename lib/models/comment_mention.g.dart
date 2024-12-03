@@ -1,20 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'trace_author.dart';
+part of 'comment_mention.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TraceAuthor _$TraceAuthorFromJson(Map<String, dynamic> json) => TraceAuthor(
-      id: json['id'] as String,
+CommentMention _$CommentMentionFromJson(Map<String, dynamic> json) =>
+    CommentMention(
+      mentionedUserId: json['mentionedUserId'] as String,
       username: json['username'] as String,
-      profilePictureUrl: json['profilePictureUrl'] as String?,
     );
 
-Map<String, dynamic> _$TraceAuthorToJson(TraceAuthor instance) =>
+Map<String, dynamic> _$CommentMentionToJson(CommentMention instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'mentionedUserId': instance.mentionedUserId,
       'username': instance.username,
-      'profilePictureUrl': instance.profilePictureUrl,
     };

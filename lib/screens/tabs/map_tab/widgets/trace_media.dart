@@ -67,28 +67,38 @@ class _VideoState extends State<_Video> {
 
   @override
   Widget build(BuildContext context) {
-    return _controller.value.isInitialized
-        ? Transform.scale(
-            scale: 0.55,
-            child: AspectRatio(
-              aspectRatio: 1 / _controller.value.aspectRatio,
-              child: FittedBox(
-                fit: BoxFit.cover,
-                child: ClipRect(
-                  clipper: const _VideoClipper(),
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      height: _controller.value.size.height,
-                      width: _controller.value.size.width,
-                      child: CachedVideoPlayerPlus(_controller),
-                    ),
-                  ),
-                ),
+    if (!_controller.value.isInitialized) {
+      return const CircularProgressIndicator();
+    }
+    if (_controller.value.rotationCorrection == 0) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: CachedVideoPlayerPlus(_controller),
+        ),
+      );
+    }
+    return Transform.scale(
+      scale: 0.55,
+      child: AspectRatio(
+        aspectRatio: 1 / _controller.value.aspectRatio,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: ClipRect(
+            clipper: const _VideoClipper(),
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                height: _controller.value.size.height,
+                width: _controller.value.size.width,
+                child: CachedVideoPlayerPlus(_controller),
               ),
             ),
-          )
-        : const CircularProgressIndicator();
+          ),
+        ),
+      ),
+    );
   }
 }
 

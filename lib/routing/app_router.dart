@@ -30,6 +30,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ChangeAppDataRoute.page),
         AutoRoute(page: UserTracesRoute.page),
         AutoRoute(page: SingleAchievementRoute.page),
+        AutoRoute(page: RankingRoute.page),
       ];
 }
 

@@ -15,8 +15,9 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<ThemeMode>(
       valueListenable: _appService.themeModeNotifier,
-      builder: (context, themeMode, _) {
+      builder: (context, themeMode, child) {
         return MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           title: 'SpotSpeak',
           routerConfig: _router.config(),
           themeMode: themeMode,

@@ -4,10 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/models/other_user.dart';
 
 class HorizontalUserList extends StatelessWidget {
-  const HorizontalUserList({
-    required this.friendsList,
-    super.key,
-  });
+  const HorizontalUserList({required this.friendsList, super.key});
 
   final List<OtherUser> friendsList;
 
@@ -28,7 +25,7 @@ class HorizontalUserList extends StatelessWidget {
                 onTap: () {},
                 child: ClipOval(
                   child: CachedNetworkImage(
-                    imageUrl: friend.profilePictureUrl ?? '',
+                    imageUrl: friend.profilePictureUrl?.toString() ?? '',
                     width: 90,
                     height: 90,
                     fit: BoxFit.cover,

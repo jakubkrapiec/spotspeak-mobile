@@ -1,21 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'comment_author.dart';
+part of 'content_author.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-CommentAuthor _$CommentAuthorFromJson(Map<String, dynamic> json) =>
-    CommentAuthor(
+ContentAuthor _$ContentAuthorFromJson(Map<String, dynamic> json) =>
+    ContentAuthor(
       id: json['id'] as String,
       username: json['username'] as String,
-      profilePictureUrl: json['profilePictureUrl'] as String?,
+      profilePictureUrl: json['profilePictureUrl'] == null
+          ? null
+          : Uri.parse(json['profilePictureUrl'] as String),
     );
 
-Map<String, dynamic> _$CommentAuthorToJson(CommentAuthor instance) =>
+Map<String, dynamic> _$ContentAuthorToJson(ContentAuthor instance) =>
     <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
-      'profilePictureUrl': instance.profilePictureUrl,
+      'profilePictureUrl': instance.profilePictureUrl?.toString(),
     };

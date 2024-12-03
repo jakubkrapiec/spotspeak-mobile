@@ -2,8 +2,10 @@ import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:spotspeak_mobile/models/friend_request_user_info.dart';
+import 'package:spotspeak_mobile/models/friendship.dart';
 import 'package:spotspeak_mobile/models/friendship_request.dart';
 import 'package:spotspeak_mobile/models/other_user_view.dart';
+import 'package:spotspeak_mobile/models/ranking_user.dart';
 import 'package:spotspeak_mobile/models/search_user.dart';
 
 part 'friend_service.g.dart';
@@ -14,11 +16,14 @@ abstract class FriendService {
   @factoryMethod
   factory FriendService(Dio dio) = _FriendService;
 
+  @GET('/friends')
+  Future<List<Friendship>> getFriends();
+
   @GET('/users/search')
   Future<List<SearchUser>> searchUsers({@Query('username') required String username});
 
   @GET('/users/profile/{userId}')
-  Future<OtherUserView> getUser({@Query('userId') required String userId});
+  Future<OtherUserView> getUser({@Path('userId') required String userId});
 
   @PUT('/friend-requests/reject/{requestId}')
   Future<FriendshipRequest> rejectRequest({@Path('requestId') required int requestId});
@@ -37,4 +42,10 @@ abstract class FriendService {
 
   @DELETE('/friend-requests/cancel/{requestId}')
   Future<void> cancelRequest({@Path('requestId') required int requestId});
+
+  @GET('/friends/mutual/{userId}')
+  Future<List<RankingUser>> getMutualFriends({@Path('userId') required String userId});
+
+  @DELETE('/friends/{friendId}')
+  Future<void> unfriend({@Path('friendId') required String friendId});
 }
