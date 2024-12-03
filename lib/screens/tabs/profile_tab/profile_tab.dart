@@ -96,12 +96,6 @@ class _ProfileTabState extends State<ProfileTab> {
                     ),
                     ProfileButton(
                       pressFunction: () {
-                        context.router.push(FriendsRoute());
-                      },
-                      buttonText: 'Lista znajomych',
-                    ),
-                    ProfileButton(
-                      pressFunction: () {
                         context.router.push(UserTracesRoute());
                       },
                       buttonText: 'Dodane ślady',

@@ -259,7 +259,7 @@ abstract class CustomTheme {
         borderSide: BorderSide.none,
       ),
       filled: true,
-      fillColor: CustomColors.grey5,
+      fillColor: CustomColors.grey6,
     ),
     tabBarTheme: TabBarTheme(
       labelColor: CustomColors.green8,

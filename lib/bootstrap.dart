@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:spotspeak_mobile/app.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -28,6 +29,8 @@ class AppBlocObserver extends BlocObserver {
 
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);

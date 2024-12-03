@@ -12,28 +12,33 @@ class FriendsSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Container(
-          decoration:
-              _appService.isDarkMode(context) ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
-          padding: EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Expanded(
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: _appService.themeModeNotifier,
+      builder: (context, themeMode, child) {
+        final isDarkMode = _appService.isDarkMode(context);
+
+        return ColoredBox(
+          color: isDarkMode ? CustomColors.grey5 : CustomColors.blue1,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Container(
+              decoration: isDarkMode ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
+              padding: EdgeInsets.all(16),
+              child: Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(hintText: 'Wyszukaj znajomego'),
+                  decoration: InputDecoration(
+                    hintText: 'Wyszukaj znajomego',
+                    fillColor: isDarkMode ? CustomColors.grey5 : null,
+                  ),
                   controller: controller,
                   style: const TextStyle(fontSize: 16),
                   autofocus: true,
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
