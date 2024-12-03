@@ -32,13 +32,6 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
   }
 
   @override
-  void deactivate() {
-    FocusManager.instance.primaryFocus?.unfocus();
-
-    super.deactivate();
-  }
-
-  @override
   void dispose() {
     _bloc.close();
     _searchQueryController.dispose();

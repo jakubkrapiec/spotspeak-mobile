@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class SpotSpeakDialog extends StatelessWidget {
-  const SpotSpeakDialog({required this.children, this.title, this.scrollController, super.key});
+  const SpotSpeakDialog({required this.children, this.title, this.scrollController, this.action, super.key});
 
   final String? title;
   final List<Widget> children;
   final ScrollController? scrollController;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +22,22 @@ class SpotSpeakDialog extends StatelessWidget {
             children: [
               Opacity(
                 opacity: 0,
-                child: IconButton(onPressed: null, icon: Icon(Icons.close)),
+                child: Row(
+                  children: [
+                    if (action != null) action!,
+                    IconButton(onPressed: null, icon: Icon(Icons.close)),
+                  ],
+                ),
               ),
               Text(title ?? ''),
-              IconButton(
-                onPressed: Navigator.of(context).pop,
-                icon: Icon(Icons.close),
+              Row(
+                children: [
+                  if (action != null) action!,
+                  IconButton(
+                    onPressed: Navigator.of(context).pop,
+                    icon: Icon(Icons.close),
+                  ),
+                ],
               ),
             ],
           ),

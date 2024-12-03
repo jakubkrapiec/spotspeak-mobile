@@ -16,7 +16,6 @@ class FriendsSearch extends StatelessWidget {
       valueListenable: _appService.themeModeNotifier,
       builder: (context, themeMode, child) {
         final isDarkMode = _appService.isDarkMode(context);
-
         return ColoredBox(
           color: isDarkMode ? CustomColors.grey5 : CustomColors.blue1,
           child: Padding(

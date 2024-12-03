@@ -32,12 +32,21 @@ class _FriendsListTabState extends State<FriendsListTab> {
     setState(() {
       _status = LoadingStatus.loading;
     });
-    final friendships = await _friendService.getFriends();
-    if (!mounted) return;
-    setState(() {
-      _friendships = friendships;
-      _status = LoadingStatus.loaded;
-    });
+    try {
+      final friendships = await _friendService.getFriends();
+      if (!mounted) return;
+      setState(() {
+        _friendships = friendships;
+        _status = LoadingStatus.loaded;
+      });
+    } catch (e, st) {
+      debugPrint('$e\n$st');
+      if (mounted) {
+        setState(() {
+          _status = LoadingStatus.error;
+        });
+      }
+    }
   }
 
   Future<void> _unfriend(Friendship friendship) async {

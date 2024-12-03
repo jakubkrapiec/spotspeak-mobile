@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:spotspeak_mobile/common/widgets/spotspeak_dialog.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/add_comment_dto.dart';
@@ -14,9 +15,11 @@ import 'package:spotspeak_mobile/models/friendship.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/trace_media.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/comment_service.dart';
 import 'package:spotspeak_mobile/services/friend_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 class TraceDialog extends StatefulWidget {
   const TraceDialog({required this.trace, super.key});
@@ -31,6 +34,7 @@ class _TraceDialogState extends State<TraceDialog> {
   late final TextEditingController _commentController;
   final _commentService = getIt<CommentService>();
   final _friendService = getIt<FriendService>();
+  final _authService = getIt<AuthenticationService>();
   late final List<Comment> _comments = widget.trace.comments;
   List<Friendship> _friends = [];
   bool _commentButtonLoading = false;
@@ -130,11 +134,41 @@ class _TraceDialogState extends State<TraceDialog> {
     });
   }
 
+  Future<void> _onTapDeleteTrace() async {
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Usuwanie śladu', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: const Text('Czy na pewno chcesz usunąć ten ślad?', style: TextStyle(fontSize: 16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Anuluj'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Usuń'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (shouldDelete ?? false) {
+      Navigator.of(context).pop(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SpotSpeakDialog(
       title: 'Ślad',
       scrollController: _scrollController,
+      action: _authService.user.value.id == widget.trace.author.id
+          ? IconButton(
+              icon: Icon(Icons.delete, color: CustomColors.red1),
+              onPressed: _onTapDeleteTrace,
+            )
+          : null,
       children: [
         Row(
           children: [
@@ -146,11 +180,19 @@ class _TraceDialogState extends State<TraceDialog> {
                   width: 32,
                   height: 32,
                   imageUrl: widget.trace.author.profilePictureUrl!.toString(),
+                  fit: BoxFit.cover,
                 ),
               ),
               Gap(8),
             ],
-            Text(widget.trace.author.username),
+            Expanded(
+              child: Text(
+                widget.trace.author.username,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
           ],
         ),
         const Gap(8),
@@ -158,19 +200,32 @@ class _TraceDialogState extends State<TraceDialog> {
           alignment: Alignment.centerLeft,
           child: StreamBuilder<void>(
             stream: _refreshStream,
-            builder: (context, snapshot) => RichText(
-              text: TextSpan(
-                text: 'Pozostało: ',
-                style: Theme.of(context).textTheme.bodyMedium,
-                children: [
-                  TextSpan(
-                    text:
-                        '${widget.trace.timeLeft.inHours}:${widget.trace.timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}:${widget.trace.timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}',
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+            builder: (context, snapshot) => widget.trace.timeLeft.isNegative
+                ? RichText(
+                    text: TextSpan(
+                      text: 'Dodano: ',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      children: [
+                        TextSpan(
+                          text: DateFormat('dd.MM.yyyy H:m').format(widget.trace.createdAt),
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  )
+                : RichText(
+                    text: TextSpan(
+                      text: 'Pozostało: ',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      children: [
+                        TextSpan(
+                          text:
+                              '${widget.trace.timeLeft.inHours}:${widget.trace.timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}:${widget.trace.timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                          style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
-            ),
           ),
         ),
         const Gap(8),
@@ -183,7 +238,11 @@ class _TraceDialogState extends State<TraceDialog> {
           TraceMedia(mediaUrl: widget.trace.resourceAccessUrl!, type: widget.trace.type),
         ],
         const Gap(8),
-        Align(alignment: Alignment.centerLeft, child: Text('Komentarze')),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Komentarze', style: TextStyle(fontWeight: FontWeight.bold)),
+        ),
+        const Gap(8),
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -257,7 +316,10 @@ class _CommentState extends State<_Comment> {
         recognizer = _gestureRecognizers[mentionText]!;
       } else {
         recognizer = TapGestureRecognizer()
-          ..onTap = () => context.router.push(UserProfileRoute(userId: mention.mentionedUserId));
+          ..onTap = () {
+            if (_userService.user.value.id == mention.mentionedUserId) return;
+            context.router.push(UserProfileRoute(userId: mention.mentionedUserId));
+          };
         _gestureRecognizers[mentionText] = recognizer;
       }
       spans
@@ -266,6 +328,7 @@ class _CommentState extends State<_Comment> {
           TextSpan(
             text: mentionText,
             style: TextStyle(fontWeight: FontWeight.bold),
+            recognizer: recognizer,
           ),
         );
       lastEnd = end;

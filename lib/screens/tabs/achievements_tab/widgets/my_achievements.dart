@@ -49,12 +49,14 @@ class _MyAchievementsState extends State<MyAchievements> {
     }
   }
 
+  final _autoSizeGroup = AutoSizeGroup();
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Twoje osiągnięcia'),
+        Text('Twoje osiągnięcia', style: TextStyle(fontWeight: FontWeight.bold)),
         const Gap(16),
         switch (_status) {
           LoadingStatus.loading => Padding(
@@ -70,7 +72,10 @@ class _MyAchievementsState extends State<MyAchievements> {
                 crossAxisSpacing: 16,
                 childAspectRatio: 1.2,
               ),
-              itemBuilder: (context, index) => _AchievementContainer(achievement: _achievements![index]),
+              itemBuilder: (context, index) => _AchievementContainer(
+                achievement: _achievements![index],
+                autoSizeGroup: _autoSizeGroup,
+              ),
               itemCount: _achievements!.length,
               shrinkWrap: true,
             ),
@@ -81,9 +86,13 @@ class _MyAchievementsState extends State<MyAchievements> {
 }
 
 class _AchievementContainer extends StatelessWidget {
-  _AchievementContainer({required this.achievement}) : super(key: ValueKey(achievement.achievementName));
+  _AchievementContainer({
+    required this.achievement,
+    required this.autoSizeGroup,
+  }) : super(key: ValueKey(achievement.achievementName));
 
   final Achievement achievement;
+  final AutoSizeGroup autoSizeGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +124,8 @@ class _AchievementContainer extends StatelessWidget {
                   child: AutoSizeText(
                     achievement.achievementName,
                     maxLines: 2,
+                    group: autoSizeGroup,
+                    stepGranularity: 0.1,
                     textAlign: TextAlign.center,
                   ),
                 ),

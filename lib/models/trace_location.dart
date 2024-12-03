@@ -1,7 +1,7 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
-import 'package:geolocator/geolocator.dart';
 
 part 'trace_location.g.dart';
 

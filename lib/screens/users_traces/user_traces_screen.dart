@@ -1,12 +1,13 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
-import 'package:spotspeak_mobile/screens/tabs/map_tab/new_trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/users_traces/trace_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
@@ -14,13 +15,7 @@ import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
 
-enum SortingType {
-  defaultType,
-  oldestFirst,
-  newestFirst,
-  closestFirst,
-  farthestFirst,
-}
+enum _SortingType { defaultType, oldestFirst, newestFirst, closestFirst, farthestFirst }
 
 @RoutePage()
 class UserTracesScreen extends StatefulWidget {
@@ -36,10 +31,10 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
 
   final _traceService = getIt<TraceService>();
   final _locationService = getIt<LocationService>();
-  List<Trace> traces = [];
+  List<Trace> _traces = [];
   List<Trace> _originalTraces = [];
-  Position? currentLocation;
-  SortingType _currentSorting = SortingType.defaultType;
+  Position? _currentLocation;
+  _SortingType _currentSorting = _SortingType.defaultType;
 
   Future<List<Trace>> _getTraces() async {
     final traces = await _traceService.getMyTraces();
@@ -51,12 +46,19 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
     return currentLocation;
   }
 
-  void _openTraceDialog(int traceId) {
-    final trace = traces.firstWhere((t) => t.id == traceId);
-    showDialog<TraceDialogResult?>(
-      context: context,
-      builder: (context) => TraceDialog(trace: trace),
-    );
+  Future<void> _openTraceDialog(int traceId) async {
+    final trace = _traces.firstWhere((t) => t.id == traceId);
+    final shouldDelete = await showDialog<bool>(
+          context: context,
+          builder: (context) => TraceDialog(trace: trace),
+        ) ??
+        false;
+    if (shouldDelete) {
+      await _traceService.deleteTrace(traceId);
+      setState(() {
+        _traces.removeWhere((t) => t.id == traceId);
+      });
+    }
   }
 
   @override
@@ -66,58 +68,43 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
   }
 
   Future<void> _initializeData() async {
-    traces = await _getTraces();
-    currentLocation = await _getCurrentLocation();
-    _originalTraces = List.from(traces);
+    _traces = await _getTraces();
+    _currentLocation = await _getCurrentLocation();
+    _originalTraces = List.from(_traces);
     setState(() {});
     if (widget.traceId != null) {
-      _openTraceDialog(widget.traceId!);
+      unawaited(_openTraceDialog(widget.traceId!));
     }
   }
 
   void _applySorting() {
     switch (_currentSorting) {
-      case SortingType.oldestFirst:
-        traces.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-
-      case SortingType.newestFirst:
-        traces.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-      case SortingType.closestFirst:
-        if (currentLocation != null) {
-          final currentLatLng = LatLng(
-            currentLocation!.latitude,
-            currentLocation!.longitude,
-          );
-          traces.sort((a, b) => a.calculateDistance(currentLatLng).compareTo(b.calculateDistance(currentLatLng)));
+      case _SortingType.oldestFirst:
+        _traces.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+      case _SortingType.newestFirst:
+        _traces.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      case _SortingType.closestFirst:
+        if (_currentLocation != null) {
+          final currentLatLng = _currentLocation!.toLatLng();
+          _traces.sort((a, b) => a.calculateDistance(currentLatLng).compareTo(b.calculateDistance(currentLatLng)));
         }
-
-      case SortingType.farthestFirst:
-        if (currentLocation != null) {
-          final currentLatLng = LatLng(
-            currentLocation!.latitude,
-            currentLocation!.longitude,
-          );
-          traces.sort(
+      case _SortingType.farthestFirst:
+        if (_currentLocation != null) {
+          final currentLatLng = _currentLocation!.toLatLng();
+          _traces.sort(
             (a, b) => b.calculateDistance(currentLatLng).compareTo(a.calculateDistance(currentLatLng)),
           );
         }
-
-      case SortingType.defaultType:
-        traces = List.from(_originalTraces);
+      case _SortingType.defaultType:
+        _traces = List.from(_originalTraces);
     }
   }
 
-  void _onSortingSelected(SortingType sortingType) {
+  void _onSortingSelected(_SortingType sortingType) {
     setState(() {
       _currentSorting = sortingType;
       _applySorting();
     });
-  }
-
-  String _getUndiscoveredTraceIconPath(int id) {
-    final randomIndex = id.hashCode % 6;
-    return 'assets/trace_icons_hidden/trace_icon_hidden_$randomIndex.svg';
   }
 
   String _getDiscoveredTraceIconPath(TraceType type) => switch (type) {
@@ -129,18 +116,18 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Dodane ślady'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: traces.isEmpty || currentLocation == null
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  Row(
+      appBar: AppBar(title: Text('Dodane ślady')),
+      body: _traces.isEmpty || _currentLocation == null
+          ? Center(child: CircularProgressIndicator())
+          : CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                const SliverGap(16),
+                SliverToBoxAdapter(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      const Gap(16),
                       Expanded(
                         child: Container(
                           padding: EdgeInsets.all(16),
@@ -149,74 +136,69 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
                               : CustomTheme.lightContainerStyle,
                           child: Text(
                             'Twoje dodane ślady:',
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.titleSmall,
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
                       Gap(16),
                       Container(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         decoration: _appService.isDarkMode(context)
                             ? CustomTheme.darkContainerStyle
                             : CustomTheme.lightContainerStyle,
                         child: PopupMenuButton(
                           onSelected: _onSortingSelected,
-                          itemBuilder: generatePopupItems,
-                          child: Icon(
-                            Icons.filter_list,
-                            size: 36,
-                          ),
+                          itemBuilder: _generatePopupItems,
+                          child: Icon(Icons.filter_list, size: 30),
                         ),
                       ),
+                      Gap(16),
                     ],
                   ),
-                  Gap(16),
-                  Text(
-                    'Całkowita liczba śladów: ${traces.length}',
+                ),
+                SliverGap(16),
+                SliverToBoxAdapter(
+                  child: Text(
+                    'Całkowita liczba śladów: ${_traces.length}',
                     style: Theme.of(context).textTheme.titleSmall,
                     textAlign: TextAlign.center,
                   ),
-                  Gap(8),
-                  Divider(),
-                  Gap(16),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: traces.length,
-                      itemBuilder: (context, index) {
-                        return TraceTile(
-                          trace: traces[index],
-                          currentLocation: currentLocation!,
-                          traceIconPath: _getDiscoveredTraceIconPath(traces[index].type),
-                        );
-                      },
+                ),
+                const SliverGap(8),
+                SliverToBoxAdapter(child: Divider()),
+                const SliverGap(16),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList.separated(
+                    itemCount: _traces.length,
+                    itemBuilder: (context, index) => TraceTile(
+                      trace: _traces[index],
+                      currentLocation: _currentLocation!,
+                      traceIconPath: _getDiscoveredTraceIconPath(_traces[index].type),
+                      onTap: () => _openTraceDialog(_traces[index].id),
                     ),
+                    separatorBuilder: (context, index) => Gap(8),
                   ),
-                ],
-              ),
-      ),
+                ),
+                const SliverGap(16),
+              ],
+            ),
     );
   }
 }
 
-List<PopupMenuItem<SortingType>> generatePopupItems(BuildContext context) {
-  final preparedWidgets = <PopupMenuItem<SortingType>>[];
+List<PopupMenuItem<_SortingType>> _generatePopupItems(BuildContext context) {
+  final preparedWidgets = <PopupMenuItem<_SortingType>>[];
 
-  for (final sortType in SortingType.values) {
-    String text;
-
-    switch (sortType) {
-      case SortingType.oldestFirst:
-        text = 'Od najstarszego';
-      case SortingType.newestFirst:
-        text = 'Od najnowszego';
-      case SortingType.closestFirst:
-        text = 'Od najbliższego';
-      case SortingType.farthestFirst:
-        text = 'Od najdalszego';
-      case SortingType.defaultType:
-        text = 'Domyślnie';
-    }
+  for (final sortType in _SortingType.values) {
+    final text = switch (sortType) {
+      _SortingType.oldestFirst => 'Od najstarszego',
+      _SortingType.newestFirst => 'Od najnowszego',
+      _SortingType.closestFirst => 'Od najbliższego',
+      _SortingType.farthestFirst => 'Od najdalszego',
+      _SortingType.defaultType => 'Domyślnie',
+    };
 
     preparedWidgets.add(
       PopupMenuItem(

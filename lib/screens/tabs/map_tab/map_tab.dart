@@ -10,6 +10,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_map_polywidget/flutter_map_polywidget.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -239,21 +240,39 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                     (position) => LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
                   ),
             ),
-            // Traces layer
-            MarkerLayer(
-              markers: [
-                for (final trace in _traces)
-                  Marker(
-                    point: trace.toLatLng(),
-                    child: TraceMarker(
-                      trace: trace,
-                      currentUserLocation: _lastLocation?.toLatLng(),
-                      onRefreshTraces: _getVisibleTraces,
+            MarkerClusterLayerWidget(
+              options: MarkerClusterLayerOptions(
+                //maxClusterRadius: 80,
+                //size: const Size(40, 40),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(50),
+                maxZoom: 15,
+                markers: [
+                  for (final trace in _traces)
+                    Marker(
+                      point: trace.toLatLng(),
+                      child: TraceMarker(
+                        trace: trace,
+                        currentUserLocation: _lastLocation?.toLatLng(),
+                        onRefreshTraces: _getVisibleTraces,
+                      ),
+                      height: TraceMarker.dimens,
+                      width: TraceMarker.dimens,
                     ),
-                    height: TraceMarker.dimens,
-                    width: TraceMarker.dimens,
+                ],
+                builder: (context, markers) => Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Theme.of(context).primaryColor,
                   ),
-              ],
+                  child: Center(
+                    child: Text(
+                      markers.length.toString(),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
             ),
             SimpleAttributionWidget(
               source: const Text('OpenStreetMap'),

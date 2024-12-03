@@ -25,15 +25,15 @@ class RankingEntry extends StatelessWidget {
                 user.rankNumber.toString(),
                 style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
               ),
-              const Gap(16),
+              const Gap(12),
               if (user.profilePictureUrl != null)
                 CircleAvatar(
-                  radius: 24,
+                  radius: 20,
                   backgroundImage: CachedNetworkImageProvider(user.profilePictureUrl.toString()),
                 )
               else
-                const CircleAvatar(radius: 24, child: Icon(Icons.person)),
-              const Gap(16),
+                const CircleAvatar(radius: 20, child: Icon(Icons.person)),
+              const Gap(12),
               Expanded(
                 child: AutoSizeText(
                   user.username,
@@ -43,6 +43,11 @@ class RankingEntry extends StatelessWidget {
                       .copyWith(fontWeight: isMe ? FontWeight.bold : FontWeight.normal),
                   maxLines: 1,
                 ),
+              ),
+              const Gap(12),
+              Text(
+                '${user.totalPoints} pkt',
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
               ),
             ],
           ),
