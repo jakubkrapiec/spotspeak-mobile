@@ -9,7 +9,7 @@ class OtherUser implements ContentAuthor, SearchUser {
   const OtherUser({
     required this.id,
     required this.username,
-    required this.totalPoints,
+    this.totalPoints,
     this.profilePictureUrl,
   });
 
@@ -20,7 +20,7 @@ class OtherUser implements ContentAuthor, SearchUser {
 
   @override
   final String username;
-  final int totalPoints;
+  final int? totalPoints;
 
   @override
   final Uri? profilePictureUrl;

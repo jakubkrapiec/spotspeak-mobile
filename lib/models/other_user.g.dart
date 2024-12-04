@@ -9,7 +9,7 @@ part of 'other_user.dart';
 OtherUser _$OtherUserFromJson(Map<String, dynamic> json) => OtherUser(
       id: json['id'] as String,
       username: json['username'] as String,
-      totalPoints: (json['totalPoints'] as num).toInt(),
+      totalPoints: (json['totalPoints'] as num?)?.toInt(),
       profilePictureUrl: json['profilePictureUrl'] == null
           ? null
           : Uri.parse(json['profilePictureUrl'] as String),

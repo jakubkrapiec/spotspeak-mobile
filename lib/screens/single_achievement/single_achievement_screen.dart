@@ -191,7 +191,7 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
         children: [
           const Text('Data zdobycia:'),
           Text(
-            _achievement!.completedAt!.toDate().format([mm, '.', dd, '.', yyyy]),
+            _achievement!.completedAt!.toDate().format([dd, '.', mm, '.', yyyy]),
             style: Theme.of(context).textTheme.titleSmall,
           ),
         ],
