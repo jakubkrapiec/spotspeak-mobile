@@ -14,6 +14,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       email: json['email'] as String,
       profilePictureUrl: json['profilePictureUrl'] as String?,
       totalPoints: (json['totalPoints'] as num?)?.toInt(),
+      receiveNotifications: json['receiveNotifications'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -24,4 +25,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'email': instance.email,
       'profilePictureUrl': instance.profilePictureUrl,
       'totalPoints': instance.totalPoints,
+      'receiveNotifications': instance.receiveNotifications,
     };

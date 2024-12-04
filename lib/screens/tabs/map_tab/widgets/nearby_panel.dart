@@ -94,8 +94,10 @@ class _NearbyPanelState extends State<NearbyPanel> {
     if (nonDiscoveredOnly) {
       _nearbyTracesCopy = [];
       _nearbyTracesCopy = _nearbyTraces!.where((trace) => !trace.hasDiscovered).toList();
+      _sortTraces(_fromClosest);
     } else {
       _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _sortTraces(_fromClosest);
     }
   }
 
@@ -188,8 +190,8 @@ class _NearbyPanelState extends State<NearbyPanel> {
               GestureDetector(
                 onTap: () {
                   setState(() {
-                    _sortTraces(_fromClosest);
                     _fromClosest = !_fromClosest;
+                    _sortTraces(_fromClosest);
                   });
                 },
                 child: Icon(

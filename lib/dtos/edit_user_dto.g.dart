@@ -12,6 +12,7 @@ EditUserDto _$EditUserDtoFromJson(Map<String, dynamic> json) => EditUserDto(
       lastName: json['lastName'] as String?,
       email: json['email'] as String?,
       username: json['username'] as String?,
+      receiveNotifications: json['receiveNotifications'] as bool?,
     );
 
 Map<String, dynamic> _$EditUserDtoToJson(EditUserDto instance) =>
@@ -21,4 +22,5 @@ Map<String, dynamic> _$EditUserDtoToJson(EditUserDto instance) =>
       'lastName': instance.lastName,
       'email': instance.email,
       'username': instance.username,
+      'receiveNotifications': instance.receiveNotifications,
     };

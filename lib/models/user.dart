@@ -12,6 +12,7 @@ class User {
     required this.email,
     required this.profilePictureUrl,
     required this.totalPoints,
+    this.receiveNotifications = true,
   });
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);
@@ -23,6 +24,7 @@ class User {
   final String email;
   final String? profilePictureUrl;
   final int? totalPoints;
+  final bool? receiveNotifications;
 
   Map<String, Object?> toJson() => _$UserToJson(this);
 }

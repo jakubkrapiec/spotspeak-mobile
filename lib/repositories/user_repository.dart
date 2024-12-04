@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/edit_user_dto.dart';
 import 'package:spotspeak_mobile/dtos/fcm_token_dto.dart';
+import 'package:spotspeak_mobile/dtos/notification_settings_dto.dart';
 import 'package:spotspeak_mobile/dtos/password_challenge_dto.dart';
 import 'package:spotspeak_mobile/dtos/update_password_dto.dart';
 import 'package:spotspeak_mobile/models/user.dart';
@@ -46,6 +47,9 @@ abstract class UserRepository {
   Future<void> updatefCMToken(
     @Body() FcmTokenDto fcmTokenDto,
   );
+
+  @PUT('/preferences/notifications')
+  Future<void> updateNotificationPreferences(@Body() NotificationSettingsDto notificationSettingsDto);
 }
 
 extension UserRepositoryX on UserRepository {
