@@ -20,13 +20,13 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
 
   late ThemeMode themeMode = _appService.themeMode;
 
-  late bool areNotificationsAllowed;
+  // late bool areNotificationsAllowed = _userService.user.value.receiveNotifications ?? true;
 
-  @override
-  void initState() {
-    super.initState();
-    areNotificationsAllowed = _userService.user.value.receiveNotifications ?? true;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   areNotificationsAllowed = _userService.user.value.receiveNotifications ?? true;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -96,13 +96,12 @@ class _AppSettingsScreenState extends State<AppSettingsScreen> {
               children: [
                 Text('Wszystkie powiadomienia'),
                 Switch(
-                  value: areNotificationsAllowed,
-                  onChanged: (bool value) {
-                    setState(() {
-                      areNotificationsAllowed = value;
-                      _userService.userRepo
-                          .updateNotificationPreferences(NotificationSettingsDto(receiveNotifications: value));
-                    });
+                  value: _userService.user.value.receiveNotifications ?? true,
+                  onChanged: (bool value) async {
+                    await _userService.userRepo
+                        .updateNotificationPreferences(NotificationSettingsDto(receiveNotifications: value));
+                    await _userService.syncUser();
+                    setState(() {});
                   },
                 ),
               ],

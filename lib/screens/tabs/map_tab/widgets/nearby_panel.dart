@@ -10,6 +10,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/extensions/position_extensions.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
+import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
@@ -128,6 +129,21 @@ class _NearbyPanelState extends State<NearbyPanel> {
     }
   }
 
+  Future<void> _openTraceDialog(int traceId) async {
+    final trace = await _traceService.getTrace(traceId);
+    final shouldDelete = await showDialog<bool>(
+          context: context,
+          builder: (context) => TraceDialog(trace: trace),
+        ) ??
+        false;
+    if (shouldDelete) {
+      await _traceService.deleteTrace(traceId);
+      setState(() {
+        _nearbyTracesCopy.removeWhere((t) => t.id == traceId);
+      });
+    }
+  }
+
   @override
   void dispose() {
     _locationStreamSubscription?.cancel();
@@ -221,7 +237,12 @@ class _NearbyPanelState extends State<NearbyPanel> {
                   return NearbyTile(
                     trace: _nearbyTracesCopy[index],
                     currentPostion: _lastCoordinatesSync!,
-                    onTapFunction: () => _onMoveToTraceLocation(_nearbyTraces![index]),
+                    onTapFunction: () {
+                      _onMoveToTraceLocation(_nearbyTraces![index]);
+                      if (_nearbyTraces![index].hasDiscovered) {
+                        _openTraceDialog(_nearbyTraces![index].id);
+                      }
+                    },
                     traceIconPath: _nearbyTracesCopy[index].hasDiscovered
                         ? _getDiscoveredTraceIconPath(_nearbyTracesCopy[index].type)
                         : _getUndiscoveredTraceIconPath(_nearbyTracesCopy[index].id),
