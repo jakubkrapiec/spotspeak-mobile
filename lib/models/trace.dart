@@ -3,7 +3,6 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:spotspeak_mobile/models/comment.dart';
 import 'package:spotspeak_mobile/models/content_author.dart';
-import 'package:spotspeak_mobile/models/tag.dart';
 import 'package:spotspeak_mobile/models/trace_type.dart';
 
 part 'trace.g.dart';
@@ -15,7 +14,6 @@ class Trace {
     required this.resourceAccessUrl,
     required this.description,
     required this.comments,
-    required this.traceTags,
     required this.latitude,
     required this.longitude,
     required this.createdAt,
@@ -29,7 +27,6 @@ class Trace {
   final String? resourceAccessUrl;
   final String description;
   final List<Comment> comments;
-  final List<Tag> traceTags;
   final num latitude;
   final num longitude;
   final DateTime createdAt;

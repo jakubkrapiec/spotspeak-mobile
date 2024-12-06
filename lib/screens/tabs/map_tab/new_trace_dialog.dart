@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spotspeak_mobile/common/widgets/spotspeak_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/trace_media_thumbnail.dart';
+import 'package:spotspeak_mobile/theme/colors.dart';
 
 class NewTraceDialog extends StatefulWidget {
   const NewTraceDialog({super.key});
@@ -18,6 +19,8 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
   final _formKey = GlobalKey<FormState>();
   File? _media;
   final _picker = ImagePicker();
+
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
     final file = File(path);
     setState(() {
       _media = file;
+      _errorMessage = null;
     });
   }
 
@@ -93,9 +97,28 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
             onRemove: () => setState(() => _media = null),
           ),
         const Gap(16),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 200),
+          child: _errorMessage == null
+              ? SizedBox()
+              : Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Text(
+                      _errorMessage!,
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(color: CustomColors.red1),
+                    ),
+                  ),
+                ),
+        ),
         ElevatedButton(
           onPressed: () {
             if (!_formKey.currentState!.validate()) return;
+            if (_descriptionController.text.isEmpty && _media == null) {
+              setState(() => _errorMessage = 'Dodaj opis lub media');
+              return;
+            }
             final result = TraceDialogResult(_descriptionController.text, _media);
             Navigator.of(context).pop(result);
           },

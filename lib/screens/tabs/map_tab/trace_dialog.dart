@@ -40,7 +40,6 @@ class _TraceDialogState extends State<TraceDialog> {
   bool _commentButtonLoading = false;
   late final FocusNode _textFieldFocusNode;
   late final ScrollController _scrollController;
-  final _refreshStream = Stream<void>.periodic(const Duration(seconds: 1));
 
   List<ContentAuthor> _getMentionableProfiles() => <ContentAuthor>{
         ..._friends.map((f) => f.friendInfo),
@@ -199,7 +198,7 @@ class _TraceDialogState extends State<TraceDialog> {
         Align(
           alignment: Alignment.centerLeft,
           child: StreamBuilder<void>(
-            stream: _refreshStream,
+            stream: Stream<void>.periodic(const Duration(seconds: 1)),
             builder: (context, snapshot) => widget.trace.timeLeft.isNegative
                 ? RichText(
                     text: TextSpan(

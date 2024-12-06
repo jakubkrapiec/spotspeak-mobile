@@ -13,9 +13,6 @@ Trace _$TraceFromJson(Map<String, dynamic> json) => Trace(
       comments: (json['comments'] as List<dynamic>)
           .map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
-      traceTags: (json['traceTags'] as List<dynamic>)
-          .map((e) => Tag.fromJson(e as Map<String, dynamic>))
-          .toList(),
       latitude: json['latitude'] as num,
       longitude: json['longitude'] as num,
       createdAt: DateTime.parse(json['createdAt'] as String),
@@ -28,7 +25,6 @@ Map<String, dynamic> _$TraceToJson(Trace instance) => <String, dynamic>{
       'resourceAccessUrl': instance.resourceAccessUrl,
       'description': instance.description,
       'comments': instance.comments,
-      'traceTags': instance.traceTags,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
       'createdAt': instance.createdAt.toIso8601String(),

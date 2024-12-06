@@ -4,13 +4,14 @@ part 'edit_user_dto.g.dart';
 
 @JsonSerializable()
 class EditUserDto {
-  EditUserDto(
-      {this.passwordChallengeToken,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.username,
-      this.receiveNotifications});
+  EditUserDto({
+    this.passwordChallengeToken,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.username,
+    this.receiveNotifications,
+  });
 
   factory EditUserDto.fromJson(Map<String, Object?> json) => _$EditUserDtoFromJson(json);
 

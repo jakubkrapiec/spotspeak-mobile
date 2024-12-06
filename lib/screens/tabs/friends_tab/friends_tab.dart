@@ -70,7 +70,7 @@ class _FriendsTabState extends State<FriendsTab> with SingleTickerProviderStateM
                 body: TabBarView(
                   controller: _tabController,
                   children: [
-                    FriendsListTab(),
+                    FriendsListTab(tabController: _tabController),
                     FriendRequestsTab(),
                     SearchFriendsTab(),
                   ],

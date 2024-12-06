@@ -7,7 +7,6 @@ import 'package:mime/mime.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/add_trace_dto.dart';
-import 'package:spotspeak_mobile/models/tag.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
 
@@ -42,9 +41,6 @@ abstract class TraceService {
     @Query('currentLongitude') double longitude,
     @Query('currentLatitude') double latitude,
   );
-
-  @GET('/tags')
-  Future<List<Tag>> getTags();
 }
 
 extension TraceServiceExtensions on TraceService {

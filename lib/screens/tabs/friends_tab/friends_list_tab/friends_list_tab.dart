@@ -10,7 +10,9 @@ import 'package:spotspeak_mobile/screens/tabs/friends_tab/widgets/friend_tile.da
 import 'package:spotspeak_mobile/services/friend_service.dart';
 
 class FriendsListTab extends StatefulWidget {
-  const FriendsListTab({super.key});
+  const FriendsListTab({required this.tabController, super.key});
+
+  final TabController tabController;
 
   @override
   State<FriendsListTab> createState() => _FriendsListTabState();
@@ -90,30 +92,33 @@ class _FriendsListTabState extends State<FriendsListTab> {
                 Text('Brak znajomych'),
                 const Gap(8),
                 ElevatedButton(
-                  onPressed: () => DefaultTabController.of(context).animateTo(2),
+                  onPressed: () => widget.tabController.animateTo(2),
                   child: Text('Dodaj znajomych'),
                 ),
               ],
             ),
           ),
-        LoadingStatus.loaded => ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              final friendship = _friendships![index];
-              return FriendTile(
-                user: friendship.friendInfo,
-                onTap: () => context.router.push(UserProfileRoute(userId: friendship.friendInfo.id)),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () => _onTapDelete(friendship),
-                  ),
-                ],
-              );
-            },
-            separatorBuilder: (context, index) => const Gap(8),
-            itemCount: _friendships?.length ?? 0,
-            physics: const BouncingScrollPhysics(),
+        LoadingStatus.loaded => RefreshIndicator(
+            onRefresh: _getFriends,
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemBuilder: (context, index) {
+                final friendship = _friendships![index];
+                return FriendTile(
+                  user: friendship.friendInfo,
+                  onTap: () => context.router.push(UserProfileRoute(userId: friendship.friendInfo.id)),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () => _onTapDelete(friendship),
+                    ),
+                  ],
+                );
+              },
+              separatorBuilder: (context, index) => const Gap(8),
+              itemCount: _friendships?.length ?? 0,
+              physics: const AlwaysScrollableScrollPhysics(),
+            ),
           ),
       },
     );

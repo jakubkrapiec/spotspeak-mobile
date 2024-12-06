@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_map_cache/flutter_map_cache.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:flutter_map_polywidget/flutter_map_polywidget.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
@@ -58,6 +58,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   StreamSubscription<MapEvent>? _mapEventSubscription;
   bool _waitingForFirstLocation = true;
   bool _addingTrace = false;
+  late final Timer _refreshTimer;
 
   late final StreamController<void> _refreshPanelController;
 
@@ -84,6 +85,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     if (widget.traceId != null) {
       _showTraceFromNotification();
     }
+    _refreshTimer = Timer.periodic(const Duration(seconds: 15), (_) => _getVisibleTracesAndEvents());
   }
 
   @override
@@ -93,6 +95,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     _locationStreamSubscription?.cancel();
     _refreshPanelController.close();
     _panelController.close();
+    _refreshTimer.cancel();
     super.dispose();
   }
 
@@ -156,8 +159,12 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     final corner = bounds.northEast;
     final radius = Geolocator.distanceBetween(center.latitude, center.longitude, corner.latitude, corner.longitude);
     final tracesAndEvents = await Future.wait([
-      _traceService.getNearbyTraces(center.latitude, center.longitude, radius.toInt()),
-      _eventService.getNearbyEvents(latitude: center.latitude, longitude: center.longitude, distance: radius.toInt()),
+      _traceService.getNearbyTraces(center.latitude, center.longitude, radius.toInt() + 100),
+      _eventService.getNearbyEvents(
+        latitude: center.latitude,
+        longitude: center.longitude,
+        distance: radius.toInt() + 100,
+      ),
     ]);
     final traces = tracesAndEvents[0] as List<TraceLocation>;
     final events = tracesAndEvents[1] as List<EventLocation>;
@@ -209,106 +216,116 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
         ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
         color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
-        body: FlutterMap(
-          mapController: _mapController.mapController,
-          options: const MapOptions(
-            maxZoom: _maxZoom,
-            minZoom: 2,
-            interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
-            initialCenter: LatLng(52, 19),
-            initialZoom: 5.5,
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
-              tileProvider: CachedTileProvider(dio: _dioForOSM, store: _dbCacheStore, maxStale: Duration(days: 30)),
+        body: Portal(
+          debugName: 'map_portal',
+          child: FlutterMap(
+            mapController: _mapController.mapController,
+            options: const MapOptions(
               maxZoom: _maxZoom,
               minZoom: 2,
-              retinaMode: false,
+              interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
+              initialCenter: LatLng(52, 19),
+              initialZoom: 5.5,
             ),
-            PolyWidgetLayer(
-              polyWidgets: [
-                if (_lastLocation != null)
-                  PolyWidget(
-                    center: _lastLocation!.toLatLng(),
-                    widthInMeters: 100,
-                    heightInMeters: 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.3),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            CurrentLocationLayer(
-              positionStream: _locationService.getLocationStream().map(
-                    (position) => LocationMarkerPosition(
-                      latitude: position.latitude,
-                      longitude: position.longitude,
-                      accuracy: position.accuracy,
-                    ),
-                  ),
-              headingStream: _locationService.getLocationStream().map(
-                    (position) => LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
-                  ),
-            ),
-            MarkerClusterLayerWidget(
-              options: MarkerClusterLayerOptions(
-                //maxClusterRadius: 80,
-                //size: const Size(40, 40),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(50),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
+                tileProvider: CachedTileProvider(dio: _dioForOSM, store: _dbCacheStore, maxStale: Duration(days: 30)),
                 maxZoom: _maxZoom,
-                markers: [
-                  for (final trace in _traces)
-                    Marker(
-                      point: trace.toLatLng(),
-                      child: TraceMarker(
-                        trace: trace,
-                        currentUserLocation: _lastLocation?.toLatLng(),
-                        onRefreshTraces: _getVisibleTracesAndEvents,
+                minZoom: 2,
+                retinaMode: false,
+              ),
+              PolyWidgetLayer(
+                polyWidgets: [
+                  if (_lastLocation != null)
+                    PolyWidget(
+                      center: _lastLocation!.toLatLng(),
+                      widthInMeters: 100,
+                      heightInMeters: 100,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.3),
+                          shape: BoxShape.circle,
+                        ),
                       ),
-                      height: TraceMarker.dimens,
-                      width: TraceMarker.dimens,
                     ),
                 ],
-                builder: (context, markers) => Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  child: Center(
-                    child: Text(
-                      markers.length.toString(),
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+              ),
+              MarkerClusterLayerWidget(
+                options: MarkerClusterLayerOptions(
+                  //maxClusterRadius: 80,
+                  //size: const Size(40, 40),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.all(50),
+                  maxZoom: _maxZoom,
+                  markers: [
+                    for (final trace in _traces)
+                      Marker(
+                        point: trace.toLatLng(),
+                        child: TraceMarker(
+                          trace: trace,
+                          currentUserLocation: _lastLocation?.toLatLng(),
+                          onRefreshTraces: _getVisibleTracesAndEvents,
+                        ),
+                        height: TraceMarker.dimens,
+                        width: TraceMarker.dimens,
+                      ),
+                  ],
+                  builder: (context, markers) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    child: Center(
+                      child: Text(
+                        markers.length.toString(),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            MarkerLayer(
-              markers: [
-                for (final event in _events)
-                  Marker(
-                    point: event.latLng,
-                    width: EventMarker.dimens,
-                    height: EventMarker.dimens,
-                    child: EventMarker(event: event),
-                  ),
-              ],
-            ),
-            PolyWidgetLayer(
-              polyWidgets: [],
-            ),
-            SimpleAttributionWidget(
-              source: const Text('OpenStreetMap'),
-              onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-              alignment: Alignment.topLeft,
-            ),
-          ],
+              PolyWidgetLayer(
+                polyWidgets: [
+                  for (final event in _events)
+                    PolyWidget(
+                      center: event.latLng,
+                      widthInMeters: event.radius.clamp(100, 500),
+                      heightInMeters: event.radius.clamp(100, 500),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: EventMarker(
+                          event: event,
+                          userLocation: _lastLocation?.toLatLng(),
+                          // TODO change
+                          onTapTrace: (_) async {},
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              CurrentLocationLayer(
+                style: LocationMarkerStyle(marker: Opacity(opacity: 0.8, child: DefaultLocationMarker())),
+                positionStream: _locationService.getLocationStream().map(
+                      (position) => LocationMarkerPosition(
+                        latitude: position.latitude,
+                        longitude: position.longitude,
+                        accuracy: position.accuracy,
+                      ),
+                    ),
+                headingStream: _locationService.getLocationStream().map(
+                      (position) =>
+                          LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
+                    ),
+              ),
+              SimpleAttributionWidget(
+                source: const Text('OpenStreetMap'),
+                onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                alignment: Alignment.topLeft,
+              ),
+            ],
+          ),
         ),
       ),
     );

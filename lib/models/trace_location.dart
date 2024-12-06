@@ -38,4 +38,16 @@ class TraceLocation {
   }
 
   Duration get timeLeft => createdAt.add(Duration(days: 1)).difference(DateTime.now());
+
+  String get iconSvgPath {
+    if (hasDiscovered) {
+      return switch (type) {
+        TraceType.text => 'assets/trace_icons_discovered/text_trace.svg',
+        TraceType.image => 'assets/trace_icons_discovered/photo_trace.svg',
+        TraceType.video => 'assets/trace_icons_discovered/video_trace.svg',
+      };
+    }
+    final randomIndex = id.hashCode % 6;
+    return 'assets/trace_icons_hidden/trace_icon_hidden_$randomIndex.svg';
+  }
 }

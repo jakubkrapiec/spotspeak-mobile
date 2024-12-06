@@ -62,30 +62,41 @@ class _FriendRequestsTabState extends State<FriendRequestsTab> {
     return switch (_status) {
       LoadingStatus.loading => const Center(child: CircularProgressIndicator()),
       LoadingStatus.error => Center(child: LoadingError(onRetry: _getRequests)),
-      LoadingStatus.loaded when _requests?.isEmpty ?? true => const Center(child: Text('Brak nowych zaproszeń')),
-      LoadingStatus.loaded => ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.all(16),
-          itemCount: _requests?.length ?? 0,
-          itemBuilder: (context, index) {
-            final request = _requests![index];
-            return FriendTile(
-              user: request.userInfo,
-              onTap: () => context.router.push(UserProfileRoute(userId: request.userInfo.id)),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.check),
-                  onPressed: () => _onAcceptRequest(request),
-                  visualDensity: VisualDensity.compact,
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => _onRejectRequest(request),
-                  visualDensity: VisualDensity.compact,
-                ),
-              ],
-            );
-          },
+      LoadingStatus.loaded when _requests?.isEmpty ?? true => Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Brak nowych zaproszeń'),
+              IconButton(onPressed: _getRequests, icon: Icon(Icons.refresh)),
+            ],
+          ),
+        ),
+      LoadingStatus.loaded => RefreshIndicator(
+          onRefresh: _getRequests,
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            itemCount: _requests?.length ?? 0,
+            itemBuilder: (context, index) {
+              final request = _requests![index];
+              return FriendTile(
+                user: request.userInfo,
+                onTap: () => context.router.push(UserProfileRoute(userId: request.userInfo.id)),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.check),
+                    onPressed: () => _onAcceptRequest(request),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => _onRejectRequest(request),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
     };
   }
