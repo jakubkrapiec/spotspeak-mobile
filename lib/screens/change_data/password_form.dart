@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -29,17 +30,44 @@ class _PasswordFormState extends State<PasswordForm> {
     try {
       await _userService.userRepo.updatePassword(UpdatePasswordDto(currentPassword, newPassword));
     } catch (exception) {
-      await Fluttertoast.showToast(
-        msg: 'W trakcie zmiany hasła wystąpił błąd: $exception',
-        toastLength: Toast.LENGTH_LONG,
-        backgroundColor: CustomColors.grey1,
-        textColor: CustomColors.grey6,
-      );
+      if (exception is DioException) {
+        if ((exception.response?.data?['message'] as List).cast<String>().firstOrNull == 'Invalid current password') {
+          await Fluttertoast.showToast(
+            msg: 'W trakcie zmiany hasła wystąpił błąd, podano nieprawidłowe aktualne hasło konta',
+            toastLength: Toast.LENGTH_LONG,
+            backgroundColor: CustomColors.grey1,
+            textColor: CustomColors.grey6,
+          );
+        } else {
+          await Fluttertoast.showToast(
+            msg: 'W trakcie zmiany hasła wystąpił błąd: ${exception.response?.data?['message']}',
+            toastLength: Toast.LENGTH_LONG,
+            backgroundColor: CustomColors.grey1,
+            textColor: CustomColors.grey6,
+          );
+        }
+      } else {
+        await Fluttertoast.showToast(
+          msg: 'W trakcie zmiany hasła wystąpił błąd: $exception',
+          toastLength: Toast.LENGTH_LONG,
+          backgroundColor: CustomColors.grey1,
+          textColor: CustomColors.grey6,
+        );
+      }
+
+      return;
     }
 
     await _userService.syncUser();
     if (!mounted) return;
     Navigator.of(context).pop();
+
+    await Fluttertoast.showToast(
+      msg: 'Hasło zostało prawidłowo zmienione',
+      toastLength: Toast.LENGTH_LONG,
+      backgroundColor: CustomColors.grey1,
+      textColor: CustomColors.grey6,
+    );
   }
 
   @override
@@ -55,7 +83,7 @@ class _PasswordFormState extends State<PasswordForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Stare hasło:'),
+            Text('Aktualne hasło:'),
             Gap(8),
             TextFormField(
               obscureText: _obscureText1,
@@ -151,12 +179,6 @@ class _PasswordFormState extends State<PasswordForm> {
                       return;
                     }
                     await _changePassword(oldPassword!, newPassword!);
-                    await Fluttertoast.showToast(
-                      msg: 'Hasło zostało prawidłowo zmienione',
-                      toastLength: Toast.LENGTH_LONG,
-                      backgroundColor: CustomColors.grey1,
-                      textColor: CustomColors.grey6,
-                    );
                   }
                 },
                 child: Text('Zatwierdź'),

@@ -73,6 +73,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     await Fluttertoast.showToast(
       msg: 'Musisz wyrazić zgodę, aby dodać ustawić zdjęcie profilowe',
       toastLength: Toast.LENGTH_SHORT,
+      backgroundColor: CustomColors.grey1,
+      textColor: CustomColors.grey6,
     );
     return false;
   }

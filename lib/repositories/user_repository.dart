@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -70,7 +69,6 @@ extension UserRepositoryX on UserRepository {
         return PasswordChallengeFailedOtherError();
       }
     } on DioException catch (e) {
-      debugPrint(e.response?.data?.toString());
       if (e.response?.statusCode == 403) {
         return PasswordChallengeFailedWrongPassword();
       }
