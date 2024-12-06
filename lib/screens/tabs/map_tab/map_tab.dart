@@ -85,7 +85,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     if (widget.traceId != null) {
       _showTraceFromNotification();
     }
-    _refreshTimer = Timer.periodic(const Duration(seconds: 15), (_) => _getVisibleTracesAndEvents());
+    // _refreshTimer = Timer.periodic(const Duration(seconds: 15), (_) => _getVisibleTracesAndEvents());
   }
 
   @override

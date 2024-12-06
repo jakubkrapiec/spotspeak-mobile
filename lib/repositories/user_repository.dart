@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
@@ -55,18 +56,24 @@ abstract class UserRepository {
 extension UserRepositoryX on UserRepository {
   Future<PasswordChallengeResult> checkPassword(String password) async {
     final dio = getIt<Dio>();
-    final response = await dio.post<Map<String, Object?>>(
-      '/users/me/generate-challenge',
-      data: jsonEncode({
-        'password': password,
-      }),
-    );
-    if (response.statusCode == 200) {
-      final dto = PasswordChallengeDto.fromJson(response.data!);
-      return PasswordChallengeSuccess(dto.token);
-    } else if (response.statusCode == 403) {
-      return PasswordChallengeFailedWrongPassword();
-    } else {
+    try {
+      final response = await dio.post<Map<String, Object?>>(
+        '/users/me/generate-challenge',
+        data: jsonEncode({'password': password}),
+      );
+      if (response.statusCode == 200) {
+        final dto = PasswordChallengeDto.fromJson(response.data!);
+        return PasswordChallengeSuccess(dto.token);
+      } else if (response.data?['message'] == 'Failed to validate password') {
+        return PasswordChallengeFailedWrongPassword();
+      } else {
+        return PasswordChallengeFailedOtherError();
+      }
+    } on DioException catch (e) {
+      debugPrint(e.response?.data?.toString());
+      if (e.response?.statusCode == 403) {
+        return PasswordChallengeFailedWrongPassword();
+      }
       return PasswordChallengeFailedOtherError();
     }
   }
