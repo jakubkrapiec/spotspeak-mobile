@@ -48,7 +48,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   List<TraceLocation>? _nearbyTraces = [];
 
-  List<TraceLocation> _nearbyTracesCopy = [];
+  List<TraceLocation> _nearbyTracesFiltered = [];
 
   bool _isFirstSync = true;
 
@@ -63,9 +63,10 @@ class _NearbyPanelState extends State<NearbyPanel> {
     super.initState();
     _initLocationService();
     _refreshStreamSubscription = widget.refreshStream.listen((_) async {
+      if (_lastCoordinatesSync == null) return;
       _nearbyTraces =
           await _traceService.getNearbyTraces(_lastCoordinatesSync!.latitude, _lastCoordinatesSync!.longitude, 1000);
-      _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _nearbyTracesFiltered = List.from(_nearbyTraces!);
       _sortTraces(_fromClosest);
     });
   }
@@ -80,11 +81,11 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   void _sortTraces(bool isFromClosest) {
     if (isFromClosest) {
-      _nearbyTracesCopy.sort(
+      _nearbyTracesFiltered.sort(
         (a, b) => a.calculateDistance(_lastCoordinatesSync!).compareTo(b.calculateDistance(_lastCoordinatesSync!)),
       );
     } else {
-      _nearbyTracesCopy.sort(
+      _nearbyTracesFiltered.sort(
         (a, b) => b.calculateDistance(_lastCoordinatesSync!).compareTo(a.calculateDistance(_lastCoordinatesSync!)),
       );
     }
@@ -92,11 +93,11 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   void _selectNonDiscoveredTraces(bool nonDiscoveredOnly) {
     if (nonDiscoveredOnly) {
-      _nearbyTracesCopy = [];
-      _nearbyTracesCopy = _nearbyTraces!.where((trace) => !trace.hasDiscovered).toList();
+      _nearbyTracesFiltered = [];
+      _nearbyTracesFiltered = _nearbyTraces!.where((trace) => !trace.hasDiscovered).toList();
       _sortTraces(_fromClosest);
     } else {
-      _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _nearbyTracesFiltered = List.from(_nearbyTraces!);
       _sortTraces(_fromClosest);
     }
   }
@@ -114,7 +115,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
     if (!mounted) return;
     setState(() {
       _nearbyTraces = traces;
-      _nearbyTracesCopy = List.from(_nearbyTraces!);
+      _nearbyTracesFiltered = List.from(_nearbyTraces!);
       _sortTraces(_fromClosest);
     });
     _lastCoordinatesSync = position.toLatLng();
@@ -130,6 +131,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   Future<void> _openTraceDialog(int traceId) async {
     final trace = await _traceService.getTrace(traceId);
+    if (!mounted) return;
     final shouldDelete = await showDialog<bool>(
           context: context,
           builder: (context) => TraceDialog(trace: trace),
@@ -138,7 +140,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
     if (shouldDelete) {
       await _traceService.deleteTrace(traceId);
       setState(() {
-        _nearbyTracesCopy.removeWhere((t) => t.id == traceId);
+        _nearbyTracesFiltered.removeWhere((t) => t.id == traceId);
       });
     }
   }
@@ -198,10 +200,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
                     _sortTraces(_fromClosest);
                   });
                 },
-                child: Icon(
-                  Icons.swap_vert,
-                  size: 28,
-                ),
+                child: Icon(Icons.swap_vert, size: 28),
               ),
             ],
           ),
@@ -219,21 +218,19 @@ class _NearbyPanelState extends State<NearbyPanel> {
           _ => Expanded(
               child: ListView.builder(
                 controller: widget.scrollController,
-                itemCount: _nearbyTracesCopy.length,
+                itemCount: _nearbyTracesFiltered.length,
                 physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return NearbyTile(
-                    trace: _nearbyTracesCopy[index],
-                    currentPostion: _lastCoordinatesSync!,
-                    onTapFunction: () {
-                      _onMoveToTraceLocation(_nearbyTraces![index]);
-                      if (_nearbyTraces![index].hasDiscovered) {
-                        _openTraceDialog(_nearbyTraces![index].id);
-                      }
-                    },
-                    traceIconPath: _nearbyTracesCopy[index].iconSvgPath,
-                  );
-                },
+                itemBuilder: (context, index) => NearbyTile(
+                  trace: _nearbyTracesFiltered[index],
+                  currentPostion: _lastCoordinatesSync!,
+                  onTapFunction: () {
+                    _onMoveToTraceLocation(_nearbyTraces![index]);
+                    if (_nearbyTraces![index].hasDiscovered) {
+                      _openTraceDialog(_nearbyTraces![index].id);
+                    }
+                  },
+                  traceIconPath: _nearbyTracesFiltered[index].iconSvgPath,
+                ),
               ),
             ),
         },

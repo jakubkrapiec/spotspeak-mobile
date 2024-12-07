@@ -81,14 +81,6 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
                 },
                 iconSize: 32,
               ),
-              IconButton(
-                icon: Icon(Icons.image),
-                onPressed: () async {
-                  final result = await _picker.pickMedia();
-                  if (result == null || !mounted) return;
-                  _setMediaFile(result.path);
-                },
-              ),
             ],
           )
         else

@@ -27,7 +27,7 @@ class AuthenticationService {
 
   final _loginInfo = LoginInfo();
 
-  ValueNotifier<UserType> userTypeNotifier = ValueNotifier<UserType>(UserType.guest);
+  final userTypeNotifier = ValueNotifier<UserType>(UserType.guest);
 
   Future<String?> get accessToken async {
     if (_tokenExpirationTimestamp != null && _tokenExpirationTimestamp!.isAfter(DateTime.now())) {
@@ -62,7 +62,6 @@ class AuthenticationService {
 
   LoginInfo get logininfo => _loginInfo;
 
-  @PostConstruct(preResolve: true)
   Future<AuthResult> init() async {
     final securedRefreshToken = await _secureStoreage.read(key: kAuthRefreshTokenKey);
 
@@ -187,6 +186,7 @@ class AuthenticationService {
   @disposeMethod
   void dispose() {
     _userController.close();
+    userTypeNotifier.dispose();
   }
 }
 

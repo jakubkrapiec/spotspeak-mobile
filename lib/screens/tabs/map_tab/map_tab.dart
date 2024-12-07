@@ -102,13 +102,20 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   void _onMoveToUserLocation() {
     if (_lastLocation != null) {
       _mapController.animateTo(dest: _lastLocation?.toLatLng(), zoom: _defaultZoom);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Brak dostępu do lokalizacji')));
     }
   }
 
   Future<void> _onAddTrace() async {
+    if (_lastLocation == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Brak dostępu do lokalizacji')));
+      return;
+    }
+    final location = _lastLocation;
     final result = await showDialog<TraceDialogResult?>(context: context, builder: (context) => const NewTraceDialog());
-    if (result == null || _lastLocation == null) return;
-    final dto = AddTraceDto(_lastLocation!.longitude, _lastLocation!.latitude, result.description, []);
+    if (result == null) return;
+    final dto = AddTraceDto(location!.longitude, location.latitude, result.description, []);
     setState(() {
       _addingTrace = true;
     });

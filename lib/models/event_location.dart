@@ -14,17 +14,19 @@ class EventLocation {
     required this.name,
     required this.isActive,
     required this.traces,
-  }) : radius = traces
-            .map(
-              (trace) => Geolocator.distanceBetween(
-                latitude.toDouble(),
-                longitude.toDouble(),
-                trace.latitude.toDouble(),
-                trace.longitude.toDouble(),
-              ),
-            )
-            .reduce((maxDistance, distance) => maxDistance > distance ? maxDistance : distance)
-            .toInt();
+  }) : radius = traces.isEmpty
+            ? 0
+            : traces
+                .map(
+                  (trace) => Geolocator.distanceBetween(
+                    latitude.toDouble(),
+                    longitude.toDouble(),
+                    trace.latitude.toDouble(),
+                    trace.longitude.toDouble(),
+                  ),
+                )
+                .reduce((maxDistance, distance) => maxDistance > distance ? maxDistance : distance)
+                .toInt();
 
   factory EventLocation.fromJson(Map<String, Object?> json) => _$EventLocationFromJson(json);
 

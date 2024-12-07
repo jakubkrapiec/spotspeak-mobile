@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:spotspeak_mobile/app.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/firebase_options.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 
 class AppBlocObserver extends BlocObserver {
   const AppBlocObserver();
@@ -39,6 +40,8 @@ Future<void> bootstrap() async {
   Bloc.observer = const AppBlocObserver();
 
   await configureDependencies();
+
+  await getIt<AuthenticationService>().init();
 
   runApp(App());
 }

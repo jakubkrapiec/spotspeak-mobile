@@ -90,17 +90,13 @@ extension GetItInjectableX on _i174.GetIt {
           gh<_i448.UserService>(),
           gh<_i457.AppRouter>(),
         ));
-    await gh.singletonAsync<_i281.AuthenticationService>(
-      () {
-        final i = _i281.AuthenticationService(
-          gh<_i361.Dio>(),
-          gh<_i337.FlutterAppAuth>(),
-          gh<_i558.FlutterSecureStorage>(),
-          gh<_i127.NotificationService>(),
-        );
-        return i.init().then((_) => i);
-      },
-      preResolve: true,
+    gh.singleton<_i281.AuthenticationService>(
+      () => _i281.AuthenticationService(
+        gh<_i361.Dio>(),
+        gh<_i337.FlutterAppAuth>(),
+        gh<_i558.FlutterSecureStorage>(),
+        gh<_i127.NotificationService>(),
+      ),
       dispose: (i) => i.dispose(),
     );
     return this;
