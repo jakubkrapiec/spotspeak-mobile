@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:spotspeak_mobile/constants.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
+import 'package:spotspeak_mobile/misc/auth_constants.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
 
 class AuthInterceptor extends Interceptor {
   late final _authService = getIt<AuthenticationService>();
 
-  static final _hostsWithAuth = ['keycloakspotspeakwebsite.website', Uri.parse(kApiBaseUrl).host];
+  static final _hostsWithAuth = <String>[Uri.https(kAuthDomain).host, Uri.parse(kApiBaseUrl).host];
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {

@@ -23,22 +23,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   final _notificationService = getIt<NotificationService>();
 
-  Future<void> _getUserAccount() async {
-    try {
-      await _userService.syncUser();
-    } catch (e) {
-      debugPrint('Error: $e');
-    }
-  }
-
   Future<void> _tryReathenticate() async {
     try {
-      await _authService.accessToken;
-      await _getUserAccount();
-      if (mounted) {
-        unawaited(context.router.replace(HomeRoute()));
+      final accessToken = await _authService.accessToken;
+      if (accessToken != null) {
+        await _userService.syncUser();
+        unawaited(_notificationService.initNotifications());
+        if (mounted) {
+          unawaited(context.router.replace(HomeRoute()));
+        }
+      } else {
+        if (mounted) {
+          unawaited(context.router.replace(LoginRoute()));
+        }
       }
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('$e\n$st');
       if (mounted) {
         unawaited(context.router.replace(LoginRoute()));
       }
@@ -49,7 +49,6 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     _tryReathenticate();
-    _notificationService.initNotifications();
   }
 
   @override

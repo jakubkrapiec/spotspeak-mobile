@@ -10,14 +10,16 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spotspeak_mobile/misc/auth_constants.dart';
 import 'package:spotspeak_mobile/models/auth_user.dart';
+import 'package:spotspeak_mobile/services/notification_service.dart';
 
 @singleton
 class AuthenticationService {
-  AuthenticationService(this._dio, this._appAuth, this._secureStoreage);
+  AuthenticationService(this._dio, this._appAuth, this._secureStoreage, this._notificationService);
 
   final Dio _dio;
   final FlutterAppAuth _appAuth;
   final FlutterSecureStorage _secureStoreage;
+  final NotificationService _notificationService;
 
   final _userController = BehaviorSubject<AuthUser>();
 
@@ -32,6 +34,9 @@ class AuthenticationService {
       return _accessToken;
     }
     final securedRefreshToken = await _secureStoreage.read(key: kAuthRefreshTokenKey);
+    if (securedRefreshToken == null) {
+      return null;
+    }
 
     final response = await _appAuth.token(
       TokenRequest(
@@ -57,6 +62,7 @@ class AuthenticationService {
 
   LoginInfo get logininfo => _loginInfo;
 
+  @PostConstruct(preResolve: true)
   Future<AuthResult> init() async {
     final securedRefreshToken = await _secureStoreage.read(key: kAuthRefreshTokenKey);
 
@@ -133,7 +139,7 @@ class AuthenticationService {
 
     if (await _setLocalVariables(result)) {
       final authUser = await getUserDetails(_accessToken!);
-
+      await _notificationService.updateFCMToken();
       return authUser;
     } else {
       throw Exception('Failed to login');

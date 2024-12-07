@@ -57,7 +57,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i457.AppRouter>(() => _i457.AppRouter());
     gh.singleton<_i724.AppService>(() => _i724.AppService());
     gh.singleton<_i68.LocationService>(() => _i68.LocationService());
-    gh.singleton<_i127.NotificationService>(() => _i127.NotificationService());
     await gh.singletonAsync<_i497.Directory>(
       () => registerModule.documentsDir,
       instanceName: 'documentsDir',
@@ -71,30 +70,39 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i274.DbCacheStore>(() => registerModule
         .dbCacheStore(gh<_i497.Directory>(instanceName: 'documentsDir')));
     gh.factory<_i361.Dio>(() => registerModule.dio(gh<_i655.PackageInfo>()));
+    gh.lazySingleton<_i547.CommentService>(
+        () => _i547.CommentService(gh<_i361.Dio>()));
     gh.singleton<_i643.UserRepository>(
         () => _i643.UserRepository(gh<_i361.Dio>()));
     gh.singleton<_i77.AchievementService>(
         () => _i77.AchievementService(gh<_i361.Dio>()));
-    gh.singleton<_i547.CommentService>(
-        () => _i547.CommentService(gh<_i361.Dio>()));
     gh.singleton<_i356.EventService>(() => _i356.EventService(gh<_i361.Dio>()));
     gh.singleton<_i100.FriendService>(
         () => _i100.FriendService(gh<_i361.Dio>()));
     gh.singleton<_i368.RankingService>(
         () => _i368.RankingService(gh<_i361.Dio>()));
     gh.singleton<_i192.TraceService>(() => _i192.TraceService(gh<_i361.Dio>()));
-    gh.singleton<_i281.AuthenticationService>(
-      () => _i281.AuthenticationService(
-        gh<_i361.Dio>(),
-        gh<_i337.FlutterAppAuth>(),
-        gh<_i558.FlutterSecureStorage>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
     gh.singleton<_i448.UserService>(
         () => _i448.UserService(gh<_i643.UserRepository>()));
     gh.factory<_i868.SearchFriendsBloc>(
         () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
+    gh.singleton<_i127.NotificationService>(() => _i127.NotificationService(
+          gh<_i448.UserService>(),
+          gh<_i457.AppRouter>(),
+        ));
+    await gh.singletonAsync<_i281.AuthenticationService>(
+      () {
+        final i = _i281.AuthenticationService(
+          gh<_i361.Dio>(),
+          gh<_i337.FlutterAppAuth>(),
+          gh<_i558.FlutterSecureStorage>(),
+          gh<_i127.NotificationService>(),
+        );
+        return i.init().then((_) => i);
+      },
+      preResolve: true,
+      dispose: (i) => i.dispose(),
+    );
     return this;
   }
 }

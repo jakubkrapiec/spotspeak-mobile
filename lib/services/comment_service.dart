@@ -6,7 +6,7 @@ import 'package:spotspeak_mobile/models/comment.dart';
 
 part 'comment_service.g.dart';
 
-@singleton
+@lazySingleton
 @RestApi(baseUrl: '/api/traces/comments')
 abstract class CommentService {
   @factoryMethod

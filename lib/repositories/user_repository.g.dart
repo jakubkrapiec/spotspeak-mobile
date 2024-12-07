@@ -186,7 +186,7 @@ class _UserRepository implements UserRepository {
   }
 
   @override
-  Future<void> updatefCMToken(FcmTokenDto fcmTokenDto) async {
+  Future<void> updateFCMToken(FcmTokenDto fcmTokenDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

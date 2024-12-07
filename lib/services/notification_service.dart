@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:injectable/injectable.dart';
-import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/fcm_token_dto.dart';
 import 'package:spotspeak_mobile/routing/app_router.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
@@ -13,9 +12,11 @@ import 'package:spotspeak_mobile/theme/colors.dart';
 
 @singleton
 class NotificationService {
-  NotificationService();
+  NotificationService(this._userService, this._appRouter);
 
   final _firebaseMessaging = FirebaseMessaging.instance;
+  final UserService _userService;
+  final AppRouter _appRouter;
 
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
@@ -23,7 +24,7 @@ class NotificationService {
 
     debugPrint('Token: $fCMToken');
     if (fCMToken != null) {
-      await getIt<UserService>().userRepo.updatefCMToken(FcmTokenDto(fcmToken: fCMToken));
+      await _userService.userRepo.updateFCMToken(FcmTokenDto(fcmToken: fCMToken));
     }
 
     // final initialMessage = await _firebaseMessaging.getInitialMessage();
@@ -38,23 +39,26 @@ class NotificationService {
 
     FirebaseMessaging.onMessage.listen(_handleForegroundNotification);
   }
+
+  Future<void> updateFCMToken() async {
+    final token = await _firebaseMessaging.getToken();
+    if (token != null) {
+      await _userService.userRepo.updateFCMToken(FcmTokenDto(fcmToken: token));
+    }
+  }
+
+  void _handleNotificationTap(RemoteMessage message) {
+    final deepLink = message.data['deep_link'] as String;
+    final uri = Uri.parse(deepLink);
+    final fullPath = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
+    _appRouter.pushNamed(fullPath);
+  }
 }
 
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
   debugPrint('title: ${message.notification?.title}');
   debugPrint('body: ${message.notification?.body}');
   debugPrint('Payload: ${message.data}');
-}
-
-void _handleNotificationTap(RemoteMessage message) {
-  final deepLink = message.data['deep_link'] as String;
-  final uri = Uri.parse(deepLink);
-  final fullPath = uri.path + (uri.hasQuery ? '?${uri.query}' : '');
-  // if (fullPath.startsWith('/home')) {
-  //   getIt<AppRouter>().replaceNamed(fullPath);
-  // } else {
-  getIt<AppRouter>().pushNamed(fullPath);
-  // }
 }
 
 void _handleForegroundNotification(RemoteMessage message) {

@@ -23,17 +23,13 @@ abstract class UserRepository {
   Future<User> getUser();
 
   @PUT('')
-  Future<void> updateUser(
-    @Body() EditUserDto editUserDto,
-  );
+  Future<void> updateUser(@Body() EditUserDto editUserDto);
 
   @DELETE('')
   Future<void> deleteUser();
 
   @PUT('/update-password')
-  Future<void> updatePassword(
-    @Body() UpdatePasswordDto updatePasswordDto,
-  );
+  Future<void> updatePassword(@Body() UpdatePasswordDto updatePasswordDto);
 
   @POST('/picture')
   @MultiPart()
@@ -44,9 +40,7 @@ abstract class UserRepository {
   Future<void> deletePicture();
 
   @PUT('/fcm-token')
-  Future<void> updatefCMToken(
-    @Body() FcmTokenDto fcmTokenDto,
-  );
+  Future<void> updateFCMToken(@Body() FcmTokenDto fcmTokenDto);
 
   @PUT('/preferences/notifications')
   Future<void> updateNotificationPreferences(@Body() NotificationSettingsDto notificationSettingsDto);

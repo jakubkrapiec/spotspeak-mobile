@@ -5,7 +5,6 @@ import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mime/mime.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/user.dart';
 import 'package:spotspeak_mobile/repositories/user_repository.dart';
 
@@ -25,7 +24,6 @@ class UserService {
   }
 
   Future<void> uploadProfilePicture(File file) async {
-    final dio = getIt<Dio>();
     final formData = FormData();
 
     final multipartFile = await MultipartFile.fromFile(
@@ -36,6 +34,6 @@ class UserService {
 
     formData.files.add(MapEntry('file', multipartFile));
 
-    await UserRepository(dio).addPicture(formData);
+    await userRepo.addPicture(formData);
   }
 }
