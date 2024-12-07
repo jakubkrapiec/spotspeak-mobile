@@ -26,14 +26,6 @@ class _ProfileTabState extends State<ProfileTab> {
 
   final _userService = getIt<UserService>();
 
-  Future<void> _logoutUser() async {
-    try {
-      await _authService.logout();
-    } catch (e) {
-      debugPrint('Error: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<UserType>(
@@ -115,7 +107,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     TextButton(
                       child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
                       onPressed: () async {
-                        await _logoutUser();
+                        await _authService.logout();
                         if (!context.mounted) return;
                         unawaited(context.router.replace(LoginRoute()));
                       },

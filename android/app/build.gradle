@@ -88,17 +88,17 @@ android {
         production {
             dimension "default"
             applicationIdSuffix ""
-            manifestPlaceholders = [appName: "Spotspeak Mobile"]
+            manifestPlaceholders = [appName: "SpotSpeak"]
         }
         staging {
             dimension "default"
             applicationIdSuffix ".stg"
-            manifestPlaceholders = [appName: "Spotspeak Mobile [STG]"]
+            manifestPlaceholders = [appName: "SpotSpeak [STG]"]
         }
         development {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders = [appName: "Spotspeak Mobile [DEV]"]
+            manifestPlaceholders = [appName: "SpotSpeak [DEV]"]
         }
     }
 

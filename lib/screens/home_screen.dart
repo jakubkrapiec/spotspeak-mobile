@@ -3,21 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/routing/app_router.gr.dart';
 
 @RoutePage()
-class HomeScreen extends StatefulWidget {
-  HomeScreen({@QueryParam('initialIndex') this.initialIndex, super.key});
-
-  int? initialIndex;
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
-    if (widget.initialIndex != null) {}
-  }
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +18,16 @@ class _HomeScreenState extends State<HomeScreen> {
         FriendsRoute(),
         ProfileRoute(),
       ],
-      bottomNavigationBuilder: (context, tabsRouter) {
-        return BottomNavigationBar(
-          currentIndex: tabsRouter.activeIndex,
-          onTap: tabsRouter.setActiveIndex,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
-            BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: 'Osiągnięcia'),
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Znajomi'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-          ],
-        );
-      },
+      bottomNavigationBuilder: (context, tabsRouter) => BottomNavigationBar(
+        currentIndex: tabsRouter.activeIndex,
+        onTap: tabsRouter.setActiveIndex,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
+          BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: 'Osiągnięcia'),
+          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Znajomi'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+        ],
+      ),
     );
   }
 }

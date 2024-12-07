@@ -210,18 +210,10 @@ class FriendsRouteArgs {
 
 /// generated route for
 /// [_i6.HomeScreen]
-class HomeRoute extends _i15.PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({
-    int? initialIndex,
-    _i16.Key? key,
-    List<_i15.PageRouteInfo>? children,
-  }) : super(
+class HomeRoute extends _i15.PageRouteInfo<void> {
+  const HomeRoute({List<_i15.PageRouteInfo>? children})
+      : super(
           HomeRoute.name,
-          args: HomeRouteArgs(
-            initialIndex: initialIndex,
-            key: key,
-          ),
-          rawQueryParams: {'initialIndex': initialIndex},
           initialChildren: children,
         );
 
@@ -230,32 +222,9 @@ class HomeRoute extends _i15.PageRouteInfo<HomeRouteArgs> {
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
-      final queryParams = data.queryParams;
-      final args = data.argsAs<HomeRouteArgs>(
-          orElse: () =>
-              HomeRouteArgs(initialIndex: queryParams.optInt('initialIndex')));
-      return _i6.HomeScreen(
-        initialIndex: args.initialIndex,
-        key: args.key,
-      );
+      return const _i6.HomeScreen();
     },
   );
-}
-
-class HomeRouteArgs {
-  const HomeRouteArgs({
-    this.initialIndex,
-    this.key,
-  });
-
-  final int? initialIndex;
-
-  final _i16.Key? key;
-
-  @override
-  String toString() {
-    return 'HomeRouteArgs{initialIndex: $initialIndex, key: $key}';
-  }
 }
 
 /// generated route for

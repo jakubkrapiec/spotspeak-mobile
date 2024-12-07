@@ -31,6 +31,7 @@ class _PasswordFormState extends State<PasswordForm> {
       await _userService.userRepo.updatePassword(UpdatePasswordDto(currentPassword, newPassword));
     } catch (exception) {
       if (exception is DioException) {
+        // ignore: avoid_dynamic_calls
         if ((exception.response?.data?['message'] as List).cast<String>().firstOrNull == 'Invalid current password') {
           await Fluttertoast.showToast(
             msg: 'W trakcie zmiany hasła wystąpił błąd, podano nieprawidłowe aktualne hasło konta',
@@ -40,6 +41,7 @@ class _PasswordFormState extends State<PasswordForm> {
           );
         } else {
           await Fluttertoast.showToast(
+            // ignore: avoid_dynamic_calls
             msg: 'W trakcie zmiany hasła wystąpił błąd: ${exception.response?.data?['message']}',
             toastLength: Toast.LENGTH_LONG,
             backgroundColor: CustomColors.grey1,
