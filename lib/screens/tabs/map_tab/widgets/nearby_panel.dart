@@ -226,9 +226,9 @@ class _NearbyPanelState extends State<NearbyPanel> {
                     trace: _nearbyTracesCopy[index],
                     currentPostion: _lastCoordinatesSync!,
                     onTapFunction: () {
-                      _onMoveToTraceLocation(_nearbyTraces![index]);
-                      if (_nearbyTraces![index].hasDiscovered) {
-                        _openTraceDialog(_nearbyTraces![index].id);
+                      _onMoveToTraceLocation(_nearbyTracesCopy[index]);
+                      if (_nearbyTracesCopy[index].hasDiscovered) {
+                        _openTraceDialog(_nearbyTracesCopy[index].id);
                       }
                     },
                     traceIconPath: _nearbyTracesCopy[index].iconSvgPath,
