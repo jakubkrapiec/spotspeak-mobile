@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:latlong2/latlong.dart';
@@ -5,6 +6,7 @@ import 'package:spotspeak_mobile/models/trace_type.dart';
 
 part 'trace_location.g.dart';
 
+@immutable
 @JsonSerializable()
 class TraceLocation {
   // ignore: avoid_positional_boolean_parameters
@@ -18,6 +20,12 @@ class TraceLocation {
   final bool hasDiscovered;
   final TraceType type;
   final DateTime createdAt;
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is TraceLocation && other.id == id;
 
   Map<String, Object?> toJson() => _$TraceLocationToJson(this);
 

@@ -20,6 +20,7 @@ class HorizontalUserList extends StatelessWidget {
           : ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: friendsList.length,
+              physics: const BouncingScrollPhysics(),
               separatorBuilder: (context, index) => const Gap(16),
               padding: const EdgeInsets.symmetric(horizontal: 16),
               itemBuilder: (context, index) {

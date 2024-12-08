@@ -25,6 +25,27 @@ class _LoginWidgetState extends State<LoginWidget> {
   final _userService = getIt<UserService>();
   final _appService = getIt<AppService>();
 
+  bool _isLoading = false;
+
+  Future<void> _logIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      await _authService.login();
+      await _userService.syncUser();
+      if (widget.isFirstLogin && mounted) {
+        unawaited(context.router.replace(HomeRoute()));
+      }
+    } finally {
+      if (context.mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -47,18 +68,13 @@ class _LoginWidgetState extends State<LoginWidget> {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await _authService.login();
-                    await _userService.syncUser();
-                    if (widget.isFirstLogin) {
-                      if (!context.mounted) return;
-                      unawaited(context.router.replace(HomeRoute()));
-                    }
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: Text('Logowanie'),
-                  ),
+                  onPressed: _logIn,
+                  child: _isLoading
+                      ? Center(child: SizedBox.square(dimension: 16, child: CircularProgressIndicator()))
+                      : const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                          child: Text('Logowanie'),
+                        ),
                 ),
               ),
             ],

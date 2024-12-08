@@ -34,14 +34,10 @@ class LoginScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const Gap(48),
-            LoginWidget(
-              isFirstLogin: true,
-            ),
+            LoginWidget(isFirstLogin: true),
             TextButton(
               child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
-              onPressed: () {
-                context.router.replace(HomeRoute());
-              },
+              onPressed: () => context.router.replace(HomeRoute()),
             ),
           ],
         ),

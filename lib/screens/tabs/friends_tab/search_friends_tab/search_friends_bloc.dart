@@ -28,8 +28,6 @@ class SearchFriendsBloc extends Bloc<SearchFriendsEvent, SearchFriendsState> {
         return;
       }
 
-      if (event.query == _currentQuery) return;
-
       _currentQuery = event.query;
 
       emit(state.copyWith(status: LoadingStatus.loading));

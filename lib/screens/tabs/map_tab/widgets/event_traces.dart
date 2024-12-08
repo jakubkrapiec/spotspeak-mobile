@@ -14,8 +14,8 @@ class EventTraces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
       width: MediaQuery.sizeOf(context).width * 0.3,
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.2),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(8),
@@ -29,17 +29,21 @@ class EventTraces extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            for (final trace in traces)
-              _TraceListEntry(
-                trace: trace,
-                userLocation: userLocation,
-                onTapTrace: onTapTrace,
-              ),
-          ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final trace in traces)
+                _TraceListEntry(
+                  trace: trace,
+                  userLocation: userLocation,
+                  onTapTrace: onTapTrace,
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -98,7 +102,7 @@ class _TraceListEntryState extends State<_TraceListEntry> {
     return InkWell(
       onTap: () => widget.onTapTrace(widget.trace),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

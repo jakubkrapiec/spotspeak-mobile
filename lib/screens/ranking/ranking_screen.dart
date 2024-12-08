@@ -68,47 +68,49 @@ class _RankingScreenState extends State<RankingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Ranking'), centerTitle: true),
-      body: CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.all(16),
-            sliver: SliverToBoxAdapter(
-              child: Text(_topText),
+      body: RefreshIndicator(
+        onRefresh: _getRankingUsers,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.all(16),
+              sliver: SliverToBoxAdapter(child: Text(_topText)),
             ),
-          ),
-          const SliverGap(16),
-          switch (_status) {
-            LoadingStatus.loading => const SliverFillRemaining(
-                child: Center(child: CircularProgressIndicator()),
-              ),
-            LoadingStatus.error => SliverFillRemaining(
-                child: Center(child: LoadingError(onRetry: _getRankingUsers)),
-              ),
-            LoadingStatus.loaded => SliverList.separated(
-                itemCount: _ranking!.length,
-                itemBuilder: (context, index) {
-                  final user = _ranking![index];
-                  return RankingEntry(
-                    user: user,
-                    isMe: user.friendId == _authService.user.value.id,
-                    onTap: () {
-                      if (user.friendId == _authService.user.value.id) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('To jesteś ty!'),
-                            duration: Duration(seconds: 5),
-                          ),
-                        );
-                        return;
-                      }
-                      context.router.push(UserProfileRoute(userId: user.friendId));
-                    },
-                  );
-                },
-                separatorBuilder: (context, index) => const Gap(8),
-              ),
-          },
-        ],
+            const SliverGap(16),
+            switch (_status) {
+              LoadingStatus.loading => const SliverFillRemaining(
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              LoadingStatus.error => SliverFillRemaining(
+                  child: Center(child: LoadingError(onRetry: _getRankingUsers)),
+                ),
+              LoadingStatus.loaded => SliverList.separated(
+                  itemCount: _ranking!.length,
+                  itemBuilder: (context, index) {
+                    final user = _ranking![index];
+                    return RankingEntry(
+                      user: user,
+                      isMe: user.friendId == _authService.user.value.id,
+                      onTap: () {
+                        if (user.friendId == _authService.user.value.id) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('To jesteś ty!'),
+                              duration: Duration(seconds: 5),
+                            ),
+                          );
+                          return;
+                        }
+                        context.router.push(UserProfileRoute(userId: user.friendId));
+                      },
+                    );
+                  },
+                  separatorBuilder: (context, index) => const Gap(8),
+                ),
+            },
+          ],
+        ),
       ),
     );
   }

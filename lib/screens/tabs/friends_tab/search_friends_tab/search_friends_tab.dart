@@ -52,34 +52,39 @@ class _SearchFriendsTabState extends State<SearchFriendsTab> {
     return BlocBuilder<SearchFriendsBloc, SearchFriendsState>(
       bloc: _bloc,
       builder: (context, state) {
-        return Scrollbar(
-          child: CustomScrollView(
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              PinnedHeaderSliver(child: FriendsSearch(controller: _searchQueryController)),
-              switch (state.status) {
-                LoadingStatus.error => SliverFillRemaining(
-                    child: Center(child: LoadingError(onRetry: _retryAfterError)),
-                  ),
-                LoadingStatus.loading => const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                LoadingStatus.loaded when state.users.isEmpty => SliverFillRemaining(
-                    child: Center(child: Text('Brak wyników')),
-                  ),
-                LoadingStatus.loaded => SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    sliver: SliverList.separated(
-                      separatorBuilder: (context, index) => const Gap(8),
-                      itemCount: state.users.length,
-                      itemBuilder: (context, index) => FriendTile(
-                        user: state.users[index],
-                        onTap: () => context.router.push(UserProfileRoute(userId: state.users[index].id)),
+        return RefreshIndicator(
+          onRefresh: () async => _bloc.add(ModifyQueryEvent(_searchQueryController.text)),
+          child: Scrollbar(
+            controller: _scrollController,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: [
+                PinnedHeaderSliver(child: FriendsSearch(controller: _searchQueryController)),
+                switch (state.status) {
+                  LoadingStatus.error => SliverFillRemaining(
+                      child: Center(child: LoadingError(onRetry: _retryAfterError)),
+                    ),
+                  LoadingStatus.loading => const SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+                  LoadingStatus.loaded when state.users.isEmpty => SliverFillRemaining(
+                      child: Center(child: Text('Brak wyników')),
+                    ),
+                  LoadingStatus.loaded => SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList.separated(
+                        separatorBuilder: (context, index) => const Gap(8),
+                        itemCount: state.users.length,
+                        itemBuilder: (context, index) => FriendTile(
+                          user: state.users[index],
+                          onTap: () => context.router.push(UserProfileRoute(userId: state.users[index].id)),
+                        ),
                       ),
                     ),
-                  ),
-              },
-            ],
+                },
+              ],
+            ),
           ),
         );
       },

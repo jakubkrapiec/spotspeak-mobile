@@ -209,131 +209,130 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       body: switch (_status) {
         LoadingStatus.error => Center(child: LoadingError(onRetry: () => _getUser(displaySpinner: true))),
         LoadingStatus.loading => Center(child: CircularProgressIndicator()),
-        LoadingStatus.loaded => SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const Gap(16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: SizedBox.square(
-                    dimension: MediaQuery.sizeOf(context).width * 0.5,
-                    child: ClipOval(
-                      child: _user?.userProfile.profilePictureUrl != null
-                          ? CachedNetworkImage(
-                              imageUrl: _user!.userProfile.profilePictureUrl!.toString(),
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
-                              'assets/default_icon.jpg',
-                              fit: BoxFit.cover,
-                            ),
+        LoadingStatus.loaded => RefreshIndicator(
+            onRefresh: () => _getUser(displaySpinner: true),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Gap(16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox.square(
+                      dimension: MediaQuery.sizeOf(context).width * 0.5,
+                      child: ClipOval(
+                        child: _user?.userProfile.profilePictureUrl != null
+                            ? CachedNetworkImage(
+                                imageUrl: _user!.userProfile.profilePictureUrl!.toString(),
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset('assets/default_icon.jpg', fit: BoxFit.cover),
+                      ),
                     ),
                   ),
-                ),
-                const Gap(16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AutoSizeText(
-                    _user!.userProfile.username,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    maxLines: 1,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    '${_user!.userProfile.totalPoints} pkt',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ),
-                const Gap(16),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: AnimatedSize(
-                    duration: const Duration(milliseconds: 150),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: _buttonLoading
-                          ? Center(child: CircularProgressIndicator())
-                          : switch (_user!.relationshipStatus) {
-                              FriendshipStatus.friends => FriendshipStatusBar(
-                                  onRemoveFriend: _onRemoveFriend,
-                                ),
-                              FriendshipStatus.invitationReceived => Row(
-                                  children: [
-                                    Expanded(
-                                      child: BigBlackButton(
-                                        onTap: _acceptFriendRequest,
-                                        label: 'Akceptuj',
-                                        icon: Icon(Icons.person_add),
-                                      ),
-                                    ),
-                                    const Gap(16),
-                                    Expanded(
-                                      child: BigBlackButton(
-                                        onTap: _rejectFriendRequest,
-                                        label: 'Odrzuć',
-                                        icon: Icon(Icons.person_remove),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              FriendshipStatus.noRelation => BigBlackButton(
-                                  onTap: _sendFriendRequest,
-                                  label: 'Zaproś do znajomych',
-                                  icon: Icon(Icons.person_add),
-                                ),
-                              FriendshipStatus.invitationSent => BigBlackButton(
-                                  onTap: _cancelFriendRequest,
-                                  label: 'Anuluj zaproszenie',
-                                  icon: Icon(Icons.person_remove),
-                                ),
-                            },
+                  const Gap(16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: AutoSizeText(
+                      _user!.userProfile.username,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      maxLines: 1,
                     ),
                   ),
-                ),
-                const Gap(16),
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      'Wspólni znajomi:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      '${_user!.userProfile.totalPoints} pkt',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
-                ),
-                HorizontalUserList(
-                  friendsList: _mutualFriends!,
-                  emptyText: 'Brak wspólnych znajomych',
-                ),
-                const Gap(16),
-                SizedBox(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text('Zdobyte osiągnięcia:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  const Gap(16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: AnimatedSize(
+                      duration: const Duration(milliseconds: 150),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: _buttonLoading
+                            ? Center(child: CircularProgressIndicator())
+                            : switch (_user!.relationshipStatus) {
+                                FriendshipStatus.friends => FriendshipStatusBar(onRemoveFriend: _onRemoveFriend),
+                                FriendshipStatus.invitationReceived => Row(
+                                    children: [
+                                      Expanded(
+                                        child: BigBlackButton(
+                                          onTap: _acceptFriendRequest,
+                                          label: 'Akceptuj',
+                                          icon: Icon(Icons.person_add),
+                                        ),
+                                      ),
+                                      const Gap(16),
+                                      Expanded(
+                                        child: BigBlackButton(
+                                          onTap: _rejectFriendRequest,
+                                          label: 'Odrzuć',
+                                          icon: Icon(Icons.person_remove),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                FriendshipStatus.noRelation => BigBlackButton(
+                                    onTap: _sendFriendRequest,
+                                    label: 'Zaproś do znajomych',
+                                    icon: Icon(Icons.person_add),
+                                  ),
+                                FriendshipStatus.invitationSent => BigBlackButton(
+                                    onTap: _cancelFriendRequest,
+                                    label: 'Anuluj zaproszenie',
+                                    icon: Icon(Icons.person_remove),
+                                  ),
+                              },
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 160,
-                  child: _achievements?.isEmpty ?? true
-                      ? Center(child: Text('Brak osiągnięć'))
-                      : ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _achievements!.length,
-                          separatorBuilder: (context, index) => Gap(24),
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          itemBuilder: (context, index) => AchievementContainer(
-                            achievement: _achievements![index],
-                            autoSizeGroup: _achievementsAutoSizeGroup,
+                  const Gap(16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Wspólni znajomi:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  HorizontalUserList(
+                    friendsList: _mutualFriends!,
+                    emptyText: 'Brak wspólnych znajomych',
+                  ),
+                  const Gap(16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Zdobyte osiągnięcia:', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 160,
+                    child: _achievements?.isEmpty ?? true
+                        ? Center(child: Text('Brak osiągnięć'))
+                        : ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _achievements!.length,
+                            physics: const BouncingScrollPhysics(),
+                            separatorBuilder: (context, index) => Gap(24),
+                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            itemBuilder: (context, index) => AchievementContainer(
+                              achievement: _achievements![index],
+                              autoSizeGroup: _achievementsAutoSizeGroup,
+                            ),
                           ),
-                        ),
-                ),
-                const Gap(16),
-              ],
+                  ),
+                  const Gap(16),
+                ],
+              ),
             ),
           ),
       },

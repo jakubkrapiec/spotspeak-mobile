@@ -23,6 +23,8 @@ import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
 import 'package:spotspeak_mobile/routing/app_router.dart' as _i457;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_bloc.dart'
     as _i868;
+import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab_bloc.dart'
+    as _i722;
 import 'package:spotspeak_mobile/services/achievement_service.dart' as _i77;
 import 'package:spotspeak_mobile/services/app_service.dart' as _i724;
 import 'package:spotspeak_mobile/services/authentication_service.dart' as _i281;
@@ -84,6 +86,10 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i192.TraceService>(() => _i192.TraceService(gh<_i361.Dio>()));
     gh.singleton<_i448.UserService>(
         () => _i448.UserService(gh<_i643.UserRepository>()));
+    gh.factory<_i722.MapTabBloc>(() => _i722.MapTabBloc(
+          gh<_i192.TraceService>(),
+          gh<_i356.EventService>(),
+        ));
     gh.factory<_i868.SearchFriendsBloc>(
         () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
     gh.singleton<_i127.NotificationService>(() => _i127.NotificationService(

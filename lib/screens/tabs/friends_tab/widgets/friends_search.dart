@@ -23,16 +23,14 @@ class FriendsSearch extends StatelessWidget {
             child: Container(
               decoration: isDarkMode ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
               padding: EdgeInsets.all(16),
-              child: Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Wyszukaj znajomego',
-                    fillColor: isDarkMode ? CustomColors.grey5 : null,
-                  ),
-                  controller: controller,
-                  style: const TextStyle(fontSize: 16),
-                  autofocus: true,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Wyszukaj znajomego',
+                  fillColor: isDarkMode ? CustomColors.grey5 : null,
                 ),
+                controller: controller,
+                style: const TextStyle(fontSize: 16),
+                autofocus: true,
               ),
             ),
           ),

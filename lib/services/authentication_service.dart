@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
+import 'package:mutex/mutex.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:spotspeak_mobile/misc/auth_constants.dart';
 import 'package:spotspeak_mobile/models/auth_user.dart';
@@ -29,6 +30,8 @@ class AuthenticationService {
 
   final userTypeNotifier = ValueNotifier<UserType>(UserType.guest);
 
+  final _accessTokenMutex = Mutex();
+
   Future<String?> get accessToken async {
     if (_tokenExpirationTimestamp != null && _tokenExpirationTimestamp!.isAfter(DateTime.now())) {
       return _accessToken;
@@ -38,13 +41,15 @@ class AuthenticationService {
       return null;
     }
 
-    final response = await _appAuth.token(
-      TokenRequest(
-        kAuthClientId,
-        kAuthRedirectUri,
-        clientSecret: kAuthClientSecret,
-        issuer: kAuthIssuer,
-        refreshToken: securedRefreshToken,
+    final response = await _accessTokenMutex.protect<TokenResponse>(
+      () => _appAuth.token(
+        TokenRequest(
+          kAuthClientId,
+          kAuthRedirectUri,
+          clientSecret: kAuthClientSecret,
+          issuer: kAuthIssuer,
+          refreshToken: securedRefreshToken,
+        ),
       ),
     );
 
@@ -71,13 +76,15 @@ class AuthenticationService {
 
     TokenResponse? response;
     try {
-      response = await _appAuth.token(
-        TokenRequest(
-          kAuthClientId,
-          kAuthRedirectUri,
-          clientSecret: kAuthClientSecret,
-          issuer: kAuthIssuer,
-          refreshToken: securedRefreshToken,
+      response = await _accessTokenMutex.protect<TokenResponse>(
+        () => _appAuth.token(
+          TokenRequest(
+            kAuthClientId,
+            kAuthRedirectUri,
+            clientSecret: kAuthClientSecret,
+            issuer: kAuthIssuer,
+            refreshToken: securedRefreshToken,
+          ),
         ),
       );
     } on PlatformException catch (e) {

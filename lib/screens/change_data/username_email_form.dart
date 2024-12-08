@@ -27,7 +27,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
 
   String? _password;
 
-  bool obscureText = true;
+  bool _obscureText = true;
 
   final _userService = getIt<UserService>();
   final _authService = getIt<AuthenticationService>();
@@ -139,7 +139,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                   Text('Potwierdź hasło:'),
                   Gap(8),
                   TextFormField(
-                    obscureText: obscureText,
+                    obscureText: _obscureText,
                     style: TextStyle(fontSize: 22),
                     validator: (value) {
                       if (_authService.userTypeNotifier.value == UserType.google) {
@@ -156,10 +156,10 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                     decoration: InputDecoration(
                       fillColor: _appService.themeMode == ThemeMode.dark ? CustomColors.grey6 : null,
                       suffixIcon: IconButton(
-                        icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility),
+                        icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
                         onPressed: () {
                           setState(() {
-                            obscureText = !obscureText;
+                            _obscureText = !_obscureText;
                           });
                         },
                       ),

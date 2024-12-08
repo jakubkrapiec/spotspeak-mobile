@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mutex/mutex.dart';
+import 'package:rxdart/rxdart.dart';
 
 @singleton
 class LocationService {
@@ -33,5 +34,5 @@ class LocationService {
   }
 
   Stream<Position> getLocationStream([LocationSettings? locationSettings]) =>
-      Geolocator.getPositionStream(locationSettings: locationSettings);
+      Geolocator.getPositionStream(locationSettings: locationSettings).shareValue();
 }
