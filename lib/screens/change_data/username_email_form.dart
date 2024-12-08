@@ -88,6 +88,15 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
     }
   }
 
+  bool _validateData(String newData, AccountData dataType) {
+    final user = _userService.user.value;
+    if (dataType == AccountData.email) {
+      return user.email != newData;
+    } else {
+      return user.username != newData;
+    }
+  }
+
   Future<PasswordChallengeResult> _checkPassword(String password) async {
     final result = await _userService.userRepo.checkPassword(password);
     return result;
@@ -173,6 +182,15 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
+                    if (!_validateData(_newValue!, widget.formType)) {
+                      await Fluttertoast.showToast(
+                        msg: 'Wpisywana wartość musi być inna niż aktualna',
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: CustomColors.grey1,
+                        textColor: CustomColors.grey6,
+                      );
+                      return;
+                    }
                     if (_authService.userTypeNotifier.value == UserType.google) {
                       await _changeData('', _newValue!, widget.formType);
                     } else {

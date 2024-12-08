@@ -118,8 +118,13 @@ class _PasswordFormState extends State<PasswordForm> {
               obscureText: _obscureText2,
               style: TextStyle(fontSize: 22),
               validator: (value) {
+                const passwordPattern = r'^[A-Za-z\d@$!%*?&]*$';
+                final passwordRegex = RegExp(passwordPattern);
+
                 if (value == null || value.isEmpty) {
                   return 'Musisz wpisać tekst';
+                } else if (!passwordRegex.hasMatch(value)) {
+                  return 'Hasło zawiera niedozwolone znaki';
                 }
                 return null;
               },
@@ -145,8 +150,13 @@ class _PasswordFormState extends State<PasswordForm> {
               obscureText: _obscureText3,
               style: TextStyle(fontSize: 22),
               validator: (value) {
+                const passwordPattern = r'^[A-Za-z\d@$!%*?&]*$';
+                final passwordRegex = RegExp(passwordPattern);
+
                 if (value == null || value.isEmpty) {
                   return 'Musisz wpisać tekst';
+                } else if (!passwordRegex.hasMatch(value)) {
+                  return 'Hasło zawiera niedozwolone znaki';
                 }
                 return null;
               },
