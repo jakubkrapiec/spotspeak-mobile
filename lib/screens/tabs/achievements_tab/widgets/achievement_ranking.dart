@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -11,7 +13,9 @@ import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/ranking_service.dart';
 
 class AchievementRanking extends StatefulWidget {
-  const AchievementRanking({super.key});
+  const AchievementRanking({required this.refreshStream, super.key});
+
+  final Stream<void> refreshStream;
 
   @override
   State<AchievementRanking> createState() => _AchievementRankingState();
@@ -23,11 +27,18 @@ class _AchievementRankingState extends State<AchievementRanking> {
 
   List<RankingUser>? _ranking;
   LoadingStatus _status = LoadingStatus.loading;
+  late final StreamSubscription<void> _refreshSubscription;
 
   @override
   void initState() {
     super.initState();
-    _fetchRanking();
+    _refreshSubscription = widget.refreshStream.listen((_) => _fetchRanking());
+  }
+
+  @override
+  void dispose() {
+    _refreshSubscription.cancel();
+    super.dispose();
   }
 
   List<RankingUser> _selectUpTo3UsersForRanking(List<RankingUser> users) {
