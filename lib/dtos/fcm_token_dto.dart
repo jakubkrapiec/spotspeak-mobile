@@ -8,7 +8,7 @@ class FcmTokenDto {
 
   factory FcmTokenDto.fromJson(Map<String, Object?> json) => _$FcmTokenDtoFromJson(json);
 
-  final String fcmToken;
+  final String? fcmToken;
 
   Map<String, Object?> toJson() => _$FcmTokenDtoToJson(this);
 }

@@ -11,7 +11,7 @@ TraceLocation _$TraceLocationFromJson(Map<String, dynamic> json) =>
       (json['id'] as num).toInt(),
       json['longitude'] as num,
       json['latitude'] as num,
-      json['hasDiscovered'] as bool,
+      json['hasDiscovered'] as bool? ?? false,
       $enumDecode(_$TraceTypeEnumMap, json['type']),
       DateTime.parse(json['createdAt'] as String),
     );

@@ -155,10 +155,18 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   }
 
   Future<void> _showTraceFromNotification() async {
+    if (_authService.userTypeNotifier.value == UserType.guest) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zaloguj się, aby zobaczyć ślad')));
+      return;
+    }
     final trace = await _traceService.getTrace(widget.traceId!);
     if (trace.isActive && mounted) {
       _onMoveToTraceLocation(trace);
-      await showDialog<void>(context: context, builder: (context) => TraceDialog(trace: trace));
+      final shouldDelete = await showDialog<bool>(context: context, builder: (context) => TraceDialog(trace: trace));
+      if (shouldDelete ?? false) {
+        await _traceService.deleteTrace(widget.traceId!);
+      }
+      _bloc.add(RequestMapUpdateEvent(bounds: _mapController.mapController.camera.visibleBounds));
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Ślad nie jest już aktywny')));
     }
@@ -179,6 +187,10 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   }
 
   Future<void> _onTapTrace(TraceLocation traceLocation) async {
+    if (_authService.userTypeNotifier.value == UserType.guest) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zaloguj się, aby zobaczyć ślad')));
+      return;
+    }
     final location = _bloc.state.lastLocation;
     if (location == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Brak dostępu do lokalizacji')));

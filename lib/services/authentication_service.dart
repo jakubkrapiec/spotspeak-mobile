@@ -9,18 +9,21 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:mutex/mutex.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:spotspeak_mobile/dtos/fcm_token_dto.dart';
 import 'package:spotspeak_mobile/misc/auth_constants.dart';
 import 'package:spotspeak_mobile/models/auth_user.dart';
 import 'package:spotspeak_mobile/services/notification_service.dart';
+import 'package:spotspeak_mobile/services/user_service.dart';
 
 @singleton
 class AuthenticationService {
-  AuthenticationService(this._dio, this._appAuth, this._secureStoreage, this._notificationService);
+  AuthenticationService(this._dio, this._appAuth, this._secureStoreage, this._notificationService, this._userService);
 
   final Dio _dio;
   final FlutterAppAuth _appAuth;
   final FlutterSecureStorage _secureStoreage;
   final NotificationService _notificationService;
+  final UserService _userService;
 
   final _userController = BehaviorSubject<AuthUser>();
 
@@ -153,6 +156,7 @@ class AuthenticationService {
   }
 
   Future<void> logout() async {
+    await _userService.userRepo.updateFCMToken(FcmTokenDto(fcmToken: null));
     _loginInfo.isLoggedIn = false;
     userTypeNotifier.value = UserType.guest;
     await _secureStoreage.delete(key: kAuthRefreshTokenKey);

@@ -12,6 +12,7 @@ import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/widgets/nearby_tile.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/location_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 import 'package:spotspeak_mobile/theme/theme.dart';
@@ -39,6 +40,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
   final _traceService = getIt<TraceService>();
   final _locationService = getIt<LocationService>();
   final _appService = getIt<AppService>();
+  final _authService = getIt<AuthenticationService>();
 
   StreamSubscription<Position>? _locationStreamSubscription;
 
@@ -130,6 +132,10 @@ class _NearbyPanelState extends State<NearbyPanel> {
   }
 
   Future<void> _openTraceDialog(int traceId) async {
+    if (_authService.userTypeNotifier.value == UserType.guest) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zaloguj się, aby zobaczyć ślad')));
+      return;
+    }
     final trace = await _traceService.getTrace(traceId);
     if (!mounted) return;
     final shouldDelete = await showDialog<bool>(
@@ -148,7 +154,6 @@ class _NearbyPanelState extends State<NearbyPanel> {
   @override
   void dispose() {
     _locationStreamSubscription?.cancel();
-    widget.mapController.dispose();
     _refreshStreamSubscription.cancel();
     super.dispose();
   }

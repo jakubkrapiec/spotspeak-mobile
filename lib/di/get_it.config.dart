@@ -102,6 +102,7 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i337.FlutterAppAuth>(),
         gh<_i558.FlutterSecureStorage>(),
         gh<_i127.NotificationService>(),
+        gh<_i448.UserService>(),
       ),
       dispose: (i) => i.dispose(),
     );

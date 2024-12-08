@@ -7,7 +7,7 @@ part of 'fcm_token_dto.dart';
 // **************************************************************************
 
 FcmTokenDto _$FcmTokenDtoFromJson(Map<String, dynamic> json) => FcmTokenDto(
-      fcmToken: json['fcmToken'] as String,
+      fcmToken: json['fcmToken'] as String?,
     );
 
 Map<String, dynamic> _$FcmTokenDtoToJson(FcmTokenDto instance) =>

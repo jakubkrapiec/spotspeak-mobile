@@ -7,6 +7,7 @@ import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/trace_dialog.dart';
+import 'package:spotspeak_mobile/services/authentication_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 
 class TraceMarker extends StatefulWidget {
@@ -25,8 +26,13 @@ class TraceMarker extends StatefulWidget {
 class _TraceMarkerState extends State<TraceMarker> {
   bool _isLoading = false;
   final _traceService = getIt<TraceService>();
+  final _authService = getIt<AuthenticationService>();
 
   Future<void> _onTapTrace() async {
+    if (_authService.userTypeNotifier.value == UserType.guest) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Zaloguj się, aby zobaczyć ślad')));
+      return;
+    }
     if (widget.currentUserLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Twoja lokalizacja nie jest dostępna')));
       return;

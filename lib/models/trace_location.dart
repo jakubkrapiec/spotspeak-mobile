@@ -17,6 +17,7 @@ class TraceLocation {
   final int id;
   final num longitude;
   final num latitude;
+  @JsonKey(defaultValue: false)
   final bool hasDiscovered;
   final TraceType type;
   final DateTime createdAt;
