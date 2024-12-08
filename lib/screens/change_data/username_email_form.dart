@@ -144,6 +144,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
             Gap(16),
             if (_authService.userTypeNotifier.value != UserType.google)
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Potwierdź hasło:'),
                   Gap(8),

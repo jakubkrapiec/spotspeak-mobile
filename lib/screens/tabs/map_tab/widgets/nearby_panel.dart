@@ -119,6 +119,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
       _nearbyTraces = traces;
       _nearbyTracesFiltered = List.from(_nearbyTraces!);
       _sortTraces(_fromClosest);
+      _selectNonDiscoveredTraces(_nonDiscoveredOnly);
     });
     _lastCoordinatesSync = position.toLatLng();
     _isFirstSync = false;

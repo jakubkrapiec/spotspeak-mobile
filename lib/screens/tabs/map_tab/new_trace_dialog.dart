@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:spotspeak_mobile/common/widgets/spotspeak_dialog.dart';
@@ -64,20 +66,42 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
               IconButton(
                 icon: Icon(Icons.camera_alt),
                 onPressed: () async {
-                  final result = await _picker.pickImage(source: ImageSource.camera);
-                  if (result == null || !mounted) return;
-                  _setMediaFile(result.path);
+                  try {
+                    final result = await _picker.pickImage(source: ImageSource.camera);
+                    if (result == null || !mounted) return;
+                    _setMediaFile(result.path);
+                  } on PlatformException catch (e) {
+                    if (e.code == 'camera_access_denied') {
+                      await Fluttertoast.showToast(
+                        msg: 'Aplikacja nie ma dostępu do aparatu',
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: CustomColors.grey1,
+                        textColor: CustomColors.grey6,
+                      );
+                    }
+                  }
                 },
               ),
               IconButton(
                 icon: Icon(Icons.video_call),
                 onPressed: () async {
-                  final result = await _picker.pickVideo(
-                    source: ImageSource.camera,
-                    maxDuration: const Duration(seconds: 10),
-                  );
-                  if (result == null || !mounted) return;
-                  _setMediaFile(result.path);
+                  try {
+                    final result = await _picker.pickVideo(
+                      source: ImageSource.camera,
+                      maxDuration: const Duration(seconds: 10),
+                    );
+                    if (result == null || !mounted) return;
+                    _setMediaFile(result.path);
+                  } on PlatformException catch (e) {
+                    if (e.code == 'camera_access_denied') {
+                      await Fluttertoast.showToast(
+                        msg: 'Aplikacja nie ma dostępu do aparatu',
+                        toastLength: Toast.LENGTH_LONG,
+                        backgroundColor: CustomColors.grey1,
+                        textColor: CustomColors.grey6,
+                      );
+                    }
+                  }
                 },
                 iconSize: 32,
               ),
