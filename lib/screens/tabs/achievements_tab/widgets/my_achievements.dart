@@ -23,7 +23,9 @@ class _MyAchievementsState extends State<MyAchievements> {
   final _achievementService = getIt<AchievementService>();
 
   List<Achievement>? _achievements;
+  List<Achievement> _achievementsFiltered = [];
   LoadingStatus _status = LoadingStatus.loading;
+  bool _showOnlyNonCompletedAchievements = false;
 
   late final StreamSubscription<void> _refreshSubscription;
 
@@ -49,6 +51,7 @@ class _MyAchievementsState extends State<MyAchievements> {
       final achievements = await _achievementService.getMyAchievements();
       setState(() {
         _achievements = achievements;
+        _filterAchievements(_showOnlyNonCompletedAchievements);
         _status = LoadingStatus.loaded;
       });
     } catch (e, st) {
@@ -61,6 +64,23 @@ class _MyAchievementsState extends State<MyAchievements> {
     }
   }
 
+  void _filterAchievements(bool onlyNonCompleted) {
+    if (onlyNonCompleted) {
+      _achievementsFiltered = List.from(_achievements?.where((a) => a.completedAt == null) ?? []);
+    } else {
+      _achievementsFiltered = List.from(_achievements ?? []);
+      _sortAchievements();
+    }
+  }
+
+  void _sortAchievements() {
+    _achievementsFiltered.sort((a, b) {
+      if (a.completedAt != null && b.completedAt == null) return -1;
+      if (a.completedAt == null && b.completedAt != null) return 1;
+      return 0;
+    });
+  }
+
   final _autoSizeGroup = AutoSizeGroup();
 
   @override
@@ -68,7 +88,24 @@ class _MyAchievementsState extends State<MyAchievements> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Twoje osiągnięcia', style: TextStyle(fontWeight: FontWeight.bold)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Twoje osiągnięcia', style: TextStyle(fontWeight: FontWeight.bold)),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _showOnlyNonCompletedAchievements = !_showOnlyNonCompletedAchievements;
+                  _filterAchievements(_showOnlyNonCompletedAchievements);
+                });
+              },
+              icon: Icon(
+                _showOnlyNonCompletedAchievements ? Icons.visibility_off : Icons.visibility,
+                size: 28,
+              ),
+            ),
+          ],
+        ),
         const Gap(16),
         switch (_status) {
           LoadingStatus.loading => Padding(
@@ -85,10 +122,10 @@ class _MyAchievementsState extends State<MyAchievements> {
                 childAspectRatio: 1.2,
               ),
               itemBuilder: (context, index) => AchievementContainer(
-                achievement: _achievements![index],
+                achievement: _achievementsFiltered[index],
                 autoSizeGroup: _autoSizeGroup,
               ),
-              itemCount: _achievements!.length,
+              itemCount: _achievementsFiltered.length,
               shrinkWrap: true,
             ),
         },
