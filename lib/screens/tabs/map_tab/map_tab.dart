@@ -53,7 +53,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   StreamSubscription<Position>? _locationStreamSubscription;
   StreamSubscription<MapEvent>? _mapEventSubscription;
-  late final Timer _refreshTimer;
+  Timer? _refreshTimer;
   late final StreamController<void> _refreshPanelController;
   bool _isWaitingForFirstLocation = true;
 
@@ -77,6 +77,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     _mapController = AnimatedMapController(vsync: this);
     _panelController = PanelController();
     _refreshPanelController = StreamController<void>.broadcast();
+    AutoTabsRouter.of(context).addListener(_onTabChanged);
     _initLocationService();
     _mapEventSubscription = _mapController.mapController.mapEventStream.listen((event) {
       if (event is MapEventMove) {
@@ -86,10 +87,31 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     if (widget.traceId != null) {
       _showTraceFromNotification();
     }
+    _initRefreshTimer();
+  }
+
+  void _onTabChanged() {
+    final index = AutoTabsRouter.of(context).activeIndex;
+    if (index != 0) {
+      _refreshTimer?.cancel();
+      _refreshTimer = null;
+    } else {
+      _initRefreshTimer();
+    }
+  }
+
+  void _initRefreshTimer() {
+    if (_refreshTimer != null) return;
     _refreshTimer = Timer.periodic(
       const Duration(minutes: 1),
-      (_) => _bloc.add(RequestMapUpdateEvent(bounds: _mapController.mapController.camera.visibleBounds)),
+      (timer) => _bloc.add(RequestMapUpdateEvent(bounds: _mapController.mapController.camera.visibleBounds)),
     );
+  }
+
+  @override
+  void deactivate() {
+    AutoTabsRouter.of(context).removeListener(_onTabChanged);
+    super.deactivate();
   }
 
   @override
@@ -97,8 +119,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     _mapController.dispose();
     _mapEventSubscription?.cancel();
     _locationStreamSubscription?.cancel();
-    _panelController.close();
-    _refreshTimer.cancel();
+    _refreshTimer?.cancel();
     _bloc.close();
     _refreshPanelController.close();
     super.dispose();

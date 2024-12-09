@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +11,9 @@ import 'package:spotspeak_mobile/models/achievement.dart';
 import 'package:spotspeak_mobile/services/achievement_service.dart';
 
 class MyAchievements extends StatefulWidget {
-  const MyAchievements({super.key});
+  const MyAchievements({required this.refreshStream, super.key});
+
+  final Stream<void> refreshStream;
 
   @override
   State<MyAchievements> createState() => _MyAchievementsState();
@@ -21,10 +25,20 @@ class _MyAchievementsState extends State<MyAchievements> {
   List<Achievement>? _achievements;
   LoadingStatus _status = LoadingStatus.loading;
 
+  late final StreamSubscription<void> _refreshSubscription;
+
   @override
   void initState() {
     super.initState();
-    _getAchievements();
+    _refreshSubscription = widget.refreshStream.listen((_) {
+      _getAchievements();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshSubscription.cancel();
+    super.dispose();
   }
 
   Future<void> _getAchievements() async {
