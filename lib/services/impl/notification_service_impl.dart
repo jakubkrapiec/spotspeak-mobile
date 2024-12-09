@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -30,12 +31,11 @@ class NotificationServiceImpl implements NotificationService {
       await _userService.userRepo.updateFCMToken(FcmTokenDto(fcmToken: fCMToken));
     }
 
-    // TODO implement this shit
-    // final initialMessage = await _firebaseMessaging.getInitialMessage();
+    final initialMessage = await _firebaseMessaging.getInitialMessage();
 
-    // if (initialMessage != null) {
-    //   _handleNotificationTap(initialMessage);
-    // }
+    if (initialMessage != null) {
+      _handleNotificationTap(initialMessage);
+    }
 
     FirebaseMessaging.onBackgroundMessage(_handleBackgroundMessage);
 
@@ -61,6 +61,7 @@ class NotificationServiceImpl implements NotificationService {
 }
 
 Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+  await Firebase.initializeApp();
   debugPrint('title: ${message.notification?.title}');
   debugPrint('body: ${message.notification?.body}');
   debugPrint('Payload: ${message.data}');

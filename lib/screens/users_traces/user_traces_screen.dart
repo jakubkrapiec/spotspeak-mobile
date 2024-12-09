@@ -115,73 +115,81 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Dodane ślady')),
-      body: _traces.isEmpty || _currentLocation == null
+      body: _currentLocation == null
           ? Center(child: CircularProgressIndicator())
-          : CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                const SliverGap(16),
-                SliverToBoxAdapter(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Gap(16),
-                      Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(16),
-                          decoration: _appService.isDarkMode(context)
-                              ? CustomTheme.darkContainerStyle
-                              : CustomTheme.lightContainerStyle,
-                          child: Text(
-                            'Twoje dodane ślady:',
-                            style: Theme.of(context).textTheme.titleSmall,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      Gap(16),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: _appService.isDarkMode(context)
-                            ? CustomTheme.darkContainerStyle
-                            : CustomTheme.lightContainerStyle,
-                        child: PopupMenuButton(
-                          onSelected: _onSortingSelected,
-                          itemBuilder: _generatePopupItems,
-                          child: Icon(Icons.filter_list, size: 30),
-                        ),
-                      ),
-                      Gap(16),
-                    ],
-                  ),
-                ),
-                SliverGap(16),
-                SliverToBoxAdapter(
+          : _traces.isEmpty
+              ? Center(
                   child: Text(
-                    'Całkowita liczba śladów: ${_traces.length}',
-                    style: Theme.of(context).textTheme.titleSmall,
+                    'Nie dodałeś jeszcze żadnych śladów.\n\nTo znak, aby wyruszyć w przygodę! :)',
+                    style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
-                ),
-                const SliverGap(8),
-                SliverToBoxAdapter(child: Divider()),
-                const SliverGap(16),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  sliver: SliverList.separated(
-                    itemCount: _traces.length,
-                    itemBuilder: (context, index) => TraceTile(
-                      trace: _traces[index],
-                      currentLocation: _currentLocation!,
-                      traceIconPath: _getDiscoveredTraceIconPath(_traces[index].type),
-                      onTap: () => _openTraceDialog(_traces[index].id),
+                )
+              : CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    const SliverGap(16),
+                    SliverToBoxAdapter(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Gap(16),
+                          Expanded(
+                            child: Container(
+                              padding: EdgeInsets.all(16),
+                              decoration: _appService.isDarkMode(context)
+                                  ? CustomTheme.darkContainerStyle
+                                  : CustomTheme.lightContainerStyle,
+                              child: Text(
+                                'Twoje dodane ślady:',
+                                style: Theme.of(context).textTheme.titleSmall,
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                          Gap(16),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: _appService.isDarkMode(context)
+                                ? CustomTheme.darkContainerStyle
+                                : CustomTheme.lightContainerStyle,
+                            child: PopupMenuButton(
+                              onSelected: _onSortingSelected,
+                              itemBuilder: _generatePopupItems,
+                              child: Icon(Icons.filter_list, size: 30),
+                            ),
+                          ),
+                          Gap(16),
+                        ],
+                      ),
                     ),
-                    separatorBuilder: (context, index) => Gap(8),
-                  ),
+                    SliverGap(16),
+                    SliverToBoxAdapter(
+                      child: Text(
+                        'Całkowita liczba śladów: ${_traces.length}',
+                        style: Theme.of(context).textTheme.titleSmall,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    const SliverGap(8),
+                    SliverToBoxAdapter(child: Divider()),
+                    const SliverGap(16),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      sliver: SliverList.separated(
+                        itemCount: _traces.length,
+                        itemBuilder: (context, index) => TraceTile(
+                          trace: _traces[index],
+                          currentLocation: _currentLocation!,
+                          traceIconPath: _getDiscoveredTraceIconPath(_traces[index].type),
+                          onTap: () => _openTraceDialog(_traces[index].id),
+                        ),
+                        separatorBuilder: (context, index) => Gap(8),
+                      ),
+                    ),
+                    const SliverGap(16),
+                  ],
                 ),
-                const SliverGap(16),
-              ],
-            ),
     );
   }
 }
