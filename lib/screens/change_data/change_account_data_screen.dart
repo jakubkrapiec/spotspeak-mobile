@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/models/user.dart';
-import 'package:spotspeak_mobile/screens/change_data/password_form.dart';
+import 'package:spotspeak_mobile/screens/account_settings/change_password_web_view.dart';
 import 'package:spotspeak_mobile/screens/change_data/username_email_form.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 
@@ -19,7 +19,8 @@ class ChangeAccountDataScreen extends StatefulWidget {
   final AccountData accountData;
 
   @override
-  State<ChangeAccountDataScreen> createState() => _ChangeAccountDataScreenState();
+  State<ChangeAccountDataScreen> createState() =>
+      _ChangeAccountDataScreenState();
 }
 
 class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
@@ -42,7 +43,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return SizedBox();
           return widget.accountData == AccountData.password
-              ? PasswordForm()
+              ? ChangePasswordWebView()
               : widget.accountData == AccountData.username
                   ? UsernameEmailForm(
                       formType: widget.accountData,
