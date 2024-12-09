@@ -12,7 +12,6 @@ import 'package:spotspeak_mobile/services/notification_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
-@prod
 @Singleton(as: NotificationService)
 class NotificationServiceImpl implements NotificationService {
   NotificationServiceImpl(this._userService, this._appRouter);

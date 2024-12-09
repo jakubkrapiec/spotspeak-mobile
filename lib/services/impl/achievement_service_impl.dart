@@ -8,7 +8,6 @@ import 'package:spotspeak_mobile/services/achievement_service.dart';
 
 part 'achievement_service_impl.g.dart';
 
-@prod
 @Singleton(as: AchievementService)
 @RestApi(baseUrl: '/api/achievements')
 abstract class AchievementServiceImpl implements AchievementService {

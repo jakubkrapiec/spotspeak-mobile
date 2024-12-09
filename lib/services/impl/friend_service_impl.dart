@@ -11,7 +11,6 @@ import 'package:spotspeak_mobile/services/friend_service.dart';
 
 part 'friend_service_impl.g.dart';
 
-@prod
 @Singleton(as: FriendService)
 @RestApi(baseUrl: '/api')
 abstract class FriendServiceImpl implements FriendService {

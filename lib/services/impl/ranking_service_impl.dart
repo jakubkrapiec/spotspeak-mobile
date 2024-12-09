@@ -6,7 +6,6 @@ import 'package:spotspeak_mobile/services/ranking_service.dart';
 
 part 'ranking_service_impl.g.dart';
 
-@prod
 @Singleton(as: RankingService)
 @RestApi(baseUrl: '/api/ranking')
 // ignore: one_member_abstracts

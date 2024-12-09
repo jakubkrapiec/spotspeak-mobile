@@ -9,7 +9,6 @@ import 'package:spotspeak_mobile/models/user.dart';
 import 'package:spotspeak_mobile/repositories/user_repository.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 
-@prod
 @Singleton(as: UserService)
 class UserServiceImpl implements UserService {
   UserServiceImpl(this.userRepo);

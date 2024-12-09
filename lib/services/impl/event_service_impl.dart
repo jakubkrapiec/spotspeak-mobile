@@ -6,7 +6,6 @@ import 'package:spotspeak_mobile/services/event_service.dart';
 
 part 'event_service_impl.g.dart';
 
-@prod
 @Singleton(as: EventService)
 @RestApi(baseUrl: '/api/events')
 // ignore: one_member_abstracts

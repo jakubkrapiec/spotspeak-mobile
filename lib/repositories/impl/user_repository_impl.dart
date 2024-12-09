@@ -10,7 +10,6 @@ import 'package:spotspeak_mobile/repositories/user_repository.dart';
 
 part 'user_repository_impl.g.dart';
 
-@prod
 @Singleton(as: UserRepository)
 @RestApi(baseUrl: '/api/users/me')
 abstract class UserRepositoryImpl implements UserRepository {

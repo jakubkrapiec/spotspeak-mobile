@@ -37,5 +37,6 @@ class LocationServiceMock implements LocationService {
   Future<Position> getCurrentLocation([LocationSettings? locationSettings]) async => _location;
 
   @override
-  ValueStream<Position> getLocationStream([LocationSettings? locationSettings]) => Stream.value(_location).shareValue();
+  ValueStream<Position> getLocationStream([LocationSettings? locationSettings]) =>
+      Stream<Position>.periodic(const Duration(seconds: 2), (index) => _location).shareValue();
 }

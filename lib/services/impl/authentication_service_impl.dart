@@ -175,15 +175,15 @@ class AuthenticationServiceImpl implements AuthenticationService {
     _loginInfo.isLoggedIn = false;
     userTypeNotifier.value = UserType.guest;
     await _secureStoreage.delete(key: kAuthRefreshTokenKey);
-
     final request = EndSessionRequest(
       idTokenHint: _idTokenRaw,
       issuer: kAuthIssuer,
       postLogoutRedirectUrl: kLogoutRedirectUri,
     );
-
     await _appAuth.endSession(request);
-    _loginInfo.isLoggedIn = false;
+    _accessToken = null;
+    _idTokenRaw = null;
+    _tokenExpirationTimestamp = null;
   }
 
   // AuthIdToken _parseIdToken(String idToken) {

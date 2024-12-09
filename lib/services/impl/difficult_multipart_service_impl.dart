@@ -10,7 +10,6 @@ import 'package:spotspeak_mobile/dtos/password_challenge_dto.dart';
 import 'package:spotspeak_mobile/models/trace.dart';
 import 'package:spotspeak_mobile/services/difficult_multipart_service.dart';
 
-@prod
 @Singleton(as: DifficultMultipartService)
 class DifficultMultipartServiceImpl implements DifficultMultipartService {
   DifficultMultipartServiceImpl(this._dio);

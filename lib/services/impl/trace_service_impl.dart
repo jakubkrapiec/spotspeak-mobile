@@ -7,7 +7,6 @@ import 'package:spotspeak_mobile/services/trace_service.dart';
 
 part 'trace_service_impl.g.dart';
 
-@prod
 @Singleton(as: TraceService)
 @RestApi(baseUrl: '/api/traces')
 abstract class TraceServiceImpl implements TraceService {

@@ -21,8 +21,6 @@ import 'package:package_info_plus/package_info_plus.dart' as _i655;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/impl/user_repository_impl.dart'
     as _i307;
-import 'package:spotspeak_mobile/repositories/mock/user_repository_mock.dart'
-    as _i694;
 import 'package:spotspeak_mobile/repositories/user_repository.dart' as _i643;
 import 'package:spotspeak_mobile/routing/app_router.dart' as _i457;
 import 'package:spotspeak_mobile/screens/tabs/friends_tab/search_friends_tab/search_friends_bloc.dart'
@@ -60,34 +58,17 @@ import 'package:spotspeak_mobile/services/impl/trace_service_impl.dart'
     as _i831;
 import 'package:spotspeak_mobile/services/impl/user_service_impl.dart' as _i112;
 import 'package:spotspeak_mobile/services/location_service.dart' as _i68;
-import 'package:spotspeak_mobile/services/mock/achievement_service_mock.dart'
-    as _i742;
 import 'package:spotspeak_mobile/services/mock/authentication_service_mock.dart'
     as _i868;
-import 'package:spotspeak_mobile/services/mock/comment_service_mock.dart'
-    as _i881;
-import 'package:spotspeak_mobile/services/mock/difficult_multipart_service_mock.dart'
-    as _i640;
-import 'package:spotspeak_mobile/services/mock/event_service_mock.dart'
-    as _i385;
-import 'package:spotspeak_mobile/services/mock/friend_service_mock.dart'
-    as _i43;
 import 'package:spotspeak_mobile/services/mock/location_service_mock.dart'
     as _i552;
-import 'package:spotspeak_mobile/services/mock/notification_service_mock.dart'
-    as _i701;
-import 'package:spotspeak_mobile/services/mock/ranking_service_mock.dart'
-    as _i670;
-import 'package:spotspeak_mobile/services/mock/trace_service_mock.dart'
-    as _i378;
-import 'package:spotspeak_mobile/services/mock/user_service_mock.dart' as _i874;
 import 'package:spotspeak_mobile/services/notification_service.dart' as _i127;
 import 'package:spotspeak_mobile/services/ranking_service.dart' as _i368;
 import 'package:spotspeak_mobile/services/trace_service.dart' as _i192;
 import 'package:spotspeak_mobile/services/user_service.dart' as _i448;
 
-const String _prod = 'prod';
 const String _test = 'test';
+const String _prod = 'prod';
 
 extension GetItInjectableX on _i174.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -114,49 +95,9 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'documentsDir',
       preResolve: true,
     );
-    gh.singleton<_i724.AppService>(
-      () => _i86.AppServiceImpl(),
-      registerFor: {
-        _prod,
-        _test,
-      },
-    );
-    gh.singleton<_i100.FriendService>(
-      () => _i43.FriendServiceMock(),
-      registerFor: {_test},
-    );
+    gh.singleton<_i724.AppService>(() => _i86.AppServiceImpl());
     gh.singleton<_i68.LocationService>(
       () => _i552.LocationServiceMock(),
-      registerFor: {_test},
-    );
-    gh.singleton<_i368.RankingService>(
-      () => _i670.RankingServiceMock(),
-      registerFor: {_test},
-    );
-    gh.singleton<_i77.AchievementService>(
-      () => _i742.AchievementServiceMock(),
-      registerFor: {_test},
-    );
-    gh.factory<_i868.SearchFriendsBloc>(
-        () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
-    gh.singleton<_i356.EventService>(
-      () => _i385.EventServiceMock(),
-      registerFor: {_test},
-    );
-    gh.lazySingleton<_i547.CommentService>(
-      () => _i881.CommentServiceImpl(),
-      registerFor: {_test},
-    );
-    gh.singleton<_i643.UserRepository>(
-      () => _i694.UserRepositoryMock(),
-      registerFor: {_test},
-    );
-    gh.singleton<_i192.TraceService>(
-      () => _i378.TraceServiceMock(),
-      registerFor: {_test},
-    );
-    gh.singleton<_i127.NotificationService>(
-      () => const _i701.NotificationServiceMock(),
       registerFor: {_test},
     );
     await gh.singletonAsync<_i361.Dio>(
@@ -166,74 +107,48 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i274.DbCacheStore>(() => registerModule
         .dbCacheStore(gh<_i497.Directory>(instanceName: 'documentsDir')));
-    gh.singleton<_i528.DifficultMultipartService>(
-      () => _i640.DifficultMultipartServiceMock(),
-      registerFor: {_test},
-    );
     gh.factory<_i361.Dio>(() => registerModule.dio(gh<_i655.PackageInfo>()));
-    gh.singleton<_i448.UserService>(
-      () => _i874.UserServiceMock(gh<_i643.UserRepository>()),
-      registerFor: {_test},
+    gh.singleton<_i68.LocationService>(
+      () => _i200.LocationServiceImpl(),
+      registerFor: {_prod},
     );
     gh.lazySingleton<_i547.CommentService>(
-      () => _i428.CommentServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
+        () => _i428.CommentServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i356.EventService>(
-      () => _i506.EventServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
-    gh.singleton<_i281.AuthenticationService>(
-      () => _i868.AuthenticationServiceMock(
-        gh<_i127.NotificationService>(),
-        gh<_i448.UserService>(),
-      ),
-      registerFor: {_test},
-      dispose: (i) => i.dispose(),
-    );
-    gh.singleton<_i368.RankingService>(
-      () => _i1053.RankingServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
+        () => _i506.EventServiceImpl(gh<_i361.Dio>()));
+    gh.singleton<_i77.AchievementService>(
+        () => _i826.AchievementServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i528.DifficultMultipartService>(
-      () => _i286.DifficultMultipartServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
-    gh.singleton<_i643.UserRepository>(
-      () => _i307.UserRepositoryImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
-    gh.singleton<_i192.TraceService>(
-      () => _i831.TraceServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
+        () => _i286.DifficultMultipartServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i100.FriendService>(
-      () => _i1060.FriendServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
+        () => _i1060.FriendServiceImpl(gh<_i361.Dio>()));
+    gh.singleton<_i643.UserRepository>(
+        () => _i307.UserRepositoryImpl(gh<_i361.Dio>()));
+    gh.singleton<_i192.TraceService>(
+        () => _i831.TraceServiceImpl(gh<_i361.Dio>()));
+    gh.singleton<_i368.RankingService>(
+        () => _i1053.RankingServiceImpl(gh<_i361.Dio>()));
+    gh.singleton<_i448.UserService>(
+        () => _i112.UserServiceImpl(gh<_i643.UserRepository>()));
     gh.factory<_i722.MapTabBloc>(() => _i722.MapTabBloc(
           gh<_i192.TraceService>(),
           gh<_i356.EventService>(),
           gh<_i528.DifficultMultipartService>(),
         ));
-    gh.singleton<_i68.LocationService>(
-      () => _i200.LocationServiceImpl(),
-      registerFor: {_prod},
-    );
-    gh.singleton<_i448.UserService>(
-      () => _i112.UserServiceImpl(gh<_i643.UserRepository>()),
-      registerFor: {_prod},
-    );
-    gh.singleton<_i77.AchievementService>(
-      () => _i826.AchievementServiceImpl(gh<_i361.Dio>()),
-      registerFor: {_prod},
-    );
+    gh.factory<_i868.SearchFriendsBloc>(
+        () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
     gh.singleton<_i127.NotificationService>(
-      () => _i1014.NotificationServiceImpl(
+        () => _i1014.NotificationServiceImpl(
+              gh<_i448.UserService>(),
+              gh<_i457.AppRouter>(),
+            ));
+    gh.singleton<_i281.AuthenticationService>(
+      () => _i868.AuthenticationServiceMock(
+        gh<_i361.Dio>(),
         gh<_i448.UserService>(),
-        gh<_i457.AppRouter>(),
       ),
-      registerFor: {_prod},
+      registerFor: {_test},
+      dispose: (i) => i.dispose(),
     );
     gh.singleton<_i281.AuthenticationService>(
       () => _i187.AuthenticationServiceImpl(
