@@ -234,7 +234,7 @@ class _TraceDialogState extends State<TraceDialog> {
         ),
         if (widget.trace.resourceAccessUrl != null) ...[
           const Gap(8),
-          TraceMedia(mediaUrl: widget.trace.resourceAccessUrl!, type: widget.trace.type),
+          TraceMedia(mediaUrl: widget.trace.resourceAccessUrl!.toString(), type: widget.trace.type),
         ],
         const Gap(8),
         Align(

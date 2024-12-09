@@ -24,7 +24,7 @@ class Trace {
   factory Trace.fromJson(Map<String, Object?> json) => _$TraceFromJson(json);
 
   final int id;
-  final String? resourceAccessUrl;
+  final Uri? resourceAccessUrl;
   final String description;
   final List<Comment> comments;
   final num latitude;
@@ -33,18 +33,16 @@ class Trace {
   final ContentAuthor author;
   final TraceType type;
 
-  LatLng get location => LatLng(latitude.toDouble(), longitude.toDouble());
+  LatLng toLatLng() => LatLng(latitude.toDouble(), longitude.toDouble());
 
   bool get isActive => timeLeft > Duration.zero;
 
-  double calculateDistance(LatLng currentLocation) {
-    return Geolocator.distanceBetween(
-      latitude.toDouble(),
-      longitude.toDouble(),
-      currentLocation.latitude,
-      currentLocation.longitude,
-    );
-  }
+  double calculateDistance(LatLng currentLocation) => Geolocator.distanceBetween(
+        latitude.toDouble(),
+        longitude.toDouble(),
+        currentLocation.latitude,
+        currentLocation.longitude,
+      );
 
   String convertedDistance(LatLng currentLocation) {
     final distance = calculateDistance(currentLocation);

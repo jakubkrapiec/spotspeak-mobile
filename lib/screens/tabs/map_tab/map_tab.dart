@@ -194,7 +194,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
   }
 
   void _onMoveToTraceLocation(Trace trace) {
-    _mapController.animateTo(dest: trace.location, zoom: _defaultZoom);
+    _mapController.animateTo(dest: trace.toLatLng(), zoom: _defaultZoom);
   }
 
   void _sideEffectListener(BuildContext context, MapTabSideEffect sideEffect) {
