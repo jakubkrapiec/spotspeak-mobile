@@ -56,13 +56,10 @@ class AccountSettingsRoute extends _i15.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i2.AchievementsTab]
-class AchievementsRoute extends _i15.PageRouteInfo<AchievementsRouteArgs> {
-  AchievementsRoute({
-    _i16.Key? key,
-    List<_i15.PageRouteInfo>? children,
-  }) : super(
+class AchievementsRoute extends _i15.PageRouteInfo<void> {
+  const AchievementsRoute({List<_i15.PageRouteInfo>? children})
+      : super(
           AchievementsRoute.name,
-          args: AchievementsRouteArgs(key: key),
           initialChildren: children,
         );
 
@@ -71,22 +68,9 @@ class AchievementsRoute extends _i15.PageRouteInfo<AchievementsRouteArgs> {
   static _i15.PageInfo page = _i15.PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<AchievementsRouteArgs>(
-          orElse: () => const AchievementsRouteArgs());
-      return _i2.AchievementsTab(key: args.key);
+      return const _i2.AchievementsTab();
     },
   );
-}
-
-class AchievementsRouteArgs {
-  const AchievementsRouteArgs({this.key});
-
-  final _i16.Key? key;
-
-  @override
-  String toString() {
-    return 'AchievementsRouteArgs{key: $key}';
-  }
 }
 
 /// generated route for

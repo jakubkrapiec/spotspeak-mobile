@@ -100,6 +100,11 @@ android {
             applicationIdSuffix ".dev"
             manifestPlaceholders = [appName: "SpotSpeak [DEV]"]
         }
+        integration_test {
+            dimension "default"
+            applicationIdSuffix ".integration_test"
+            manifestPlaceholders = [appName: "SpotSpeak [TEST]"]
+        }
     }
 
     buildTypes {

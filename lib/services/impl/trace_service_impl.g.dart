@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'achievement_service.dart';
+part of 'trace_service_impl.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,13 +8,13 @@ part of 'achievement_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _AchievementService implements AchievementService {
-  _AchievementService(
+class _TraceServiceImpl implements TraceServiceImpl {
+  _TraceServiceImpl(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= '/api/achievements';
+    baseUrl ??= '/api/traces';
   }
 
   final Dio _dio;
@@ -24,19 +24,85 @@ class _AchievementService implements AchievementService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<Achievement>> getAchievements(String userId) async {
+  Future<Trace> getTrace(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Achievement>>(Options(
+    final _options = _setStreamType<Trace>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/${userId}',
+          '/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Trace _value;
+    try {
+      _value = Trace.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<void> deleteTrace(int id) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<void>(Options(
+      method: 'DELETE',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/${id}',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<List<TraceLocation>> getNearbyTraces(
+    double latitude,
+    double longitude,
+    int distance,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'latitude': latitude,
+      r'longitude': longitude,
+      r'distance': distance,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<List<TraceLocation>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/nearby',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -46,10 +112,10 @@ class _AchievementService implements AchievementService {
           baseUrl,
         )));
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Achievement> _value;
+    late List<TraceLocation> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => Achievement.fromJson(i as Map<String, dynamic>))
+          .map((dynamic i) => TraceLocation.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -59,12 +125,12 @@ class _AchievementService implements AchievementService {
   }
 
   @override
-  Future<List<Achievement>> getMyAchievements() async {
+  Future<List<Trace>> getMyTraces() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Achievement>>(Options(
+    final _options = _setStreamType<List<Trace>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -81,10 +147,10 @@ class _AchievementService implements AchievementService {
           baseUrl,
         )));
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Achievement> _value;
+    late List<Trace> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => Achievement.fromJson(i as Map<String, dynamic>))
+          .map((dynamic i) => Trace.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -94,20 +160,26 @@ class _AchievementService implements AchievementService {
   }
 
   @override
-  Future<AchievementDetails> getAchievementDetails(
-      int userAchievementId) async {
+  Future<Trace> discoverTrace(
+    int traceId,
+    double longitude,
+    double latitude,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'currentLongitude': longitude,
+      r'currentLatitude': latitude,
+    };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<AchievementDetails>(Options(
+    final _options = _setStreamType<Trace>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/details/${userAchievementId}',
+          '/discover/${traceId}',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -117,44 +189,9 @@ class _AchievementService implements AchievementService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late AchievementDetails _value;
+    late Trace _value;
     try {
-      _value = AchievementDetails.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<List<OtherUser>> getAchievementFriends(int userAchievementId) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<OtherUser>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/details/${userAchievementId}/friends',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<OtherUser> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => OtherUser.fromJson(i as Map<String, dynamic>))
-          .toList();
+      _value = Trace.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

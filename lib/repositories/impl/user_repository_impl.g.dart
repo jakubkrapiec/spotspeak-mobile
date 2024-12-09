@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'trace_service.dart';
+part of 'user_repository_impl.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,13 +8,13 @@ part of 'trace_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _TraceService implements TraceService {
-  _TraceService(
+class _UserRepositoryImpl implements UserRepositoryImpl {
+  _UserRepositoryImpl(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
   }) {
-    baseUrl ??= '/api/traces';
+    baseUrl ??= '/api/users/me';
   }
 
   final Dio _dio;
@@ -24,19 +24,19 @@ class _TraceService implements TraceService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<Trace> getTrace(int id) async {
+  Future<User> getUser() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Trace>(Options(
+    final _options = _setStreamType<User>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/${id}',
+          '',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -46,9 +46,9 @@ class _TraceService implements TraceService {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Trace _value;
+    late User _value;
     try {
-      _value = Trace.fromJson(_result.data!);
+      _value = User.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -57,19 +57,20 @@ class _TraceService implements TraceService {
   }
 
   @override
-  Future<void> deleteTrace(int id) async {
+  Future<void> updateUser(EditUserDto editUserDto) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(editUserDto.toJson());
     final _options = _setStreamType<void>(Options(
-      method: 'DELETE',
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/${id}',
+          '',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -82,62 +83,19 @@ class _TraceService implements TraceService {
   }
 
   @override
-  Future<List<TraceLocation>> getNearbyTraces(
-    double latitude,
-    double longitude,
-    int distance,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'latitude': latitude,
-      r'longitude': longitude,
-      r'distance': distance,
-    };
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<TraceLocation>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-        .compose(
-          _dio.options,
-          '/nearby',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<TraceLocation> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => TraceLocation.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<List<Trace>> getMyTraces() async {
+  Future<void> deleteUser() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<Trace>>(Options(
-      method: 'GET',
+    final _options = _setStreamType<void>(Options(
+      method: 'DELETE',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/my',
+          '',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -146,40 +104,24 @@ class _TraceService implements TraceService {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<Trace> _value;
-    try {
-      _value = _result.data!
-          .map((dynamic i) => Trace.fromJson(i as Map<String, dynamic>))
-          .toList();
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    await _dio.fetch<void>(_options);
   }
 
   @override
-  Future<Trace> discoverTrace(
-    int traceId,
-    double longitude,
-    double latitude,
-  ) async {
+  Future<void> updatePassword(UpdatePasswordDto updatePasswordDto) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'currentLongitude': longitude,
-      r'currentLatitude': latitude,
-    };
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Trace>(Options(
-      method: 'GET',
+    final _data = <String, dynamic>{};
+    _data.addAll(updatePasswordDto.toJson());
+    final _options = _setStreamType<void>(Options(
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/discover/${traceId}',
+          '/update-password',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -188,15 +130,86 @@ class _TraceService implements TraceService {
           _dio.options.baseUrl,
           baseUrl,
         )));
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Trace _value;
-    try {
-      _value = Trace.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> addPicture(FormData data) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = data;
+    final _options = _setStreamType<void>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+        .compose(
+          _dio.options,
+          '/picture',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> updateFCMToken(FcmTokenDto fcmTokenDto) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(fcmTokenDto.toJson());
+    final _options = _setStreamType<void>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/fcm-token',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    await _dio.fetch<void>(_options);
+  }
+
+  @override
+  Future<void> updateNotificationPreferences(
+      NotificationSettingsDto notificationSettingsDto) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(notificationSettingsDto.toJson());
+    final _options = _setStreamType<void>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/preferences/notifications',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    await _dio.fetch<void>(_options);
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

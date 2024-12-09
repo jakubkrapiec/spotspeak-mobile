@@ -3,10 +3,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/dtos/edit_user_dto.dart';
-import 'package:spotspeak_mobile/repositories/user_repository.dart';
 import 'package:spotspeak_mobile/screens/change_data/change_account_data_screen.dart';
 import 'package:spotspeak_mobile/services/app_service.dart';
 import 'package:spotspeak_mobile/services/authentication_service.dart';
+import 'package:spotspeak_mobile/services/difficult_multipart_service.dart';
 import 'package:spotspeak_mobile/services/user_service.dart';
 import 'package:spotspeak_mobile/theme/colors.dart';
 
@@ -32,6 +32,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
   final _userService = getIt<UserService>();
   final _authService = getIt<AuthenticationService>();
   final _appService = getIt<AppService>();
+  final _difficultMultipartService = getIt<DifficultMultipartService>();
 
   Future<void> _changeData(String currentPassword, String newData, AccountData dataType) async {
     final response = await _checkPassword(currentPassword);
@@ -98,7 +99,7 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
   }
 
   Future<PasswordChallengeResult> _checkPassword(String password) async {
-    final result = await _userService.userRepo.checkPassword(password);
+    final result = await _difficultMultipartService.checkPassword(password);
     return result;
   }
 
@@ -135,11 +136,8 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
               onSaved: (value) {
                 _newValue = value;
               },
-              decoration: _appService.themeMode == ThemeMode.dark
-                  ? InputDecoration(
-                      fillColor: CustomColors.grey6,
-                    )
-                  : null,
+              decoration:
+                  _appService.themeMode == ThemeMode.dark ? InputDecoration(fillColor: CustomColors.grey6) : null,
             ),
             Gap(16),
             if (_authService.userTypeNotifier.value != UserType.google)

@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:injectable/injectable.dart';
 import 'package:spotspeak_mobile/app.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 import 'package:spotspeak_mobile/firebase_options.dart';
@@ -26,22 +27,28 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-Future<void> bootstrap() async {
+Future<void> prepareApp({Environment mode = prod}) async {
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+
+  if (mode == prod) {
+    await Firebase.initializeApp(name: 'lalala', options: DefaultFirebaseOptions.currentPlatform);
+  }
+
+  //Bloc.observer = const AppBlocObserver();
+
+  await configureDependencies(mode);
+
+  await getIt<AuthenticationService>().init();
+}
+
+Future<void> bootstrap({Environment mode = prod}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await prepareApp(mode: mode);
 
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  //Bloc.observer = const AppBlocObserver();
-
-  await configureDependencies();
-
-  await getIt<AuthenticationService>().init();
 
   runApp(App());
 }

@@ -20,7 +20,7 @@ import 'package:spotspeak_mobile/misc/auth_interceptor.dart';
 final getIt = GetIt.instance;
 
 @InjectableInit()
-Future<void> configureDependencies() => getIt.init();
+Future<void> configureDependencies(Environment mode) => getIt.init(environment: mode.name);
 
 @module
 abstract class RegisterModule {

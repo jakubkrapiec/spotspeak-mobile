@@ -12,13 +12,14 @@ import 'package:spotspeak_mobile/models/trace_location.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab_events.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab_side_effect.dart';
 import 'package:spotspeak_mobile/screens/tabs/map_tab/map_tab_state.dart';
+import 'package:spotspeak_mobile/services/difficult_multipart_service.dart';
 import 'package:spotspeak_mobile/services/event_service.dart';
 import 'package:spotspeak_mobile/services/trace_service.dart';
 
 @injectable
 class MapTabBloc extends Bloc<MapTabEvent, MapTabState>
     with SideEffectBlocMixin<MapTabEvent, MapTabState, MapTabSideEffect> {
-  MapTabBloc(this._traceService, this._eventService) : super(MapTabState.initial()) {
+  MapTabBloc(this._traceService, this._eventService, this._difficultMultipartService) : super(MapTabState.initial()) {
     on<AddTraceEvent>(_onAddTraceEvent);
     on<RequestMapUpdateEvent>(_onRequestMapUpdateEvent);
     on<UpdateLocationEvent>(_onUpdateLocationEvent);
@@ -41,7 +42,7 @@ class MapTabBloc extends Bloc<MapTabEvent, MapTabState>
     final dto = AddTraceDto(event.location.longitude, event.location.latitude, event.traceDialogResult.description, []);
 
     try {
-      await _traceService.addTrace(event.traceDialogResult.media, dto);
+      await _difficultMultipartService.addTrace(event.traceDialogResult.media, dto);
       _refreshPanelController.add(null);
       produceSideEffect(const ShouldRequestUpdateSideEffect());
     } catch (e, st) {
@@ -67,6 +68,7 @@ class MapTabBloc extends Bloc<MapTabEvent, MapTabState>
 
   final TraceService _traceService;
   final EventService _eventService;
+  final DifficultMultipartService _difficultMultipartService;
 
   Future<(List<TraceLocation>, List<EventLocation>)> _getVisibleTracesAndEvents(LatLngBounds bounds) async {
     _refreshPanelController.add(null);

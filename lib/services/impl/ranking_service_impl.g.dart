@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'ranking_service.dart';
+part of 'ranking_service_impl.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'ranking_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _RankingService implements RankingService {
-  _RankingService(
+class _RankingServiceImpl implements RankingServiceImpl {
+  _RankingServiceImpl(
     this._dio, {
     this.baseUrl,
     this.errorLogger,
