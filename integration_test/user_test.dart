@@ -79,7 +79,7 @@ void main() {
           await tester.tap(submitButton);
           await tester.pumpAndSettle();
 
-          final errorMessage = find.textContaining('Wpisywana wartość musi być inna');
+          final errorMessage = find.textContaining('Nazwa musi być inna niż aktualna');
           expect(errorMessage, findsOneWidget);
         },
       );
