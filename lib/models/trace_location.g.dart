@@ -8,12 +8,12 @@ part of 'trace_location.dart';
 
 TraceLocation _$TraceLocationFromJson(Map<String, dynamic> json) =>
     TraceLocation(
-      (json['id'] as num).toInt(),
-      json['longitude'] as num,
-      json['latitude'] as num,
-      json['hasDiscovered'] as bool? ?? false,
-      $enumDecode(_$TraceTypeEnumMap, json['type']),
-      DateTime.parse(json['createdAt'] as String),
+      id: (json['id'] as num).toInt(),
+      longitude: json['longitude'] as num,
+      latitude: json['latitude'] as num,
+      hasDiscovered: json['hasDiscovered'] as bool? ?? false,
+      type: $enumDecode(_$TraceTypeEnumMap, json['type']),
+      createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$TraceLocationToJson(TraceLocation instance) =>
