@@ -299,6 +299,20 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                           ),
                       ],
                     ),
+                    CurrentLocationLayer(
+                      style: LocationMarkerStyle(marker: Opacity(opacity: 0.8, child: DefaultLocationMarker())),
+                      positionStream: _locationService.getLocationStream().map(
+                            (position) => LocationMarkerPosition(
+                              latitude: position.latitude,
+                              longitude: position.longitude,
+                              accuracy: position.accuracy,
+                            ),
+                          ),
+                      headingStream: _locationService.getLocationStream().map(
+                            (position) =>
+                                LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
+                          ),
+                    ),
                     MarkerClusterLayerWidget(
                       options: MarkerClusterLayerOptions(
                         //maxClusterRadius: 80,
@@ -352,20 +366,6 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                             ),
                           ),
                       ],
-                    ),
-                    CurrentLocationLayer(
-                      style: LocationMarkerStyle(marker: Opacity(opacity: 0.8, child: DefaultLocationMarker())),
-                      positionStream: _locationService.getLocationStream().map(
-                            (position) => LocationMarkerPosition(
-                              latitude: position.latitude,
-                              longitude: position.longitude,
-                              accuracy: position.accuracy,
-                            ),
-                          ),
-                      headingStream: _locationService.getLocationStream().map(
-                            (position) =>
-                                LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
-                          ),
                     ),
                     SimpleAttributionWidget(
                       source: const Text('OpenStreetMap'),
