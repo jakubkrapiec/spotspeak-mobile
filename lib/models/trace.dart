@@ -19,7 +19,7 @@ class Trace {
     required DateTime createdAt,
     required this.author,
     required this.type,
-  }) : createdAt = createdAt.subtract(const Duration(hours: 1));
+  }) : createdAt = createdAt.add(const Duration(hours: 1));
 
   factory Trace.fromJson(Map<String, Object?> json) => _$TraceFromJson(json);
 

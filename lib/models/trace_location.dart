@@ -16,7 +16,7 @@ class TraceLocation {
     required this.hasDiscovered,
     required this.type,
     required DateTime createdAt,
-  }) : createdAt = createdAt.subtract(const Duration(hours: 1));
+  }) : createdAt = createdAt.add(const Duration(hours: 1));
 
   factory TraceLocation.fromJson(Map<String, Object?> json) => _$TraceLocationFromJson(json);
 
