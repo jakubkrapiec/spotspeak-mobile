@@ -4,10 +4,10 @@ import 'package:integration_test/integration_test.dart';
 import 'package:spotspeak_mobile/bootstrap.dart';
 import 'package:spotspeak_mobile/di/get_it.dart';
 
+import 'friend_test.dart' as friend_test;
 import 'login_test.dart' as login_test;
 import 'trace_test.dart' as trace_test;
 import 'user_test.dart' as user_test;
-import 'friend_test.dart' as friend_test;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

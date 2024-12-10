@@ -21,6 +21,19 @@
 			"command": "flutter clean;flutter pub get",
 			"label": "clean",
 			"problemMatcher": []
+		},
+		{
+			"label": "test",
+			"type": "flutter",
+			"command": "flutter",
+			"args": [
+				"test",
+				"integration_test/app_test.dart",
+				"--flavor",
+				"integration_test",
+				"--dart-define",
+				"AUTH_CLIENT_SECRET=nzJjmrPpzJrpUz4zadRJxa4m3MFNEiVv"
+			],
 		}
 	]
 }
