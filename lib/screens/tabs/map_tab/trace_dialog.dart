@@ -58,9 +58,13 @@ class _TraceDialogState extends State<TraceDialog> {
   List<String> _generateMentionsFromText(String text) {
     final mentions = <String>[];
     final mentionableProfiles = _getMentionableProfiles();
+    final splitText = text.split(' ');
     for (final profile in mentionableProfiles) {
-      if (text.split(' ').contains('@${profile.username}')) {
-        mentions.add(profile.id);
+      for (final textFragment in splitText) {
+        if (textFragment == '@${profile.username}') {
+          mentions.add(profile.id);
+          break;
+        }
       }
     }
     return mentions;

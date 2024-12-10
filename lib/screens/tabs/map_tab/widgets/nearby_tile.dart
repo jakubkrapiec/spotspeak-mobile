@@ -29,37 +29,39 @@ class NearbyTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-      child: Container(
-        padding: EdgeInsets.all(4),
+      child: DecoratedBox(
         decoration: _appService.isDarkMode(context) ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
-        child: ListTile(
-          onTap: onTapFunction,
-          leading: SvgPicture.asset(
-            width: 40,
-            height: 40,
-            theme: SvgTheme(currentColor: Theme.of(context).primaryColor),
-            traceIconPath,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            onTap: onTapFunction,
+            leading: SvgPicture.asset(
+              width: 40,
+              height: 40,
+              theme: SvgTheme(currentColor: Theme.of(context).primaryColor),
+              traceIconPath,
+            ),
+            title: Text(trace.convertedDistance(currentPostion)),
+            subtitle: StreamBuilder<void>(
+              stream: Stream<void>.periodic(const Duration(seconds: 1)),
+              builder: (context, snapshot) {
+                return RichText(
+                  text: TextSpan(
+                    text: 'Pozostało: ',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    children: [
+                      TextSpan(
+                        text:
+                            '${trace.timeLeft.inHours}:${trace.timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}:${trace.timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+            trailing: Icon(Icons.location_on),
           ),
-          title: Text(trace.convertedDistance(currentPostion)),
-          subtitle: StreamBuilder<void>(
-            stream: Stream<void>.periodic(const Duration(seconds: 1)),
-            builder: (context, snapshot) {
-              return RichText(
-                text: TextSpan(
-                  text: 'Pozostało: ',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  children: [
-                    TextSpan(
-                      text:
-                          '${trace.timeLeft.inHours}:${trace.timeLeft.inMinutes.remainder(60).toString().padLeft(2, '0')}:${trace.timeLeft.inSeconds.remainder(60).toString().padLeft(2, '0')}',
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          trailing: Icon(Icons.location_on),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_animations/flutter_map_animations.dart';
 import 'package:gap/gap.dart';
@@ -48,7 +49,7 @@ class _NearbyPanelState extends State<NearbyPanel> {
 
   LatLng? _lastCoordinatesSync;
 
-  List<TraceLocation>? _nearbyTraces = [];
+  List<TraceLocation>? _nearbyTraces;
 
   List<TraceLocation> _nearbyTracesFiltered = [];
 
@@ -66,10 +67,15 @@ class _NearbyPanelState extends State<NearbyPanel> {
     _initLocationService();
     _refreshStreamSubscription = widget.refreshStream.listen((_) async {
       if (_lastCoordinatesSync == null) return;
-      _nearbyTraces =
+      final newNearbyTraces =
           await _traceService.getNearbyTraces(_lastCoordinatesSync!.latitude, _lastCoordinatesSync!.longitude, 1000);
-      _nearbyTracesFiltered = List.from(_nearbyTraces!);
-      _sortTraces(_fromClosest);
+      if (mounted) {
+        setState(() {
+          _nearbyTraces = newNearbyTraces;
+          _nearbyTracesFiltered = List.from(_nearbyTraces!);
+          _sortTraces(_fromClosest);
+        });
+      }
     });
   }
 
@@ -183,33 +189,36 @@ class _NearbyPanelState extends State<NearbyPanel> {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Text(
-                'Ślady w pobliżu',
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.left,
+              Expanded(
+                child: AutoSizeText(
+                  'Ślady w pobliżu',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.left,
+                  maxLines: 1,
+                ),
               ),
-              Expanded(child: SizedBox()),
-              GestureDetector(
-                onTap: () {
+              IconButton(
+                onPressed: () {
                   setState(() {
                     _nonDiscoveredOnly = !_nonDiscoveredOnly;
                     _selectNonDiscoveredTraces(_nonDiscoveredOnly);
                   });
                 },
-                child: Icon(
-                  _nonDiscoveredOnly ? Icons.visibility_off : Icons.visibility,
-                  size: 28,
-                ),
+                icon: Icon(_nonDiscoveredOnly ? Icons.visibility_off : Icons.visibility),
+                iconSize: 24,
+                visualDensity: VisualDensity.compact,
               ),
               Gap(8),
-              GestureDetector(
-                onTap: () {
+              IconButton(
+                onPressed: () {
                   setState(() {
                     _fromClosest = !_fromClosest;
                     _sortTraces(_fromClosest);
                   });
                 },
-                child: Icon(Icons.swap_vert, size: 28),
+                icon: Icon(Icons.swap_vert),
+                iconSize: 24,
+                visualDensity: VisualDensity.compact,
               ),
             ],
           ),
