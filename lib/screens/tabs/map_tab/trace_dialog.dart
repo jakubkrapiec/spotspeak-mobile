@@ -59,7 +59,7 @@ class _TraceDialogState extends State<TraceDialog> {
     final mentions = <String>[];
     final mentionableProfiles = _getMentionableProfiles();
     for (final profile in mentionableProfiles) {
-      if ('$text '.contains('@${profile.username}')) {
+      if (text.split(' ').contains('@${profile.username}')) {
         mentions.add(profile.id);
       }
     }
