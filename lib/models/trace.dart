@@ -9,17 +9,17 @@ part 'trace.g.dart';
 
 @JsonSerializable()
 class Trace {
-  const Trace({
+  Trace({
     required this.id,
     required this.resourceAccessUrl,
     required this.description,
     required this.comments,
     required this.latitude,
     required this.longitude,
-    required this.createdAt,
+    required DateTime createdAt,
     required this.author,
     required this.type,
-  });
+  }) : createdAt = createdAt.add(const Duration(hours: 1));
 
   factory Trace.fromJson(Map<String, Object?> json) => _$TraceFromJson(json);
 

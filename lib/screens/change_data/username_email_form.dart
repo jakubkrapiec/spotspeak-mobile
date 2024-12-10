@@ -55,13 +55,13 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
           } catch (exception) {
             dataType == AccountData.username
                 ? await Fluttertoast.showToast(
-                    msg: 'Użytkownik o podanej nazwie już istnieje',
+                    msg: 'Podana nazwa użytkownika jest już zajęta',
                     toastLength: Toast.LENGTH_LONG,
                     backgroundColor: CustomColors.grey1,
                     textColor: CustomColors.grey6,
                   )
                 : await Fluttertoast.showToast(
-                    msg: 'Użytkownik o podanym adresie email już istnieje',
+                    msg: 'Podany adres email jest już zajęty',
                     toastLength: Toast.LENGTH_LONG,
                     backgroundColor: CustomColors.grey1,
                     textColor: CustomColors.grey6,
@@ -142,10 +142,10 @@ class _UsernameEmailFormState extends State<UsernameEmailForm> {
                 initialValue: widget.initValue,
                 style: TextStyle(fontSize: 22),
                 validator: (value) {
-                  if (widget.formType == AccountData.username) {
-                    if (_userService.user.value.username == value) {
-                      return 'Wpisywana wartość musi być inna niż aktualna';
-                    }
+                  if (widget.formType == AccountData.username && _userService.user.value.username == value) {
+                    return 'Nazwa musi być inna niż aktualna';
+                  } else if (widget.formType == AccountData.email && _userService.user.value.email == value) {
+                    return 'Email musi być inny niż aktualny';
                   }
 
                   const emailPattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$';

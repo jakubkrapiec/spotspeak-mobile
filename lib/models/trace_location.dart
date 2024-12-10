@@ -9,8 +9,14 @@ part 'trace_location.g.dart';
 @immutable
 @JsonSerializable()
 class TraceLocation {
-  // ignore: avoid_positional_boolean_parameters
-  const TraceLocation(this.id, this.longitude, this.latitude, this.hasDiscovered, this.type, this.createdAt);
+  TraceLocation({
+    required this.id,
+    required this.longitude,
+    required this.latitude,
+    required this.hasDiscovered,
+    required this.type,
+    required DateTime createdAt,
+  }) : createdAt = createdAt.add(const Duration(hours: 1));
 
   factory TraceLocation.fromJson(Map<String, Object?> json) => _$TraceLocationFromJson(json);
 
