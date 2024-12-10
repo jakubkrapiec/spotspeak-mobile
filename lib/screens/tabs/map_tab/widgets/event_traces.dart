@@ -14,7 +14,7 @@ class EventTraces extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.sizeOf(context).width * 0.3,
+      width: MediaQuery.sizeOf(context).width * 0.37,
       constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.2),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -91,11 +91,15 @@ class _TraceListEntryState extends State<_TraceListEntry> {
       widget.userLocation!.longitude,
     );
     setState(() {
-      _currentDistance = distance.toInt();
+      if (distance >= 1000) {
+        _currentDistance = '${(distance / 1000).toInt()} km';
+      } else {
+        _currentDistance = '${distance.toInt()} m';
+      }
     });
   }
 
-  int? _currentDistance;
+  String? _currentDistance;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +116,7 @@ class _TraceListEntryState extends State<_TraceListEntry> {
               height: 24,
               theme: SvgTheme(currentColor: Theme.of(context).primaryColor),
             ),
-            Text('${_currentDistance ?? '???'} m'),
+            Text(_currentDistance ?? '???'),
           ],
         ),
       ),
