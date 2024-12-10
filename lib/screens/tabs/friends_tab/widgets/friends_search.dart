@@ -24,6 +24,7 @@ class FriendsSearch extends StatelessWidget {
               decoration: isDarkMode ? CustomTheme.darkContainerStyle : CustomTheme.lightContainerStyle,
               padding: EdgeInsets.all(16),
               child: TextField(
+                key: ValueKey('friend_search_field'),
                 decoration: InputDecoration(
                   hintText: 'Wyszukaj znajomego',
                   fillColor: isDarkMode ? CustomColors.grey5 : null,

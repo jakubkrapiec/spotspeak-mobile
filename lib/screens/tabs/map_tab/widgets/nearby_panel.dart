@@ -105,14 +105,17 @@ class _NearbyPanelState extends State<NearbyPanel> {
   }
 
   Future<void> _onLocationChanged(Position position) async {
+    double? distance;
+    if (_lastCoordinatesSync != null) {
+      distance = Geolocator.distanceBetween(
+        _lastCoordinatesSync!.latitude,
+        _lastCoordinatesSync!.longitude,
+        position.latitude,
+        position.longitude,
+      );
+    }
     _lastCoordinatesSync ??= position.toLatLng();
-    final distance = Geolocator.distanceBetween(
-      _lastCoordinatesSync!.latitude,
-      _lastCoordinatesSync!.longitude,
-      position.latitude,
-      position.longitude,
-    );
-    if (distance < 50 && !_isFirstSync) return;
+    if (distance == null || distance < 50 && !_isFirstSync) return;
     final traces = await _traceService.getNearbyTraces(position.latitude, position.longitude, 1000);
     if (!mounted) return;
     setState(() {

@@ -25,21 +25,32 @@ Future<void> configureDependencies(Environment mode) => getIt.init(environment: 
 @module
 abstract class RegisterModule {
   @injectable
-  Dio dio(PackageInfo packageInfo) {
+  Dio dio(PackageInfo packageInfo, PrettyDioLogger prettyDioLogger) {
     final dio = Dio(
       BaseOptions(
         baseUrl: kApiBaseUrl,
         headers: {HttpHeaders.userAgentHeader: 'SpotSpeakMobile/${packageInfo.version}'},
       ),
     );
-    if (kDebugMode) {
-      dio.interceptors.add(
-        PrettyDioLogger(requestHeader: true, requestBody: true, responseHeader: true, maxWidth: 120),
-      );
-    }
     dio.interceptors.add(AuthInterceptor());
+    if (kDebugMode) {
+      dio.interceptors.add(prettyDioLogger);
+    }
     return dio;
   }
+
+  @test
+  @singleton
+  PrettyDioLogger get prettyDioLoggerTest => PrettyDioLogger(enabled: false);
+
+  @prod
+  @singleton
+  PrettyDioLogger get prettyDioLoggerProd => PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        maxWidth: 120,
+      );
 
   @preResolve
   @singleton
@@ -62,7 +73,7 @@ abstract class RegisterModule {
   @Named(documentsDirInstanceName)
   Future<Directory> get documentsDir => getApplicationDocumentsDirectory();
 
-  @singleton
+  @Singleton(dispose: disposeDbCacheStore)
   DbCacheStore dbCacheStore(@Named(documentsDirInstanceName) Directory documentsDir) =>
       DbCacheStore(databasePath: documentsDir.path);
 
@@ -70,3 +81,5 @@ abstract class RegisterModule {
   @singleton
   Future<PackageInfo> get packageInfo => PackageInfo.fromPlatform();
 }
+
+Future<void> disposeDbCacheStore(DbCacheStore dbCacheStore) => dbCacheStore.close();

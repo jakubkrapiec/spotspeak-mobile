@@ -24,8 +24,14 @@ class HomeScreen extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Mapa'),
           BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: 'Osiągnięcia'),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Znajomi'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people, key: ValueKey('bottom_nav_friends')),
+            label: 'Znajomi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person, key: ValueKey('bottom_nav_profile')),
+            label: 'Profil',
+          ),
         ],
       ),
     );

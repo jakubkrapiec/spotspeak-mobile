@@ -154,6 +154,7 @@ class _UserTracesScreenState extends State<UserTracesScreen> {
                                 ? CustomTheme.darkContainerStyle
                                 : CustomTheme.lightContainerStyle,
                             child: PopupMenuButton(
+                              key: const ValueKey('sorting_button'),
                               onSelected: _onSortingSelected,
                               itemBuilder: _generatePopupItems,
                               child: Icon(Icons.filter_list, size: 30),

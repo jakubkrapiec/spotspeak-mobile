@@ -82,11 +82,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Informacje o koncie'),
-      ),
-      body: Padding(
+      appBar: AppBar(title: Text('Informacje o koncie')),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             Gap(32),
@@ -185,17 +184,19 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   ),
                 ),
                 Gap(16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Zdjęcie profilowe'),
-                    Gap(8),
-                    Text(
-                      maxLines: 3,
-                      'Kliknij w zdjęcie, aby dodać nowe',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text('Zdjęcie profilowe'),
+                      Gap(8),
+                      Text(
+                        maxLines: 3,
+                        'Kliknij w zdjęcie, aby dodać nowe',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

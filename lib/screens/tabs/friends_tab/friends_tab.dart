@@ -62,7 +62,7 @@ class _FriendsTabState extends State<FriendsTab> with SingleTickerProviderStateM
                       tabs: [
                         Tab(text: 'Znajomi'),
                         Tab(text: 'Zaproszenia'),
-                        Tab(text: 'Wyszukaj'),
+                        Tab(text: 'Szukaj'),
                       ],
                     ),
                   ),

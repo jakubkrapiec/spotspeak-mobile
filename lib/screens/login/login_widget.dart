@@ -71,9 +71,11 @@ class _LoginWidgetState extends State<LoginWidget> {
                   onPressed: _logIn,
                   child: _isLoading
                       ? Center(child: SizedBox.square(dimension: 16, child: CircularProgressIndicator()))
-                      : const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                          child: Text('Logowanie'),
+                      : Center(
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                            child: Text('Logowanie'),
+                          ),
                         ),
                 ),
               ),

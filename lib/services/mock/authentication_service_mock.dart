@@ -48,7 +48,7 @@ class AuthenticationServiceMock implements AuthenticationService {
         'client_id': 'flutter-frontend',
         'client_secret': kAuthClientSecret,
         'grant_type': 'password',
-        'username': 'testuser',
+        'username': 'contact@jakubkrapiec.dev',
         'password': 'TestPassword12!',
         'scope': ['openid', 'profile', 'email', 'offline_access'].join(' '),
       },

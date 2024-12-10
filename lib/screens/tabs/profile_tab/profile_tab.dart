@@ -41,35 +41,38 @@ class _ProfileTabState extends State<ProfileTab> {
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const Gap(16),
-                      StreamBuilder<User>(
-                        stream: _userService.user,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasData &&
-                              snapshot.data?.profilePictureUrl != null &&
-                              snapshot.data!.profilePictureUrl!.isNotEmpty) {
-                            return SizedBox.square(
-                              dimension: 200,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl: snapshot.data!.profilePictureUrl!,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, _) => Image.asset('assets/default_icon.jpg'),
+                      Center(
+                        child: StreamBuilder<User>(
+                          stream: _userService.user,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return CircularProgressIndicator();
+                            } else if (snapshot.hasData &&
+                                snapshot.data?.profilePictureUrl != null &&
+                                snapshot.data!.profilePictureUrl!.isNotEmpty) {
+                              return SizedBox.square(
+                                dimension: 200,
+                                child: ClipOval(
+                                  child: CachedNetworkImage(
+                                    imageUrl: snapshot.data!.profilePictureUrl!,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, _) => Image.asset('assets/default_icon.jpg'),
+                                  ),
                                 ),
-                              ),
-                            );
-                          } else {
-                            return ClipOval(
-                              child: Image.asset(
-                                'assets/default_icon.jpg',
-                                fit: BoxFit.cover,
-                              ),
-                            );
-                          }
-                        },
+                              );
+                            } else {
+                              return ClipOval(
+                                child: Image.asset(
+                                  'assets/default_icon.jpg',
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            }
+                          },
+                        ),
                       ),
                       const Gap(16),
                       StreamBuilder<User>(
@@ -79,6 +82,7 @@ class _ProfileTabState extends State<ProfileTab> {
                             snapshot.data?.username ?? 'Nieznany',
                             style: Theme.of(context).textTheme.bodyLarge,
                             maxLines: 1,
+                            textAlign: TextAlign.center,
                           );
                         },
                       ),
@@ -89,6 +93,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           return Text(
                             snapshot.data?.totalPoints != null ? '${snapshot.data?.totalPoints} pkt' : '0 pkt',
                             style: Theme.of(context).textTheme.bodySmall,
+                            textAlign: TextAlign.center,
                           );
                         },
                       ),

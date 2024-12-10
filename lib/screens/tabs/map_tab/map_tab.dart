@@ -412,7 +412,12 @@ class _FloatingActionButtons extends StatelessWidget {
             FloatingActionButton(
               onPressed: addingTrace ? null : onTapAddTrace,
               heroTag: 'add_trace',
-              child: addingTrace ? const CircularProgressIndicator() : const Icon(Icons.add),
+              child: addingTrace
+                  ? const CircularProgressIndicator()
+                  : const Icon(
+                      Icons.add,
+                      key: ValueKey('add_trace'),
+                    ),
             ),
           ],
         ),

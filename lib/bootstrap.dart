@@ -30,9 +30,9 @@ class AppBlocObserver extends BlocObserver {
 Future<void> prepareApp({Environment mode = prod}) async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  if (mode == prod) {
-    await Firebase.initializeApp(name: 'lalala', options: DefaultFirebaseOptions.currentPlatform);
-  }
+  //if (mode == prod) {
+  await Firebase.initializeApp(name: 'lalala', options: DefaultFirebaseOptions.currentPlatform);
+  //}
 
   //Bloc.observer = const AppBlocObserver();
 

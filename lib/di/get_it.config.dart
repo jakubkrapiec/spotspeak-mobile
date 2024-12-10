@@ -18,6 +18,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart' as _i558;
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:package_info_plus/package_info_plus.dart' as _i655;
+import 'package:pretty_dio_logger/pretty_dio_logger.dart' as _i528;
 import 'package:spotspeak_mobile/di/get_it.dart' as _i397;
 import 'package:spotspeak_mobile/repositories/impl/user_repository_impl.dart'
     as _i307;
@@ -105,19 +106,27 @@ extension GetItInjectableX on _i174.GetIt {
       instanceName: 'dioForOSM',
       preResolve: true,
     );
-    gh.singleton<_i274.DbCacheStore>(() => registerModule
-        .dbCacheStore(gh<_i497.Directory>(instanceName: 'documentsDir')));
-    gh.factory<_i361.Dio>(() => registerModule.dio(gh<_i655.PackageInfo>()));
+    gh.singleton<_i274.DbCacheStore>(
+      () => registerModule
+          .dbCacheStore(gh<_i497.Directory>(instanceName: 'documentsDir')),
+      dispose: _i397.disposeDbCacheStore,
+    );
+    gh.singleton<_i528.PrettyDioLogger>(
+      () => registerModule.prettyDioLoggerTest,
+      registerFor: {_test},
+    );
+    gh.singleton<_i528.PrettyDioLogger>(
+      () => registerModule.prettyDioLoggerProd,
+      registerFor: {_prod},
+    );
     gh.singleton<_i68.LocationService>(
       () => _i200.LocationServiceImpl(),
       registerFor: {_prod},
     );
-    gh.lazySingleton<_i547.CommentService>(
-        () => _i428.CommentServiceImpl(gh<_i361.Dio>()));
-    gh.singleton<_i356.EventService>(
-        () => _i506.EventServiceImpl(gh<_i361.Dio>()));
-    gh.singleton<_i77.AchievementService>(
-        () => _i826.AchievementServiceImpl(gh<_i361.Dio>()));
+    gh.factory<_i361.Dio>(() => registerModule.dio(
+          gh<_i655.PackageInfo>(),
+          gh<_i528.PrettyDioLogger>(),
+        ));
     gh.singleton<_i528.DifficultMultipartService>(
         () => _i286.DifficultMultipartServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i100.FriendService>(
@@ -130,13 +139,14 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i1053.RankingServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i448.UserService>(
         () => _i112.UserServiceImpl(gh<_i643.UserRepository>()));
-    gh.factory<_i722.MapTabBloc>(() => _i722.MapTabBloc(
-          gh<_i192.TraceService>(),
-          gh<_i356.EventService>(),
-          gh<_i528.DifficultMultipartService>(),
-        ));
+    gh.lazySingleton<_i547.CommentService>(
+        () => _i428.CommentServiceImpl(gh<_i361.Dio>()));
+    gh.singleton<_i356.EventService>(
+        () => _i506.EventServiceImpl(gh<_i361.Dio>()));
     gh.factory<_i868.SearchFriendsBloc>(
         () => _i868.SearchFriendsBloc(gh<_i100.FriendService>()));
+    gh.singleton<_i77.AchievementService>(
+        () => _i826.AchievementServiceImpl(gh<_i361.Dio>()));
     gh.singleton<_i127.NotificationService>(
         () => _i1014.NotificationServiceImpl(
               gh<_i448.UserService>(),
@@ -161,6 +171,11 @@ extension GetItInjectableX on _i174.GetIt {
       registerFor: {_prod},
       dispose: (i) => i.dispose(),
     );
+    gh.factory<_i722.MapTabBloc>(() => _i722.MapTabBloc(
+          gh<_i192.TraceService>(),
+          gh<_i356.EventService>(),
+          gh<_i528.DifficultMultipartService>(),
+        ));
     return this;
   }
 }

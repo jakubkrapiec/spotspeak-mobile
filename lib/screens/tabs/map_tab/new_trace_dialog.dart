@@ -52,6 +52,7 @@ class _NewTraceDialogState extends State<NewTraceDialog> {
         Form(
           key: _formKey,
           child: TextFormField(
+            key: ValueKey('trace_text_field'),
             controller: _descriptionController,
             style: Theme.of(context).textTheme.bodySmall,
             maxLines: 3,
