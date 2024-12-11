@@ -245,139 +245,140 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
       bloc: _bloc,
       child: BlocBuilder<MapTabBloc, MapTabState>(
         bloc: _bloc,
-        builder: (context, state) {
-          return Scaffold(
-            floatingActionButton: _FloatingActionButtons(
-              onTapMoveToUserLocation: () => _onMoveToUserLocation(state.lastLocation?.toLatLng()),
-              onTapAddTrace: () => _onAddTrace(state.lastLocation?.toLatLng()),
-              addingTrace: state.isAddingTrace,
+        builder: (context, state) => Scaffold(
+          floatingActionButton: _FloatingActionButtons(
+            onTapMoveToUserLocation: () => _onMoveToUserLocation(state.lastLocation?.toLatLng()),
+            onTapAddTrace: () => _onAddTrace(state.lastLocation?.toLatLng()),
+            addingTrace: state.isAddingTrace,
+          ),
+          body: SlidingUpPanel(
+            controller: _panelController,
+            panelBuilder: (scrollController) => NearbyPanel(
+              scrollController: scrollController,
+              mapController: _mapController,
+              panelController: _panelController,
+              refreshStream: _refreshPanelController.stream,
             ),
-            body: SlidingUpPanel(
-              controller: _panelController,
-              panelBuilder: (scrollController) => NearbyPanel(
-                scrollController: scrollController,
-                mapController: _mapController,
-                panelController: _panelController,
-                refreshStream: _refreshPanelController.stream,
-              ),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
-              body: Portal(
-                debugName: 'map_portal',
-                child: FlutterMap(
-                  mapController: _mapController.mapController,
-                  options: const MapOptions(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            color: _appService.isDarkMode(context) ? CustomColors.grey5 : CustomColors.blue1,
+            body: Portal(
+              debugName: 'map_portal',
+              child: FlutterMap(
+                mapController: _mapController.mapController,
+                options: const MapOptions(
+                  maxZoom: _maxZoom,
+                  minZoom: 2,
+                  interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
+                  initialCenter: LatLng(52, 19),
+                  initialZoom: 5.5,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
+                    tileProvider: CachedTileProvider(
+                      dio: _dioForOSM,
+                      store: _dbCacheStore,
+                      maxStale: Duration(days: 30),
+                    ),
                     maxZoom: _maxZoom,
                     minZoom: 2,
-                    interactionOptions: InteractionOptions(flags: ~InteractiveFlag.rotate),
-                    initialCenter: LatLng(52, 19),
-                    initialZoom: 5.5,
+                    retinaMode: false,
                   ),
-                  children: [
-                    TileLayer(
-                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      userAgentPackageName: _dio.options.headers[HttpHeaders.userAgentHeader]! as String,
-                      tileProvider:
-                          CachedTileProvider(dio: _dioForOSM, store: _dbCacheStore, maxStale: Duration(days: 30)),
+                  PolyWidgetLayer(
+                    polyWidgets: [
+                      if (state.lastLocation != null)
+                        PolyWidget(
+                          center: state.lastLocation!.toLatLng(),
+                          widthInMeters: 100,
+                          heightInMeters: 100,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor.withOpacity(0.3),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  CurrentLocationLayer(
+                    style: LocationMarkerStyle(marker: Opacity(opacity: 0.8, child: DefaultLocationMarker())),
+                    positionStream: _locationService.getLocationStream().map(
+                          (position) => LocationMarkerPosition(
+                            latitude: position.latitude,
+                            longitude: position.longitude,
+                            accuracy: position.accuracy,
+                          ),
+                        ),
+                    headingStream: _locationService.getLocationStream().map(
+                          (position) =>
+                              LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
+                        ),
+                  ),
+                  MarkerClusterLayerWidget(
+                    options: MarkerClusterLayerOptions(
+                      //maxClusterRadius: 80,
+                      //size: const Size(40, 40),
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(50),
                       maxZoom: _maxZoom,
-                      minZoom: 2,
-                      retinaMode: false,
-                    ),
-                    PolyWidgetLayer(
-                      polyWidgets: [
-                        if (state.lastLocation != null)
-                          PolyWidget(
-                            center: state.lastLocation!.toLatLng(),
-                            widthInMeters: 100,
-                            heightInMeters: 100,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor.withOpacity(0.3),
-                                shape: BoxShape.circle,
+                      markers: [
+                        for (final trace in state.traces)
+                          Marker(
+                            point: trace.toLatLng(),
+                            child: TraceMarker(
+                              trace: trace,
+                              currentUserLocation: state.lastLocation?.toLatLng(),
+                              onRefreshTraces: () => _bloc.add(
+                                RequestMapUpdateEvent(bounds: _mapController.mapController.camera.visibleBounds),
                               ),
                             ),
+                            height: TraceMarker.dimens,
+                            width: TraceMarker.dimens,
                           ),
                       ],
-                    ),
-                    CurrentLocationLayer(
-                      style: LocationMarkerStyle(marker: Opacity(opacity: 0.8, child: DefaultLocationMarker())),
-                      positionStream: _locationService.getLocationStream().map(
-                            (position) => LocationMarkerPosition(
-                              latitude: position.latitude,
-                              longitude: position.longitude,
-                              accuracy: position.accuracy,
-                            ),
-                          ),
-                      headingStream: _locationService.getLocationStream().map(
-                            (position) =>
-                                LocationMarkerHeading(heading: position.heading, accuracy: position.headingAccuracy),
-                          ),
-                    ),
-                    MarkerClusterLayerWidget(
-                      options: MarkerClusterLayerOptions(
-                        //maxClusterRadius: 80,
-                        //size: const Size(40, 40),
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(50),
-                        maxZoom: _maxZoom,
-                        markers: [
-                          for (final trace in state.traces)
-                            Marker(
-                              point: trace.toLatLng(),
-                              child: TraceMarker(
-                                trace: trace,
-                                currentUserLocation: state.lastLocation?.toLatLng(),
-                                onRefreshTraces: () => _bloc.add(
-                                  RequestMapUpdateEvent(bounds: _mapController.mapController.camera.visibleBounds),
-                                ),
-                              ),
-                              height: TraceMarker.dimens,
-                              width: TraceMarker.dimens,
-                            ),
-                        ],
-                        builder: (context, markers) => Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              markers.length.toString(),
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
-                            ),
+                      builder: (context, markers) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            markers.length.toString(),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
                           ),
                         ),
                       ),
                     ),
-                    PolyWidgetLayer(
-                      polyWidgets: [
-                        for (final event in state.events)
-                          PolyWidget(
-                            center: event.latLng,
-                            widthInMeters: event.radius.clamp(100, 500),
-                            heightInMeters: event.radius.clamp(100, 500),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: EventMarker(
-                                event: event,
-                                userLocation: state.lastLocation?.toLatLng(),
-                                onTapTrace: _onTapTrace,
-                              ),
+                  ),
+                  PolyWidgetLayer(
+                    polyWidgets: [
+                      for (final event in state.events)
+                        PolyWidget(
+                          center: event.latLng,
+                          widthInMeters: event.radius.clamp(100, 500),
+                          heightInMeters: event.radius.clamp(100, 500),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: EventMarker(
+                              event: event,
+                              userLocation: state.lastLocation?.toLatLng(),
+                              onTapTrace: _onTapTrace,
                             ),
                           ),
-                      ],
-                    ),
-                    SimpleAttributionWidget(
-                      source: const Text('OpenStreetMap'),
-                      onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
-                      alignment: Alignment.topLeft,
-                    ),
-                  ],
-                ),
+                        ),
+                    ],
+                  ),
+                  SimpleAttributionWidget(
+                    source: const Text('OpenStreetMap'),
+                    onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                    alignment: Alignment.topLeft,
+                  ),
+                ],
               ),
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

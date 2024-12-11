@@ -266,6 +266,7 @@ class _TraceDialogState extends State<TraceDialog> {
           style: Theme.of(context).textTheme.bodySmall,
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (value) => _onAddComment(),
+          maxLength: 140,
           focusNode: _textFieldFocusNode,
           decoration: InputDecoration(
             hintText: 'Dodaj komentarz',
