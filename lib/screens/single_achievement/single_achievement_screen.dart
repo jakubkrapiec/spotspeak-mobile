@@ -78,7 +78,11 @@ class _SingleAchievementScreenState extends State<SingleAchievementScreen> {
               Expanded(child: CachedNetworkImage(imageUrl: _achievement!.resourceAccessUrl)),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Text(_achievement!.achievementName, style: Theme.of(context).textTheme.bodyLarge),
+                child: Text(
+                  _achievement!.achievementName,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                  textAlign: TextAlign.center,
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

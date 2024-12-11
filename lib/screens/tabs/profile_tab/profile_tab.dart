@@ -43,7 +43,7 @@ class _ProfileTabState extends State<ProfileTab> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Gap(16),
+                      const Gap(32),
                       Center(
                         child: StreamBuilder<User>(
                           stream: _userService.user,
@@ -74,7 +74,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           },
                         ),
                       ),
-                      const Gap(16),
+                      const Gap(32),
                       StreamBuilder<User>(
                         stream: _userService.user,
                         builder: (context, snapshot) {
@@ -86,7 +86,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           );
                         },
                       ),
-                      const Gap(8),
+                      const Gap(16),
                       StreamBuilder<User>(
                         stream: _userService.user,
                         builder: (context, snapshot) {
@@ -97,7 +97,7 @@ class _ProfileTabState extends State<ProfileTab> {
                           );
                         },
                       ),
-                      const Gap(16),
+                      const Gap(32),
                       ProfileButton(
                         pressFunction: () {
                           context.router.push(UserTracesRoute());
@@ -118,7 +118,7 @@ class _ProfileTabState extends State<ProfileTab> {
                         },
                         buttonText: 'Ustawienia aplikacji',
                       ),
-                      const Gap(16),
+                      const Gap(32),
                       TextButton(
                         child: Text('Wyloguj się', style: Theme.of(context).textTheme.labelMedium),
                         onPressed: () async {
