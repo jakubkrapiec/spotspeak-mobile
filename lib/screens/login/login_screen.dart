@@ -18,6 +18,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        height: double.infinity,
         decoration: _appService.isDarkMode(context)
             ? CustomColors.backgroundGradientDark
             : CustomColors.backgroundGradientLight,
