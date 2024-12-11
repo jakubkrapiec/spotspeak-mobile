@@ -17,7 +17,7 @@ class EventMarker extends StatefulWidget {
   final LatLng? userLocation;
   final Future<void> Function(TraceLocation) onTapTrace;
 
-  static const dimens = 136.0;
+  static const dimens = 112.0;
 
   @override
   State<EventMarker> createState() => _EventMarkerState();
@@ -95,16 +95,13 @@ class _EventMarkerState extends State<EventMarker> with SingleTickerProviderStat
                 child: Center(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Icon(Icons.priority_high, color: Colors.white),
                       const Gap(8),
                       AutoSizeText(
                         widget.event.name,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                       ),

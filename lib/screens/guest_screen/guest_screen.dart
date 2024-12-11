@@ -16,11 +16,11 @@ class GuestScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Aby móc korzystać z tej funkcjonalności musisz zalogować się na swoje konto',
+            'Aby móc korzystać z tej funkcjonalności, musisz zalogować się na swoje konto',
             style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.center,
           ),
-          Gap(32),
+          const Gap(32),
           LoginWidget(),
         ],
       ),
