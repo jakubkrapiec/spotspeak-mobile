@@ -59,6 +59,7 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
 
   static const _defaultZoom = 16.5;
   static const _maxZoom = 19.0;
+  bool _showClusterEvents = true;
 
   late final PanelController _panelController;
 
@@ -80,6 +81,9 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
     AutoTabsRouter.of(context).addListener(_onTabChanged);
     _initLocationService();
     _mapEventSubscription = _mapController.mapController.mapEventStream.listen((event) {
+      setState(() {
+        _showClusterEvents = _mapController.mapController.camera.zoom < 15;
+      });
       if (event is MapEventMove) {
         _onMapScrolled(_mapController.mapController.camera.visibleBounds);
       }
@@ -336,6 +340,18 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                             height: TraceMarker.dimens,
                             width: TraceMarker.dimens,
                           ),
+                        if (_showClusterEvents)
+                          for (final event in state.events)
+                            Marker(
+                              point: event.latLng,
+                              width: EventMarker.dimens * 0.8,
+                              height: EventMarker.dimens * 0.8,
+                              child: EventMarker(
+                                event: event,
+                                userLocation: state.lastLocation?.toLatLng(),
+                                onTapTrace: _onTapTrace,
+                              ),
+                            ),
                       ],
                       builder: (context, markers) => Container(
                         decoration: BoxDecoration(
@@ -351,24 +367,25 @@ class _MapTabState extends State<MapTab> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                  PolyWidgetLayer(
-                    polyWidgets: [
-                      for (final event in state.events)
-                        PolyWidget(
-                          center: event.latLng,
-                          widthInMeters: event.radius.clamp(100, 500),
-                          heightInMeters: event.radius.clamp(100, 500),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: EventMarker(
-                              event: event,
-                              userLocation: state.lastLocation?.toLatLng(),
-                              onTapTrace: _onTapTrace,
+                  if (!_showClusterEvents)
+                    PolyWidgetLayer(
+                      polyWidgets: [
+                        for (final event in state.events)
+                          PolyWidget(
+                            center: event.latLng,
+                            widthInMeters: event.radius.clamp(100, 500),
+                            heightInMeters: event.radius.clamp(100, 500),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: EventMarker(
+                                event: event,
+                                userLocation: state.lastLocation?.toLatLng(),
+                                onTapTrace: _onTapTrace,
+                              ),
                             ),
                           ),
-                        ),
-                    ],
-                  ),
+                      ],
+                    ),
                   SimpleAttributionWidget(
                     source: const Text('OpenStreetMap'),
                     onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),

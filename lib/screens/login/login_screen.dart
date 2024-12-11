@@ -21,25 +21,27 @@ class LoginScreen extends StatelessWidget {
         decoration: _appService.isDarkMode(context)
             ? CustomColors.backgroundGradientDark
             : CustomColors.backgroundGradientLight,
-        child: Column(
-          children: [
-            const Gap(50),
-            SizedBox.square(
-              dimension: 350,
-              child: SvgPicture.asset('assets/SPOT.svg'),
-            ),
-            Text(
-              'Zacznijmy wspólną przygodę!',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            const Gap(48),
-            LoginWidget(isFirstLogin: true),
-            TextButton(
-              child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
-              onPressed: () => context.router.replace(HomeRoute()),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const Gap(50),
+              SizedBox.square(
+                dimension: 350,
+                child: SvgPicture.asset('assets/SPOT.svg'),
+              ),
+              Text(
+                'Zacznijmy wspólną przygodę!',
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const Gap(48),
+              LoginWidget(isFirstLogin: true),
+              TextButton(
+                child: const Text('Kontynuuj jako gość', textAlign: TextAlign.start),
+                onPressed: () => context.router.replace(HomeRoute()),
+              ),
+            ],
+          ),
         ),
       ),
     );
