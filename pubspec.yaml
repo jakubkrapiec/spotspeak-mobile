@@ -51,7 +51,7 @@ dependencies:
   logger: ^2.5.0
   mime: ^2.0.0
   mutex: ^3.1.0
-  package_info_plus: ^8.1.1
+  package_info_plus: ^8.1.2
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   pretty_dio_logger: ^1.4.0
